@@ -1,0 +1,128 @@
+name: clean_arch_base
+description: "A new Flutter project."
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.8.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+#--------------------- Networks & Firebase -----------------------
+  dio: ^5.7.0
+  pretty_dio_logger: ^1.4.0
+  firebase_core: ^4.9.0
+  firebase_remote_config: ^6.5.1
+  awesome_notifications: ^0.11.0
+  awesome_notifications_fcm: ^0.11.0
+
+#--------------------- Caching (Dio) + Storage (Hive CE) -----------------------
+  dio_cache_interceptor: ^3.5.0
+  # MemCacheStore (built-in to dio_cache_interceptor) is used as the cache
+  # backend — no extra package needed. Persistent cache can be added later
+  # by swapping the store in `cache_config.dart`.
+  hive_ce: ^2.13.1
+  hive_ce_flutter: ^2.3.2
+
+#--------------------- Connectivity -----------------------
+  connectivity_plus: ^7.1.1
+
+#--------------------- Localization & Internationalization -----------------------
+  intl: 0.20.2
+  easy_localization: ^3.0.8
+  easy_logger: ^0.0.2
+
+#--------------------- Tools -----------------------
+  image_picker: ^1.1.2
+  file_picker: ^10.3.1
+  image_cropper: ^9.1.0
+  flutter_html: ^3.0.0
+  video_player: ^2.9.2
+  cached_network_image: ^3.4.1
+  dropdown_search: ^6.0.2
+  flutter_screenutil: ^5.9.3
+  flutter_secure_storage: ^10.2.0
+
+#--------------------- State Management & Utilities -----------------------
+  equatable: ^2.0.7
+  flutter_bloc: ^9.1.1
+  get_it: ^9.2.1
+  injectable: ^3.0.0
+
+#--------------------- UI & Animations -----------------------
+  # flutter_spinkit dropped — Material 3 CircularProgressIndicator covers
+  # 100% of our use-cases. carousel_slider dropped — replaced by PageView.
+  # pinput dropped — no current usage; build a native OTP widget when needed.
+  flutter_svg: ^2.1.0
+  lottie: ^3.1.2
+  flutter_animate: ^4.5.2
+  # Skeleton shimmer used by PaginatedListWidget for first-page loading.
+  skeletonizer: ^2.1.0
+
+#--------------------- Storage & Data -----------------------
+  # SecureStorage (flutter_secure_storage) is the only at-rest store —
+  # everything sensitive (tokens, user payload) is encrypted on disk.
+  # shared_preferences was intentionally dropped.
+  path_provider: ^2.1.4
+
+#--------------------- Sharing & Links -----------------------
+  share_plus: ^12.0.0
+  url_launcher: ^6.3.0
+
+#--------------------- Reactive & Utils -----------------------
+  rxdart: ^0.28.0
+  uuid: ^4.5.0
+  dartz: ^0.10.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  build_runner: ^2.4.13
+  flutter_gen_runner: ^5.4.0
+  injectable_generator: ^3.0.0
+  hive_ce_generator: ^1.10.0
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/svg/
+    - assets/svg/base_svg/
+    - assets/svg/app_svg/
+    - assets/fonts/
+    - assets/lottie/
+    - assets/translations/
+
+  fonts:
+    - family: Beiruti
+      fonts:
+        - asset: assets/fonts/Beiruti-ExtraLight.ttf
+          weight: 200
+        - asset: assets/fonts/Beiruti-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Beiruti-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Beiruti-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Beiruti-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Beiruti-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Beiruti-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/Beiruti-Black.ttf
+          weight: 900
+
+flutter_gen:
+  output: lib/src/config/res/
+  line_length: 80
+  integrations:
+    lottie: true
+    flutter_svg: true
+  assets:
+    enabled: true
+    outputs:
+      class_name: AppAssets

@@ -1,0 +1,322 @@
+---
+name: rtl-arabic
+description: RTL Arabic rules, layout mirroring prevention, directional APIs, and localization for Flutter_Base.
+---
+
+# Skill: RTL Arabic — Flutter_Base
+
+## Project Language Setup
+
+This project uses `easy_localization` + Expo Arabic font.
+Language detection via `context.isArabic` and `context.isRight`.
+
+---
+
+## Language Files
+
+```
+assets/translations/
+├── ar.json    ← Arabic strings
+└── en.json    ← English strings
+
+// Access:
+tr('key')                    // current language
+tr('key', args: [value])     // with args
+```
+
+---
+
+## Font — Expo Arabic
+
+Already configured in pubspec.yaml:
+```
+Expo font family:
+  - ExpoArabicBold.ttf     (weight: 700)
+  - ExpoArabicSemiBold.ttf (weight: 600)
+  - ExpoArabicMedium.ttf   (weight: 500)
+  - ExpoArabicBook.ttf     (weight: 400)
+  - ExpoArabicLight.ttf    (weight: 300)
+```
+
+FontFamily: `ConstantManager.fontFamily` = `'Expo'`
+Set globally in `AppTheme.light` → no need to set per widget.
+
+---
+
+## ⚠️ THE MOST IMPORTANT RULE — Layout Mirroring Prevention
+
+> Figma shows Arabic RTL design. Elements on the RIGHT in Figma MUST stay on the RIGHT in Flutter.
+> The app is already configured as RTL. Flutter's `start` = physical RIGHT, `end` = physical LEFT.
+
+### The Core Equation (memorize this):
+```
+Figma RIGHT  →  Flutter "start"
+Figma LEFT   →  Flutter "end"
+Row first child  →  physical RIGHT
+Row last child   →  physical LEFT
+```
+
+### ⚠️ Figma MCP Section Verification (CRITICAL)
+
+> Figma MCP sometimes returns sections **mirrored/reversed** from the actual design.
+> This is the most common source of RTL bugs — images and lists appearing on the wrong side.
+
+**MANDATORY for every section read from Figma MCP:**
+1. Cross-check MCP data with the actual **Figma screenshot**
+2. Verify Arabic text starts from the **RIGHT** (physical right = start in Flutter RTL)
+3. Verify horizontal lists/filter tabs start from the **RIGHT** (first item = "عرض الكل" or similar)
+4. Verify card images are on the correct side (match Figma visual, not just MCP coordinates)
+5. **If MCP data contradicts the visual → ALWAYS trust the screenshot**
+
+```dart
+// Figma screenshot: filter tabs → "عرض الكل" on RIGHT, categories flow LEFT
+// ✅ CORRECT — first child = physical RIGHT in RTL
+Row(children: [showAllTab, category1Tab, category2Tab])
+
+// ❌ WRONG — MCP returned reversed order (common bug!)
+Row(children: [category2Tab, category1Tab, showAllTab])
+
+// Figma screenshot: card with image on RIGHT, text on LEFT
+// ✅ CORRECT — image first (physical RIGHT in RTL Row)
+Row(children: [CachedImage(...), Expanded(child: textColumn)])
+
+// ❌ WRONG — MCP reported image position incorrectly
+Row(children: [Expanded(child: textColumn), CachedImage(...)])
+```
+
+**Quick verification checklist per section:**
+```
+□ Arabic text aligned to physical RIGHT (CrossAxisAlignment.start)
+□ Filter/tab lists: first tab on physical RIGHT
+□ Card images: match Figma screenshot position
+□ Row children order: RIGHT element is FIRST child
+□ Did NOT blindly follow MCP coordinates — verified against screenshot
+```
+
+---
+
+## RTL Rules for Flutter_Base
+
+### Rule 1 — Column: Text Alignment (Most Common Issue)
+
+The most frequent bug: Arabic titles appearing on LEFT instead of RIGHT.
+
+```dart
+// Figma: title is on the RIGHT (Arabic default)
+// ✅ CORRECT
+Column(
+  crossAxisAlignment: CrossAxisAlignment.start,  // → physical RIGHT ✓
+  children: [
+    Text(LocaleKeys.title.tr()),
+    Text(LocaleKeys.subtitle.tr()),
+  ],
+)
+
+// ❌ WRONG — this pushes titles to physical LEFT
+Column(
+  crossAxisAlignment: CrossAxisAlignment.end,
+  children: [...]
+)
+
+// ❌ WRONG — default is center in some contexts
+Column(
+  // no crossAxisAlignment — text may center
+  children: [...]
+)
+```
+
+### Rule 2 — Row: Children Order
+
+```dart
+// Figma AppBar: [← Back on RIGHT]  [Title center]  [Search on LEFT]
+// ✅ CORRECT — Figma RIGHT = Row first child
+Row(
+  children: [
+    BackArrowWidget(),        // first = physical RIGHT ✓
+    Expanded(child: TitleText()),
+    SearchIconWidget(),       // last = physical LEFT ✓
+  ],
+)
+
+// ❌ WRONG — visually mirrors the whole AppBar
+Row(
+  children: [
+    SearchIconWidget(),       // ends up on RIGHT ✗
+    Expanded(child: TitleText()),
+    BackArrowWidget(),        // ends up on LEFT ✗
+  ],
+)
+```
+
+### Rule 3 — Stack + Positioned → Always PositionedDirectional
+
+```dart
+// ✅ CORRECT
+PositionedDirectional(start: 16, top: 10, child: widget)  // physical RIGHT
+PositionedDirectional(end: 16, top: 10, child: widget)    // physical LEFT
+
+// ❌ WRONG — reverses in RTL (appears on wrong side)
+Positioned(right: 16, top: 10, child: widget)  // → physical LEFT in RTL ✗
+Positioned(left: 16, top: 10, child: widget)   // → physical RIGHT in RTL ✗
+```
+
+### Rule 4 — Align → Always AlignmentDirectional
+
+```dart
+// ✅ CORRECT
+Align(alignment: AlignmentDirectional.centerStart)  // physical RIGHT
+Align(alignment: AlignmentDirectional.centerEnd)    // physical LEFT
+Align(alignment: AlignmentDirectional.topStart)     // top-RIGHT
+
+// ❌ WRONG — LTR specific
+Align(alignment: Alignment.centerRight)  // doesn't adapt to RTL
+Align(alignment: Alignment.centerLeft)
+```
+
+### Rule 5 — Text Alignment
+
+```dart
+// ✅ CORRECT
+Text(text, textAlign: TextAlign.start)  // → physical RIGHT in RTL
+
+// ❌ WRONG
+Text(text, textAlign: TextAlign.left)   // always physical LEFT
+Text(text, textAlign: TextAlign.right)  // always physical RIGHT (LTR semantic)
+```
+
+### Rule 6 — Padding/Margin → Use Directional Extensions
+
+```dart
+// The base project has .paddingStart() and .paddingEnd() extensions
+// ALWAYS use these instead of .paddingLeft() / .paddingRight():
+
+widget.paddingStart(AppPadding.pW16)   // → right padding in RTL ✓
+widget.paddingEnd(AppPadding.pW16)     // → left padding in RTL ✓
+
+widget.paddingOnlyDirectional(
+  start: AppPadding.pW16,   // right
+  end: AppPadding.pW8,      // left
+  top: AppPadding.pH12,
+)
+
+// Same for margin:
+widget.marginStart(AppMargin.mW12)    // right margin in RTL
+widget.marginEnd(AppMargin.mW12)      // left margin in RTL
+widget.marginOnlyDirectional(start: AppMargin.mW16)
+
+// ❌ WRONG
+widget.paddingLeft(16)    // always physical left
+widget.paddingRight(16)   // always physical right
+EdgeInsets.only(right: x) // LTR-specific
+```
+
+### Rule 7 — Forbidden List (NEVER use in this project)
+
+```dart
+❌ Row(textDirection: TextDirection.rtl, ...)
+   → unnecessary, breaks consistency
+
+❌ Positioned(left: x)     → PositionedDirectional(end: x)
+❌ Positioned(right: x)    → PositionedDirectional(start: x)
+❌ Align(Alignment.centerLeft)    → AlignmentDirectional.centerEnd
+❌ Align(Alignment.centerRight)   → AlignmentDirectional.centerStart
+❌ EdgeInsets.only(left: x)       → EdgeInsetsDirectional.only(end: x)
+❌ EdgeInsets.only(right: x)      → EdgeInsetsDirectional.only(start: x)
+❌ TextAlign.left                 → TextAlign.start
+```
+
+### Rule 8 — Figma `left` Values → Flutter Conversion
+
+Figma reports element position as `left` value from left edge of screen (physical pixels):
+
+```
+Screen width ≈ 390px
+Figma left: 340px → means element is near physical RIGHT → PositionedDirectional(start: ~16)
+Figma left: 16px  → means element is near physical LEFT  → PositionedDirectional(end: 16)
+```
+
+### Rule 9 — Localize All Text
+
+```dart
+// ✅ CORRECT — always use LocaleKeys
+Text(LocaleKeys.greeting.tr())
+Text(LocaleKeys.screenTitle.tr())
+
+// ❌ WRONG
+Text('مرحباً')
+Text('Hello')
+```
+
+### Rule 10 — Add Strings to Translation Files
+
+```json
+// assets/translations/lang.json (then run generate)
+{
+  "feature_name": {
+    "title": "عنوان الشاشة",
+    "button_submit": "إرسال"
+  }
+}
+```
+
+```bash
+dart run generate/strings/main.dart
+```
+
+---
+
+## Rule 11 — Text Directionality Inside Components (CRITICAL)
+
+> **نص داخل components أحياناً بيتعكس من اليمين للشمال. لازم تتأكد أن النص بيظهر صح.**
+
+بعض الـ widgets (خصوصاً custom components) ممكن النص جواها يتعكس بشكل غير متوقع. الحل:
+
+```dart
+// ✅ CORRECT — Force text direction when text appears reversed inside a component
+Directionality(
+  textDirection: TextDirection.rtl,
+  child: Text(LocaleKeys.description.tr()),
+)
+
+// ✅ CORRECT — Use textDirection on Text widget directly
+Text(
+  LocaleKeys.itemName.tr(),
+  textDirection: TextDirection.rtl,
+  style: const TextStyle().setMainTextColor.s14.regular,
+)
+```
+
+**متى تستخدم هذا:**
+- لو النص داخل component معقد (مثلاً dialog, bottom sheet, custom card) بيظهر معكوس
+- لو النص داخل third-party widget مش بيحترم الـ RTL
+- فقط على مستوى الـ Text/widget المتأثر — مش على الـ screen كلها
+
+**متى لا تستخدمه:**
+- النص طبيعي ومعروض صح → لا تضيف Directionality
+- الـ screen-level RTL شغال → لا تكرره
+
+---
+
+## Figma Arabic Text Detection
+
+When reading Figma text nodes via MCP:
+
+```
+If text contains characters in range U+0600–U+06FF → Arabic text
+→ Confirm app is running RTL locale
+→ Add to ar.json
+→ Use tr('key') in generated code
+```
+
+Regex to detect Arabic: `[\u0600-\u06FF]`
+
+---
+
+## Language Switching (already in base)
+
+```dart
+// lang_cubit.dart already handles this
+// Settings screen toggles language:
+context.read<LangCubit>().changeLanguage(context, Languages.arabic);
+context.read<LangCubit>().changeLanguage(context, Languages.english);
+```

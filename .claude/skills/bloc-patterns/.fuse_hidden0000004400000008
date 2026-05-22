@@ -1,0 +1,160 @@
+---
+name: bloc-patterns
+description: AsyncCubit templates, CRUD local updates, AsyncBlocBuilder, PaginatedCubit, and BlocListener patterns for Flutter_Base.
+---
+
+# Skill: BLoC/Cubit Patterns — Flutter_Base
+
+## Architecture Overview
+
+All cubits that do API calls extend `AsyncCubit<T>`. Never create raw `Cubit` for data-fetching.
+
+---
+
+## AsyncCubit — Base Pattern
+
+```dart
+abstract class AsyncCubit<T> extends Cubit<AsyncState<T>> {
+  // Built-in: setLoading(), setSuccess(data), setError(msg), reset(), updateData()
+  // Built-in: executeAsync(operation, successEmitter, showErrorToast)
+  // Built-in: baseCrudUseCase (auto-injected)
+}
+```
+
+## AsyncState<T> — Built-in States
+
+```dart
+state.status        // BaseStatus enum: initial, loading, loadingMore, success, error
+state.data          // T
+state.errorMessage  // String?
+state.isInitial / state.isLoading / state.isSuccess / state.isError / state.isLoadingMore
+```
+
+---
+
+## Standard Cubit Template
+
+```dart
+@injectable
+class ProductsCubit extends AsyncCubit<List<ProductEntity>> {
+  ProductsCubit() : super([]);
+
+  Future<void> fetchProducts() async {
+    await executeAsync(
+      operation: () async => baseCrudUseCase.call(CrudBaseParams(
+        api: ApiConstants.products,
+        httpRequestType: HttpRequestType.get,
+        mapper: (json) => (json['data']['data'] as List)
+            .map((e) => ProductEntity.fromJson(e)).toList(),
+      )),
+    );
+  }
+}
+```
+
+---
+
+## CRUD Local Update Rule (NON-NEGOTIABLE)
+
+**NEVER re-fetch the list after add/edit/delete.** Update state locally.
+
+```dart
+// Add → insert at index 0
+(newItem) => setSuccess(data: [newItem, ...state.data])
+
+// Edit → map + replace matching item
+(updated) => setSuccess(data: state.data.map((e) => e.id == id ? updated : e).toList())
+
+// Delete → removeWhere
+mapper: (_) => state.data..removeWhere((e) => e.id == id)
+```
+
+---
+
+## AsyncBlocBuilder Usage
+
+```dart
+AsyncBlocBuilder<ProductsCubit, List<ProductEntity>>(
+  builder: (context, products) {
+    if (products.isEmpty) return const EmptyWidget();
+    return ListView.builder(
+      itemCount: products.length,
+      itemBuilder: (_, i) => ProductCard(product: products[i]),
+    );
+  },
+  skeletonBuilder: (_) => const ProductsSkeletonList(),
+  errorBuilder: (ctx, error) => ErrorView(error: error, onRetry: () => ctx.read<ProductsCubit>().fetchProducts()),
+)
+```
+
+### Sliver Version (CustomScrollView)
+```dart
+AsyncSliverBlocBuilder<ItemsCubit, List<ItemEntity>>(
+  builder: (ctx, items) => SliverList.builder(
+    itemCount: items.length,
+    itemBuilder: (_, i) => ItemCard(item: items[i]),
+  ),
+)
+```
+
+---
+
+## Multiple Cubits — MultiBlocProvider
+
+```dart
+MultiBlocProvider(
+  providers: [
+    BlocProvider(create: (_) => injector<BannersCubit>()..fetchBanners()),
+    BlocProvider(create: (_) => injector<CategoriesCubit>()..fetchCategories()),
+  ],
+  child: DefaultScaffold(title: LocaleKeys.home.tr(), body: const HomeBody()),
+)
+```
+
+**Multi-section empty:** `SizedBox.shrink()` (not `EmptyWidget`).
+**Heavy screens (4+ APIs):** Consider `compute()` for JSON parsing.
+
+---
+
+## BlocListener — For Actions
+
+```dart
+BlocListener<SubmitCubit, AsyncState<bool>>(
+  listener: (context, state) {
+    if (state.isSuccess) {
+      MessageUtils.showSnackBar(message: LocaleKeys.success.tr(), baseStatus: BaseStatus.success);
+      Go.back();
+    }
+  },
+  child: bodyWidget,
+)
+```
+
+---
+
+## Pagination — PaginatedCubit
+
+```dart
+PaginatedListWidget<ItemEntity>(
+  cubit: context.read<ItemsCubit>(),
+  itemBuilder: (item) => ItemCard(item: item),
+  skeletonBuilder: () => const ItemCardSkeleton(),
+)
+```
+
+---
+
+## Figma State Mapping
+
+```
+Figma "Loading"      → state.isLoading  → skeletonBuilder
+Figma "Empty"        → state.isSuccess + data.isEmpty → EmptyWidget
+Figma "Error"        → state.isError    → errorBuilder / ErrorView
+Figma "Default"      → state.isSuccess + data.notEmpty → builder
+Figma "Loading More" → state.isLoadingMore → list + loader at bottom
+```
+
+## Entity Safety
+
+Every entity MUST have `factory initial()`, `fromJson` with `??` defaults, `tryParse` (never `parse`).
+See `flutter-base-coding-standards.mdc` section 8.5 for full rules.

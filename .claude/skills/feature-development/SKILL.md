@@ -1,0 +1,497 @@
+---
+name: feature-development
+description: Flutter feature development workflow — Figma MCP + Postman MCP + full phase checklist.
+---
+
+# Flutter Feature Development — Full Workflow
+
+## ⚠️ Mandatory Pre-Flight Reading (إلزامي قبل أي feature جديد)
+
+> **هذا الـ skill ده هو الـ workflow — لكن قبل ما تبدأ، اقرأ الـ skills دي بـ `Read` tool عشان تكون شاحن الـ context كله:**
+
+### 📚 القراءة الإلزامية (لكل feature جديد — بالترتيب):
+
+```
+1. .claude/skills/feature-prompt/SKILL.md       ← الـ workflow الكامل (STEP 0-8)
+2. .claude/skills/coding-standards/SKILL.md     ← Senior mindset + entity safety + 30+ rule
+3. .claude/skills/rtl-arabic/SKILL.md           ← RTL layout mirroring + Figma reading direction
+4. .claude/skills/flutter-patterns/SKILL.md     ← Senior widget building + file structure
+5. .claude/skills/widget-efficiency/SKILL.md    ← اختيار الـ widget الصح + بناء أقل widget tree (no wrappers)
+6. .claude/skills/bloc-patterns/SKILL.md        ← BlocConsumer/Listener strict rules + AsyncCubit
+```
+
+> **`widget-efficiency` مش optional** — هي الـ rulebook لاختيار الـ widget الصح وتجنّب الـ wrappers الزيادة.
+> قبل ما تكتب `Padding(...)` / `Center(...)` / `Container()` للـ sizing / `GestureDetector` / `Stack` للـ badge / `ClipRRect` حوالين `Image` / `Opacity` على `color` — راجع الـ skill ده.
+
+### 🎯 القراءة الـ Conditional (حسب نوع الفيتشر):
+
+```
+لو الفيتشر فيه API           → .claude/skills/api-pipeline/SKILL.md
+لو الفيتشر فيه form          → .claude/skills/form-api-pipeline/SKILL.md
+لو فيه Figma design           → .claude/skills/figma-to-flutter/SKILL.md
+                                .claude/skills/figma-widget-mapping/SKILL.md
+                                .claude/skills/figma-mcp-mapping/SKILL.md
+لو navigation معقد            → .claude/skills/navigation-patterns/SKILL.md
+                                .claude/skills/multi-screen-flow/SKILL.md
+لو search field               → .claude/skills/search-field-debounce/SKILL.md
+لو scaffold/status bar        → .claude/skills/scaffold-patterns/SKILL.md
+لو bloc scoping سؤال          → .claude/skills/bloc-provider-scoping/SKILL.md
+لو DI أو architecture         → .claude/skills/di-and-architecture/SKILL.md
+لو design tokens              → .claude/skills/design-tokens/SKILL.md
+لو محتاج تولّد Postman         → .claude/skills/api-design/SKILL.md
+```
+
+### ✅ بعد ما تخلص الـ Feature (إلزامي):
+
+```
+.claude/skills/post-feature-review/SKILL.md   ← code review checklist + critical/high issues
+```
+
+### 🔍 Trigger Rules — متى تقرأ إيه:
+
+| المهمة | الـ skills اللازم قراءتها |
+|--------|---------------------------|
+| **Feature كامل من Figma + API** | الـ 6 إلزامية + figma + api-pipeline + post-feature-review |
+| **Feature UI فقط (لا API)** | الـ 6 إلزامية + figma — تخطي api/bloc لو مفيش cubits |
+| **Cubit/Endpoint جديد** | feature-prompt + bloc-patterns + api-pipeline + coding-standards |
+| **Form + API submit** | feature-prompt + form-api-pipeline + bloc-patterns + widget-efficiency + coding-standards |
+| **Refactor widget موجود** | flutter-patterns + widget-efficiency + coding-standards |
+| **بناء widget جديد في core/widgets** | widget-efficiency + flutter-patterns + coding-standards |
+
+
+## ⚠️ MCP Critical Rules
+
+### Figma MCP:
+- Raw numbers (16, 20) → convert to `AppSize`/`AppPadding`/`AppCircular`
+- **Colors → read `color_manager.dart` FIRST, reuse existing AppColors by purpose** (e.g. dark text → `AppColors.primary`, grey text → `AppColors.hintText`, light bg → `AppColors.fill`). Only add truly new colors with **generic names** — NEVER screen-prefixed (`loginPrimary` ❌)
+- **Font sizes → Figma ≤13sp keep as-is, Figma 14-18sp reduce by 1–2sp, Figma ≥20sp reduce by 2sp** (Figma 12 → `.s12`, Figma 16 → `.s14`, Figma 22 → `.s20`)
+- **Screen-level body padding > 12px → reduce by 2–4px** (Figma 16 → 12 or 14, Figma 20 → 16). ≤ 12px → keep as-is.
+- **RTL Section Verification** — Figma MCP sometimes returns sections mirrored. ALWAYS cross-check with the visual screenshot. Verify: Arabic text starts from RIGHT, horizontal lists/filters start from RIGHT, card images match Figma visual position. Trust screenshot over raw MCP data.
+- **Icon background check** — some AppAssets icons already include their background. Check before wrapping in Container. If icon has built-in bg → use directly. If transparent → add Container bg.
+- App is RTL — read positions from Figma AS-IS, never mirror
+- No `Directionality` widget on layouts (exception: wrapping a single Text widget to fix mirrored text inside complex components like Slider/DropdownButton)
+- No `Icons.*` from Material — use `AppAssets` only
+
+### Postman MCP:
+- Every Entity needs `factory initial()` — mandatory
+- Every `fromJson` field needs `?? defaultValue` or nullable
+- One cubit per endpoint — never merge
+- Check response fully for pagination before starting
+- **List endpoints → MUST be `PaginatedCubit`** (not `AsyncCubit<List<T>>`)
+
+### RTL — Mandatory Check on EVERY Screen:
+- `CrossAxisAlignment.start` → physical RIGHT (use for Arabic text alignment) ✅
+- `CrossAxisAlignment.end` → physical LEFT ✅
+- `AlignmentDirectional.centerStart` → physical RIGHT ✅
+- `PositionedDirectional(start:)` → physical RIGHT ✅
+- `PositionedDirectional(end:)` → physical LEFT ✅
+- Row: first child → physical RIGHT, last child → physical LEFT
+- Never: `Positioned(left/right:)`, `Align(Alignment.centerLeft/Right)`, `EdgeInsets.only(left/right:)`, `TextAlign.left`
+
+---
+
+## PHASE 1 — Audit Before Build
+
+### Check config/ before writing any value:
+- `color_manager.dart` → AppColors
+- `app_sizes.dart` → AppSize, AppPadding, AppMargin, AppCircular, FontSizeManager
+- `assets.gen.dart` → AppAssets
+- `locale_keys.g.dart` → LocaleKeys
+
+### Check core/ before building any widget:
+
+> **See `flutter-base-coding-standards.mdc` sections 8.4 and 11 for full widget/helper/extension inventory.**
+
+**Quick Reference — Must-Use Widgets:**
+- Buttons: `LoadingButton` (async submit), `DefaultButton` (simple)
+- Fields: `CustomTextFiled` (with label), `DefaultTextField` (raw), `AppDropdown<T>`
+- State: `AsyncBlocBuilder` / `AsyncSliverBlocBuilder` / `PaginatedListWidget`
+- Images: `CachedImage` (network), `UploadImageWidget`
+- Scaffold: `DefaultScaffold` (inner screens) — see `scaffold-statusbar.mdc`
+- Dialogs: `successDialog`, `showCustomDialog`, `showDefaultBottomSheet`
+- Icons: `IconWidget` (handles SVG/PNG/Lottie/network)
+- Messages: `MessageUtils.showSnackBar`
+
+**Must-Use Helpers:** `Validators.*`, `InputFormatters.*`, `FormMixin`, `Go.*`, `ApiConstants.*`
+
+**Golden Rule:** If it exists in `core/` or `config/` → use it. Never reinvent.
+
+---
+
+## PHASE 2 — Figma Analysis
+
+### Read ALL screens for the feature:
+1. Main screen (default state)
+2. Empty state
+3. Loading/skeleton state
+4. Error state
+5. All modals & bottom sheets
+6. Success/failure states
+7. Pagination load-more state (if applicable)
+
+### For every Figma value:
+```
+Color hex → match AppColors → add if not found
+Number px → match AppSize/AppPadding/AppMargin → add if not found
+Font size → match FontSizeManager → add if not found
+Icon → match AppAssets → add if not found
+```
+
+---
+
+## PHASE 3 — API / Entity Rules
+
+> **⚠️ If UI_ONLY mode → SKIP this phase entirely.** Create entities with static/dummy data. No API calls. No Postman.
+
+> **See `flutter-base-coding-standards.mdc` section 8.5 for full entity template, fromJson type table, and tryParse rules.**
+
+### ⚠️ Entity Safety Summary (NON-NEGOTIABLE):
+1. **`factory initial()`** — MANDATORY for every entity (Skeletonizer + null-safety)
+2. **`fromJson` with `??` defaults** — String→`''`, int→`0`, double→`0.0`, bool→`false`, List→`[]`, Object→`.initial()`, nullable→no `??`
+3. **`tryParse` ONLY** — NEVER use `int.parse()` or `double.parse()` (crashes on bad data)
+4. **DateTime fields** → `DateTime.tryParse(json['date'] ?? '') ?? DateTime(2000)` — NEVER `DateTime.parse()`
+5. **Enum fields** → `Status.values.firstWhere((e) => e.name == json['status'], orElse: () => Status.initial)` — NEVER without `orElse`
+6. **Nested List<Entity>** → `(json['items'] as List?)?.map((e) => e != null ? Entity.fromJson(e) : Entity.initial()).toList() ?? []` — null-check each element
+7. **One cubit per endpoint** — never merge multiple services in one cubit
+8. **Check response** for pagination before starting
+
+---
+
+## PHASE 4 — Feature Folder Structure
+
+> **كل section / component في الشاشة لازم يكون في ملف منفصل** — مش method في نفس الـ body file.
+> الـ body widget يجمع الـ sections فقط. كل section في ملف خاص.
+
+```
+lib/src/features/feature_name/
+├── entity/
+│   └── feature_name_entity.dart
+└── presentation/
+    ├── imports/
+    │   └── view_imports.dart              ← all imports + part declarations
+    ├── cubits/
+    │   └── feature_name_cubit.dart        ← part of view_imports.dart
+    ├── view/
+    │   └── feature_name_screen.dart       ← part of view_imports.dart
+    └── widgets/
+        ├── feature_name_body.dart         ← layout only — يجمع الـ sections
+        ├── feature_name_header_widget.dart ← ملف منفصل لكل section
+        ├── feature_name_list_widget.dart   ← ملف منفصل
+        └── feature_name_card_widget.dart   ← ملف منفصل
+```
+
+**❌ FORBIDDEN — كتابة كل الـ widgets في ملف الـ body كـ methods:**
+```dart
+// ❌ Everything in one file as _build methods
+class _FeatureBody extends StatelessWidget {
+  Widget _buildHeader() => Container(...);  // NO!
+  Widget _buildFilters() => Row(...);       // NO!
+  Widget _buildList() => ListView(...);     // NO!
+}
+```
+
+**✅ CORRECT — كل section في ملف منفصل:**
+```dart
+// feature_name_body.dart — layout only
+class _FeatureBody extends StatelessWidget {
+  const _FeatureBody();
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(slivers: [
+      const _FeatureHeader().toSliver(),
+      const _FeatureFilterBar().toSliver(),
+      const _FeatureList(),
+    ]);
+  }
+}
+```
+
+---
+
+## PHASE 5 — Cubit Pattern
+
+### Standard Cubit
+
+```dart
+// part of '../imports/view_imports.dart'
+@injectable
+class MyFeatureCubit extends AsyncCubit<List<MyFeatureEntity>> {
+  MyFeatureCubit() : super([]);
+
+  Future<void> fetchItems() async {
+    await executeAsync(
+      operation: () => baseCrudUseCase.call(
+        CrudBaseParams(
+          api: ApiConstants.myEndpoint,
+          httpRequestType: HttpRequestType.get,
+          mapper: (json) => (json['data']['data'] as List)
+              .map((e) => MyFeatureEntity.fromJson(e))
+              .toList(),
+        ),
+      ),
+    );
+  }
+
+  // Local update on delete — NO re-fetch
+  Future<void> deleteItem(int id) async {
+    final result = await baseCrudUseCase.call(CrudBaseParams(
+      api: '${ApiConstants.myEndpoint}/$id',
+      httpRequestType: HttpRequestType.delete,
+      mapper: (_) => state.data..removeWhere((e) => e.id == id),
+    ));
+    result.when(
+      (data) => setSuccess(data: data),
+      (failure) => setError(errorMessage: failure.message, showToast: true),
+    );
+  }
+}
+```
+
+**Pagination (MANDATORY for list screens):**
+```dart
+// List endpoints with standalone screens → ALWAYS PaginatedCubit
+@injectable
+class MyCubit extends PaginatedCubit<ItemEntity> {
+  @override
+  Future<Result<Map<String, dynamic>, Failure>> fetchPageData(int page, {String? key}) async {
+    return baseCrudUseCase.call(CrudBaseParams(
+      api: ApiConstants.myEndpoint,
+      httpRequestType: HttpRequestType.get,
+      queryParameters: ConstantManager.paginateJson(page),
+      mapper: (json) => json,
+    ));
+  }
+
+  @override
+  List<ItemEntity> parseItems(json) =>
+      (json['data'] as List).map((e) => ItemEntity.fromJson(e)).toList();
+
+  @override
+  PaginationMeta parsePagination(json) => PaginationMeta.fromJson(json['pagination']);
+}
+// View: PaginatedListWidget(cubit: ..., itemBuilder: ...)
+```
+> **Exception:** AsyncCubit<List<T>> only for dropdowns, sub-sections, filter chips.
+
+### ⚠️ CRUD Local Update Rule (NON-NEGOTIABLE)
+
+> **NEVER re-fetch the entire list after add/edit/delete.** Always update the local state immediately.
+> The API response from the action (add/edit/delete) contains enough info to update the UI without re-calling the GET service.
+
+**Add (Insert at index 0):**
+```dart
+Future<void> addItem(AddItemParams params) async {
+  final result = await baseCrudUseCase.call(CrudBaseParams(
+    api: ApiConstants.items,
+    httpRequestType: HttpRequestType.post,
+    body: params.toJson(),
+    mapper: (json) => ItemEntity.fromJson(json['data']),
+  ));
+  result.when(
+    (newItem) => setSuccess(data: [newItem, ...state.data]),  // insert at index 0
+    (failure) => setError(errorMessage: failure.message, showToast: true),
+  );
+}
+```
+
+**Edit (copyWith on matching item):**
+```dart
+Future<void> editItem(int id, EditItemParams params) async {
+  final result = await baseCrudUseCase.call(CrudBaseParams(
+    api: '${ApiConstants.items}/$id',
+    httpRequestType: HttpRequestType.put,
+    body: params.toJson(),
+    mapper: (json) => ItemEntity.fromJson(json['data']),
+  ));
+  result.when(
+    (updatedItem) {
+      final updatedList = state.data.map((e) => e.id == id ? updatedItem : e).toList();
+      setSuccess(data: updatedList);
+    },
+    (failure) => setError(errorMessage: failure.message, showToast: true),
+  );
+}
+```
+
+**Delete (removeWhere):**
+```dart
+Future<void> deleteItem(int id) async {
+  final result = await baseCrudUseCase.call(CrudBaseParams(
+    api: '${ApiConstants.items}/$id',
+    httpRequestType: HttpRequestType.delete,
+    mapper: (_) => state.data..removeWhere((e) => e.id == id),
+  ));
+  result.when(
+    (data) => setSuccess(data: data),
+    (failure) => setError(errorMessage: failure.message, showToast: true),
+  );
+}
+```
+
+```dart
+// ❌ FORBIDDEN — re-fetching the entire list after action
+onDeleteSuccess: () => fetchItems()      // wasteful, causes flash
+onAddSuccess: () => fetchItems()         // bad UX, user loses scroll position
+```
+
+---
+
+### RefreshIndicator — MANDATORY on All Data Screens
+
+> Every screen that displays data from API MUST have a `RefreshIndicator` to allow pull-to-refresh.
+
+```dart
+// ✅ CORRECT — list screen with RefreshIndicator
+RefreshIndicator(
+  onRefresh: () => context.read<MyCubit>().fetchItems(),
+  child: ListView.builder(
+    physics: const AlwaysScrollableScrollPhysics(),
+    itemCount: items.length,
+    itemBuilder: (_, i) => ItemCard(item: items[i]),
+  ),
+)
+
+// ✅ For screens with CustomScrollView
+RefreshIndicator(
+  onRefresh: () => Future.wait([
+    context.read<BannersCubit>().fetchBanners(),
+    context.read<CategoriesCubit>().fetchCategories(),
+  ]),
+  child: CustomScrollView(
+    physics: const AlwaysScrollableScrollPhysics(),
+    slivers: [...],
+  ),
+)
+
+// ❌ FORBIDDEN — no refresh capability
+ListView.builder(itemCount: items.length, itemBuilder: ...)
+```
+
+---
+
+### Empty Sections → Hide When No Data (Multi-Section Screens)
+
+> When a screen has multiple sections, each with its own API service, **hide sections that return empty data** so the screen looks clean.
+
+```dart
+// ✅ CORRECT — section hidden when empty
+AsyncBlocBuilder<BannersCubit, List<BannerEntity>>(
+  builder: (context, banners) {
+    if (banners.isEmpty) return const SizedBox.shrink();  // hidden!
+    return BannerCarousel(banners: banners);
+  },
+  skeletonBuilder: (_) => const BannerSkeleton(),
+)
+
+// ❌ WRONG — showing empty section or EmptyWidget inside a multi-section screen
+AsyncBlocBuilder<BannersCubit, List<BannerEntity>>(
+  builder: (context, banners) {
+    if (banners.isEmpty) return EmptyWidget(title: 'No banners');  // ugly in multi-section
+    return BannerCarousel(banners: banners);
+  },
+)
+```
+
+**Rule:** `EmptyWidget` is for **full-screen empty states** (single-service screens). For sections within a multi-service screen, use `SizedBox.shrink()` to hide.
+
+**لو كل الـ sections فاضية؟** → اعرض `EmptyWidget` واحد على مستوى الشاشة كلها:
+```dart
+// Check if ALL sections are empty → show full-screen empty
+if (banners.isEmpty && categories.isEmpty && products.isEmpty) {
+  return EmptyWidget(title: LocaleKeys.noContent.tr());
+}
+```
+
+---
+
+### Isolate for Heavy Screens (Performance Optimization)
+
+> When a screen has **many concurrent API calls** (e.g. Home screen with 4+ services), consider using `compute()` / `Isolate` for heavy JSON parsing to prevent UI jank.
+
+```dart
+// ✅ For screens with many services (home, dashboard, etc.)
+// Use compute() for heavy parsing in the mapper
+mapper: (json) => compute(_parseItems, json),
+
+// Standalone parsing function (must be top-level or static)
+static List<ItemEntity> _parseItems(Map<String, dynamic> json) {
+  return (json['data']['data'] as List)
+      .map((e) => ItemEntity.fromJson(e))
+      .toList();
+}
+```
+
+**When to use Isolate:**
+- Screen has 4+ concurrent API calls
+- Each response has large lists (20+ items with nested objects)
+- User reports jank/freeze during loading
+
+---
+
+## PHASE 6 — Localization
+
+```
+1. Extract all text from Figma
+2. Add to assets/translations/lang.json (snake_case keys)
+3. Run: dart run generate/strings/main.dart
+4. Use LocaleKeys.xxx.tr() in all widgets
+```
+
+```dart
+// ✅
+Text(LocaleKeys.featureTitle.tr())
+
+// ❌
+Text('عنوان الصفحة')
+```
+
+---
+
+## PHASE 7 — Pre-Delivery Checklist
+
+```
+Design & Tokens:
+□ No raw Color(), Icons.*, SizedBox(N), TextStyle() — use AppColors, AppAssets, AppSize, TextStyleEx
+□ Font sizes ≤13sp kept as-is, 14+ reduced 1–2sp from Figma | Screen body padding > 12px reduced 2–4px
+□ All text uses LocaleKeys.xxx.tr() | Design matches Figma 100%
+
+Entity & API:
+□ Every entity has factory initial() + fromJson with ?? defaults + tryParse (never parse)
+□ One cubit per endpoint | Part-of system in view_imports.dart
+□ Local update on add/edit/delete (never re-fetch) | ApiConstants for all URLs
+□ List endpoints use PaginatedCubit (not AsyncCubit<List>) for standalone screens
+
+RTL (see rtl-arabic skill for full rules):
+□ No Positioned(left/right), Align(centerLeft/Right), EdgeInsets.only(left/right), TextAlign.left
+□ CrossAxisAlignment.start for text alignment | Row: RIGHT element = FIRST child
+□ No Directionality on layouts (single Text exception only) | Visual test: titles on RIGHT
+
+Core Widgets (see flutter-base-coding-standards.mdc section 11):
+□ LoadingButton, CustomTextFiled, AppDropdown, AsyncBlocBuilder, CachedImage, Go.xxx
+□ DefaultScaffold (inner) | Scaffold+SafeArea (auth) | Status bar synced
+
+Forms:
+□ FormMixin + validateAndScroll() | Validators.* + InputFormatters.* | .toEnglishNumbers()
+
+Scroll & Performance:
+□ Multi-section → CustomScrollView + Slivers (no shrinkWrap) | RefreshIndicator on data screens
+□ Sliver sections: widget returns **Box** (Column, etc.) and parent uses `.toSliver()` once — never double-wrap (SliverToBoxAdapter expects RenderBox, not RenderSliver)
+□ Empty sections → SizedBox.shrink() | Heavy screens (4+ APIs) → compute()
+
+Widget Splitting (MANDATORY):
+□ Body = layout only — no _buildXxx() methods returning 10+ lines
+□ Every section/card in SEPARATE file | Each added as part in view_imports.dart
+
+Clean Code (MANDATORY):
+□ No unused imports | No unused optional parameters
+□ const on every widget/constructor that can be const
+□ Spacing: .szH/.szW only (no SizedBox) | Padding: extensions only (no Padding widget)
+□ Models/enums in entity/ folder (no helper methods in widget classes)
+□ Dropdown/small widget API → isolated BlocBuilder (not wrapping whole screen)
+□ All text from LocaleKeys — no hardcoded Arabic/English strings
+□ AppBar/BottomSheet/Dialog content checked for RTL correctness
+
+Shared Widget Reuse (CRITICAL):
+□ Searched app_shared/ + existing features before creating new widget
+□ No duplicate cards across features | Optional params for minor variations
+```
