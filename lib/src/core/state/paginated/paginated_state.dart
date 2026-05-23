@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../extensions/base_state.dart';
+import '../../shared/extensions/base_state.dart';
 import '../../network/error/failures.dart';
 import 'paginated_data.dart';
 

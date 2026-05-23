@@ -4,7 +4,7 @@ import 'package:injectable/injectable.dart';
 import '../../../../config/language/locale_keys.g.dart';
 import '../../../../config/res/config_imports.dart';
 import '../../../network/error/failures.dart';
-import '../../../helpers/cache_service.dart';
+import '../../helpers/cache_service.dart';
 import '../../../state/async/async_cubit.dart';
 
 @injectable

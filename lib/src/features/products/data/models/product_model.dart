@@ -1,4 +1,4 @@
-import '../../../../core/extensions/json_extensions.dart';
+import '../../../../core/shared/extensions/json_extensions.dart';
 
 /// DTO mirroring the JSON shape returned by the API.
 ///

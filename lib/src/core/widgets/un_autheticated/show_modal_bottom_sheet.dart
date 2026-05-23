@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../extensions/context_extension.dart';
-import '../../extensions/text_style_extensions.dart';
-import '../../extensions/widgets/widget_extentions.dart';
+import '../../shared/extensions/context_extension.dart';
+import '../../shared/extensions/text_style_extensions.dart';
+import '../../shared/extensions/widgets/widget_extentions.dart';
  
 Future<T?> showAppModalBottomSheet<T>({
   required BuildContext context,

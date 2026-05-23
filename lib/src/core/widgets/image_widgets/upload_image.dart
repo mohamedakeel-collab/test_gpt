@@ -2,8 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../config/res/config_imports.dart';
-import '../../extensions/widgets/widget_extentions.dart';
-import '../../helpers/image_helper.dart';
+import '../../shared/extensions/widgets/widget_extentions.dart';
+import '../../shared/helpers/image_helper.dart';
 import '../fields/text_fields/default_text_field.dart';
 import 'cached_image.dart';
 

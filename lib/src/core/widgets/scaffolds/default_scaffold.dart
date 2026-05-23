@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../../config/res/config_imports.dart';
-import '../../extensions/text_style_extensions.dart';
+import '../../shared/extensions/text_style_extensions.dart';
 import 'arrow_widget.dart';
 
 class DefaultScaffold extends StatelessWidget {

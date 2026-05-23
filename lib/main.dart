@@ -1,5 +1,4 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:easy_logger/easy_logger.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +10,7 @@ import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
 import 'src/app.dart';
 import 'src/config/language/languages.dart';
-import 'src/core/helpers/helpers.dart';
+import 'src/core/shared/helpers/helpers.dart';
 import 'src/core/network/auth/token_storage.dart';
 import 'src/core/navigation/Constants/imports_constants.dart';
 import 'src/core/navigation/go.dart';
@@ -22,7 +21,7 @@ import 'src/core/network/network_info.dart';
 import 'src/core/network/offline/offline_queue_manager.dart';
 import 'src/core/notifications/notification_manager.dart';
 import 'src/core/notifications/notification_router.dart';
-import 'src/core/shared/bloc_observer.dart';
+import 'src/core/shared/observer/bloc_observer.dart';
 import 'src/core/shared/service_locators/setup_service_locators.dart';
 import 'src/core/widgets/handling_views/exeption_view.dart';
 
@@ -77,13 +76,6 @@ void main() async {
   if (kReleaseMode) {
     ErrorWidget.builder =
         (FlutterErrorDetails details) => const ExceptionView();
-  }
-
-  if (kDebugMode) {
-    EasyLocalization.logger.enableLevels = [
-      LevelMessages.error,
-      LevelMessages.warning,
-    ];
   }
 
   Helpers.changeStatusbarColor(statusBarColor: Colors.transparent);

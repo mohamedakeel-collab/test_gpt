@@ -2,9 +2,9 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../../../config/res/assets.gen.dart';
 import '../../../config/res/config_imports.dart';
-import '../../extensions/context_extension.dart';
-import '../../extensions/text_style_extensions.dart';
- import '../../extensions/widgets/widget_extentions.dart';
+import '../../shared/extensions/context_extension.dart';
+import '../../shared/extensions/text_style_extensions.dart';
+ import '../../shared/extensions/widgets/widget_extentions.dart';
 import '../../navigation/navigator.dart';
 
 enum SelectArrowStyleEnum { showMore, arrowBack, arrowRight }

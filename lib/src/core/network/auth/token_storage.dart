@@ -1,6 +1,6 @@
 import 'package:injectable/injectable.dart';
 
-import '../../helpers/cache_service.dart';
+import '../../shared/helpers/cache_service.dart';
 
 /// Source of truth for the user's access + refresh tokens.
 ///

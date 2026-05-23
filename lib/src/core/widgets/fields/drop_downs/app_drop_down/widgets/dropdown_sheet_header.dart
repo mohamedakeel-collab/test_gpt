@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../../config/res/config_imports.dart';
-import '../../../../../extensions/context_extension.dart';
-import '../../../../../extensions/text_style_extensions.dart';
+import '../../../../../shared/extensions/context_extension.dart';
+import '../../../../../shared/extensions/text_style_extensions.dart';
 
 /// Header row inside a dropdown sheet: title + optional trailing widget
 /// + close button.

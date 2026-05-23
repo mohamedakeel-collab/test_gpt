@@ -3,10 +3,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 import '../../../config/res/assets.gen.dart';
 import '../../../config/res/config_imports.dart';
-import '../../../core/extensions/context_extension.dart';
-import '../../../core/extensions/text_style_extensions.dart';
-import '../../extensions/widgets/margin_extention.dart';
-import '../../extensions/widgets/padding_extension.dart';
+import '../../shared/extensions/context_extension.dart';
+import '../../shared/extensions/text_style_extensions.dart';
+import '../../shared/extensions/widgets/margin_extention.dart';
+import '../../shared/extensions/widgets/padding_extension.dart';
 
 class EmptyWidget extends StatelessWidget {
   final String? path;

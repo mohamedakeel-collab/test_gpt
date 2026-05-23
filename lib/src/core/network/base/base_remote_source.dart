@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
-import '../../extensions/string_extension.dart';
+import '../../shared/extensions/string_extension.dart';
 import '../cancel/request_cancellation_manager.dart';
 import '../dio_client.dart';
 import '../error/failures.dart';

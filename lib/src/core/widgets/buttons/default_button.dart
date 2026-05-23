@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../config/res/config_imports.dart';
-import '../../extensions/context_extension.dart';
+import '../../shared/extensions/context_extension.dart';
 
 class DefaultButton extends StatelessWidget {
   final String? title;

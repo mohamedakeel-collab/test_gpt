@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../config/res/config_imports.dart';
-import '../../extensions/widgets/widget_extentions.dart';
+import '../../shared/extensions/widgets/widget_extentions.dart';
 
 class AnimatedButton extends StatefulWidget {
   const AnimatedButton({

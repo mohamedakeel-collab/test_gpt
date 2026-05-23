@@ -32,7 +32,8 @@ dependencies:
 #--------------------- Localization & Internationalization -----------------------
   intl: 0.20.2
   easy_localization: ^3.0.8
-  easy_logger: ^0.0.2
+  # easy_logger dropped — it only existed to silence easy_localization's
+  # debug-mode info chatter. Not worth a transitive dependency for that.
 
 #--------------------- Tools -----------------------
   image_picker: ^1.1.2

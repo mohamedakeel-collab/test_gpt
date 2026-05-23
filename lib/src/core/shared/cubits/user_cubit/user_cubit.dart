@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../config/res/config_imports.dart';
-import '../../../helpers/cache_service.dart';
+import '../../helpers/cache_service.dart';
 import '../../../network/auth/token_storage.dart';
 import '../../models/user_model.dart';
 

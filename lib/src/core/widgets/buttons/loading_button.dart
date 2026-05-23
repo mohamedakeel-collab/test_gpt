@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../../config/res/config_imports.dart';
-import '../../extensions/context_extension.dart';
- import '../../extensions/text_style_extensions.dart';
-import '../../extensions/widgets/widget_extentions.dart';
+import '../../shared/extensions/context_extension.dart';
+ import '../../shared/extensions/text_style_extensions.dart';
+import '../../shared/extensions/widgets/widget_extentions.dart';
 import 'custom_animated_button.dart';
 
 class LoadingButton extends StatelessWidget {

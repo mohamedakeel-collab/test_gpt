@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../extensions/base_state.dart';
+import '../../shared/extensions/base_state.dart';
 import '../../network/error/failures.dart';
 import 'paginated_data.dart';
 import 'paginated_state.dart';

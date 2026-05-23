@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../config/res/config_imports.dart';
-import '../helpers/loading_manager.dart';
+import '../shared/helpers/loading_manager.dart';
 
 /// Loading affordances used across the app.
 ///

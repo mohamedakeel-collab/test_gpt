@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../config/language/locale_keys.g.dart';
 import '../../config/res/config_imports.dart';
-import '../extensions/base_state.dart';
-import '../extensions/text_style_extensions.dart';
+import '../shared/extensions/base_state.dart';
+import '../shared/extensions/text_style_extensions.dart';
 import '../navigation/navigator.dart';
 
 class MessageUtils {

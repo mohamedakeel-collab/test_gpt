@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 import '../../../config/res/assets.gen.dart';
 import '../../../config/res/config_imports.dart';
-import '../../../core/extensions/context_extension.dart';
-import '../../../core/extensions/text_style_extensions.dart';
+import '../../shared/extensions/context_extension.dart';
+import '../../shared/extensions/text_style_extensions.dart';
 import '../../../core/navigation/navigator.dart';
 import '../pickers/custom_dialog.dart';
 

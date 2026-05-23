@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../config/res/config_imports.dart';
-import '../../extensions/text_style_extensions.dart';
+import '../../shared/extensions/text_style_extensions.dart';
 import 'animated_button.dart';
 import 'navigation_bar_entity.dart';
 
