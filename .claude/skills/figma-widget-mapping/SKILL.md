@@ -137,7 +137,7 @@ description: Comprehensive mapping from Figma MCP elements (Frame, Auto-layout, 
 | Figma State/Variant | Flutter Implementation |
 |---------------------|----------------------|
 | Default | `AsyncBlocBuilder` -> `builder:` |
-| Loading | `AsyncBlocBuilder` -> `skeletonBuilder:` with `Entity.initial()` |
+| Loading | `AsyncBlocBuilder` -> `loadingBuilder:` with `Entity.initial()` |
 | Error | `AsyncBlocBuilder` -> `errorBuilder:` with `ErrorView` |
 | Empty | Inside `builder:` -> `if (data.isEmpty) return EmptyWidget()` |
 | Disabled | Widget with `opacity: 0.5` + `IgnorePointer` |

@@ -64,7 +64,7 @@ Container(
 ```
 1. وفّر الـ cubit بـ BlocProvider
 2. اقرا الـ state بـ context.watch (مش AsyncBlocBuilder!)
-3. pass state.data كـ items + state.isLoading للـ AppDropdown
+3. pass state.data كـ items + state is AsyncLoading للـ AppDropdown
 4. ❌ لا تلف الـ AppDropdown في AsyncBlocBuilder/BlocBuilder
 5. ❌ لا تضيف errorBuilder أو error UI على الـ dropdown
 6. لو فشلت الـ service → items فاضي، الـ user يقفل ويرجع
@@ -219,7 +219,7 @@ const TextStyle().setHintColor.s12.regular       // Figma 14sp hint
 | Text input (no label) | `DefaultTextField(controller, hint)` — raw base field, use for search bars |
 | Dropdown | `AppDropdown<T>` |
 | Shadow | `boxShadow: [AppColors.containerShadow]` |
-| Loading state | `AsyncBlocBuilder` with `skeletonBuilder` |
+| Loading state | `AsyncBlocBuilder` with `loadingBuilder` |
 
 
 ## Phase 4: Pixel Accuracy Checklist

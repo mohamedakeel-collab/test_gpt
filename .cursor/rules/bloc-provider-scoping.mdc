@@ -198,7 +198,7 @@ class _ProductDetailBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<DeleteProductCubit, AsyncState<BaseModel?>>(
       listener: (context, state) {
-        if (state.isSuccess) Go.back(true);
+        if (state is AsyncSuccess) Go.back(true);
       },
       child: /* body content */,
     );

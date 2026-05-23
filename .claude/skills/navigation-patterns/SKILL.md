@@ -101,7 +101,7 @@ Future<void> _goToCreate(BuildContext context) async {
 // Inside CreateProductScreen's BlocListener:
 BlocListener<CreateProductCubit, AsyncState<ProductEntity>>(
   listener: (context, state) {
-    if (state.isSuccess && state.data != null) {
+    if (state is AsyncSuccess && state.data != null) {
       Go.back(state.data);  // ← Return the new entity to caller
     }
   },
@@ -111,7 +111,7 @@ BlocListener<CreateProductCubit, AsyncState<ProductEntity>>(
 // 3. CUBIT: Local update method in list cubit
 class ProductsCubit extends AsyncCubit<List<ProductEntity>> {
   void addProduct(ProductEntity product) {
-    setSuccess(data: [product, ...state.data]);
+    setData([product, ...(lastData ?? const [])]);
   }
 }
 ```
@@ -129,14 +129,14 @@ Future<void> _goToEdit(BuildContext context, ProductEntity product) async {
 
 // DESTINATION: BlocListener
 listener: (context, state) {
-  if (state.isSuccess && state.data != null) {
+  if (state is AsyncSuccess && state.data != null) {
     Go.back(state.data);  // ← Return updated entity
   }
 },
 
 // CUBIT: Local update
 void updateProduct(ProductEntity updated) {
-  setSuccess(data: state.data.map((e) => e.id == updated.id ? updated : e).toList());
+  setData((lastData ?? const []).map((e) => e.id == updated.id ? updated : e).toList());
 }
 ```
 
@@ -146,7 +146,7 @@ void updateProduct(ProductEntity updated) {
 // DETAIL SCREEN: After delete success
 BlocListener<DeleteProductCubit, AsyncState<BaseModel?>>(
   listener: (context, state) {
-    if (state.isSuccess) {
+    if (state is AsyncSuccess) {
       Go.back(true);  // ← Signal "item was deleted"
     }
   },
@@ -162,7 +162,7 @@ Future<void> _goToDetail(BuildContext context, ProductEntity product) async {
 
 // CUBIT
 void removeProduct(String id) {
-  setSuccess(data: state.data.where((e) => e.id != id).toList());
+  setData((lastData ?? const []).where((e) => e.id != id).toList());
 }
 ```
 
@@ -238,7 +238,7 @@ class _HomeTabsScreenState extends State<HomeTabsScreen> {
 // Login success → replace with Home (user can't go back to login)
 BlocListener<LoginCubit, AsyncState<UserEntity>>(
   listener: (context, state) {
-    if (state.isSuccess) {
+    if (state is AsyncSuccess) {
       Go.offAll(const HomeTabsScreen());  // ← Clears entire stack
     }
   },

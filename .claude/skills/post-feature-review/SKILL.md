@@ -46,12 +46,12 @@ description: Automatic code review after completing any feature — finds and fi
 ### 2.1 Clean Architecture Layers
 - [ ] Dio / HTTP مستخدم في presentation → **FORBIDDEN** (data layer فقط)
 - [ ] `BuildContext` مستخدم في cubit أو domain → **FORBIDDEN**
-- [ ] Hardcoded endpoint string بدل `ApiConstants.xxx` → **FORBIDDEN**
+- [ ] Hardcoded endpoint string بدل `ApiEndpoints.xxx` → **FORBIDDEN**
 - [ ] Manual construction لـ repos/usecases في UI بدل `injector<T>()`
 
 ### 2.2 Part-of System
-- [ ] كل ملف في الـ feature فيه `part of '../imports/view_imports.dart'`
-- [ ] كل ملف جديد مضاف كـ `part` في `view_imports.dart`
+- [ ] كل ملف في الـ feature فيه `part of '../imports/<feature>_imports.dart'`
+- [ ] كل ملف جديد مضاف كـ `part` في `<feature>_imports.dart`
 
 ### 2.3 DI & Injectable
 - [ ] كل Cubit معلّم بـ `@injectable`
@@ -63,7 +63,7 @@ description: Automatic code review after completing any feature — finds and fi
 - [ ] Cubits في `presentation/cubits/`
 - [ ] Screen في `presentation/view/`
 - [ ] Widgets في `presentation/widgets/`
-- [ ] Imports في `presentation/imports/view_imports.dart`
+- [ ] Imports في `presentation/imports/<feature>_imports.dart`
 
 ---
 

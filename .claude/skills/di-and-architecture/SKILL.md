@@ -55,11 +55,11 @@ dart run build_runner build --delete-conflicting-outputs
 - أي كلاس فيه `Dio` أو `http.get` → لازم يكون في data layer فقط
 - أي كلاس فيه `BuildContext` → لازم يكون في presentation فقط
 
-### 4. Endpoints — `ApiConstants` فقط
+### 4. Endpoints — `ApiEndpoints` فقط
 
 ```dart
 // ✅ CORRECT
-api: ApiConstants.products,
+api: ApiEndpoints.products,
 
 // ❌ WRONG — hardcoded string
 api: '/api/v1/products',
@@ -83,7 +83,7 @@ api: '/api/v1/products',
 - [ ] كل Screen تستخدم `injector<MyCubit>()` داخل `BlocProvider`
 - [ ] لا يوجد constructor manual لـ repos/usecases في UI
 - [ ] HTTP/Dio غير مستخدم في presentation
-- [ ] `ApiConstants` هو المصدر الوحيد للـ endpoints
+- [ ] `ApiEndpoints` هو المصدر الوحيد للـ endpoints
 - [ ] تم تشغيل `build_runner` بعد إضافة injectable جديد
 
 ## Output
@@ -91,5 +91,5 @@ api: '/api/v1/products',
 بعد تشغيل هذا الـ skill:
 - لخّص أي Cubits تم تعديلها لتستخدم `injector`.
 - أماكن تم نقل `Dio` منها إلى data layer.
-- أي endpoints تم نقلها لـ `ApiConstants`.
+- أي endpoints تم نقلها لـ `ApiEndpoints`.
 

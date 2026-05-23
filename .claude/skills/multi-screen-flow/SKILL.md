@@ -51,7 +51,7 @@ lib/src/features/products/
 │   └── product_params.dart         ← Form params for create/edit
 ├── presentation/
 │   ├── imports/
-│   │   └── view_imports.dart
+│   │   └── <feature>_imports.dart
 │   ├── cubits/
 │   │   ├── products_cubit.dart     ← List (AsyncCubit or PaginatedCubit)
 │   │   ├── product_detail_cubit.dart
@@ -111,7 +111,7 @@ class _ProductsBody extends StatelessWidget {
           ),
         );
       },
-      skeletonBuilder: (_) => ListView.builder(
+      loadingBuilder: (_) => ListView.builder(
         itemCount: 8,
         itemBuilder: (_, __) => _ProductCard(product: ProductEntity.initial()),
       ),
@@ -176,7 +176,7 @@ class _ProductDetailBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<DeleteProductCubit, AsyncState<BaseModel?>>(
       listener: (context, state) {
-        if (state.isSuccess) {
+        if (state is AsyncSuccess) {
           Go.back(true);
         }
       },
@@ -201,7 +201,7 @@ class _ProductDetailBody extends StatelessWidget {
   Future<void> _goToEdit(BuildContext context, ProductEntity product) async {
     final updated = await Go.to<ProductEntity>(EditProductScreen(product: product));
     if (updated != null && context.mounted) {
-      context.read<ProductDetailCubit>().setSuccess(data: updated);
+      context.read<ProductDetailCubit>().setData(updated);
     }
   }
 
@@ -253,7 +253,7 @@ class _CreateProductBodyState extends State<_CreateProductBody> with FormMixin {
   Widget build(BuildContext context) {
     return BlocListener<CreateProductCubit, AsyncState<ProductEntity>>(
       listener: (context, state) {
-        if (state.isSuccess && state.data != null) {
+        if (state is AsyncSuccess && state.data != null) {
           Go.back(state.data);
         }
       },
@@ -318,7 +318,7 @@ class _EditProductBodyState extends State<_EditProductBody> with FormMixin {
   Widget build(BuildContext context) {
     return BlocListener<EditProductCubit, AsyncState<ProductEntity>>(
       listener: (context, state) {
-        if (state.isSuccess && state.data != null) {
+        if (state is AsyncSuccess && state.data != null) {
           Go.back(state.data);
         }
       },
@@ -353,7 +353,7 @@ class _EditProductBodyState extends State<_EditProductBody> with FormMixin {
 | Action | Source Screen | Return Value | Target Screen Action |
 |--------|-------------|-------------|---------------------|
 | Create | CreateScreen | `ProductEntity` (from API response) | List: `addProduct(entity)` — insert at index 0 |
-| Edit | EditScreen | `ProductEntity` (from API response) | Detail: `setSuccess(data: entity)` |
+| Edit | EditScreen | `ProductEntity` (from API response) | Detail: `setData(entity)` |
 | Delete | DetailScreen | `bool` (true) | List: `removeProduct(id)` |
 | Edit from List | EditScreen | `ProductEntity` | List: `updateProduct(entity)` |
 
@@ -366,19 +366,19 @@ class _EditProductBodyState extends State<_EditProductBody> with FormMixin {
 class ProductsCubit extends AsyncCubit<List<ProductEntity>> {
   ProductsCubit() : super([]);
 
-  Future<void> fetchProducts() async { /* ... executeAsync ... */ }
+  Future<void> fetchProducts() async { /* ... execute ... */ }
 
   // Local CRUD operations — NEVER re-fetch
   void addProduct(ProductEntity product) {
-    setSuccess(data: [product, ...state.data]);
+    setData([product, ...(lastData ?? const [])]);
   }
 
   void updateProduct(ProductEntity updated) {
-    setSuccess(data: state.data.map((e) => e.id == updated.id ? updated : e).toList());
+    setData((lastData ?? const []).map((e) => e.id == updated.id ? updated : e).toList());
   }
 
   void removeProduct(String id) {
-    setSuccess(data: state.data.where((e) => e.id != id).toList());
+    setData((lastData ?? const []).where((e) => e.id != id).toList());
   }
 }
 ```

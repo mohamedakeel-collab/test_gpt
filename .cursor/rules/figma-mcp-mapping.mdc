@@ -1,4 +1,6 @@
 ---
+description: Figma MCP → Flutter_Base token mapping cheatsheet. Maps Figma styles (colors, spacing, typography, radii) to the project's AppColors / AppSize / AppPadding / AppCircular / TextStyle extensions.
+globs: ["lib/**/*.dart"]
 ---
 
 # Figma MCP → Flutter_Base Token Mapping

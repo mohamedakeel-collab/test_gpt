@@ -26,12 +26,13 @@ description: AsyncCubit templates, CRUD local updates, AsyncBlocBuilder, Paginat
 // ❌ FORBIDDEN — لف الـ body كله في BlocConsumer "لمجرد الراحة"
 BlocConsumer<MyCubit, AsyncState<MyData>>(
   listener: (ctx, state) {
-    if (state.isError) MessageUtils.showSnackBar(...);
+    if (state is AsyncFailure) MessageUtils.showSnackBar(...);
   },
-  builder: (ctx, state) {
-    if (state.isLoading) return const SkeletonView();
-    if (state.isError) return const ErrorView();
-    return _BodyContent(data: state.data);
+  builder: (ctx, state) => switch (state) {
+    AsyncLoading() => const SkeletonView(),
+    AsyncFailure() => const ErrorView(),
+    AsyncSuccess(:final data) => _BodyContent(data: data),
+    AsyncInitial() => const SizedBox.shrink(),
   },
 )
 // المشكلة: الـ AsyncBlocBuilder بيعمل نفس الـ build automatically،
@@ -60,17 +61,22 @@ BlocListener<SubmitCubit, AsyncState<bool>>(
 ```dart
 // ✅ الافتراضي — AsyncBlocBuilder بيعمل كل حاجة
 AsyncBlocBuilder<ProductsCubit, List<ProductEntity>>(
+  onRetry: () => context.read<ProductsCubit>().fetchProducts(),
+  loadingBuilder: (_) => const ProductsSkeleton(),                    // optional
+  errorBuilder:   (_, Failure f) => _ProductsError(failure: f),       // optional
   builder: (ctx, products) => _ProductsList(products: products),
-  skeletonBuilder: (_) => const ProductsSkeleton(),
 )
 
 // ✅ BlocListener — لـ side effect واضح (navigation/snackbar/dialog)
 BlocListener<SubmitCubit, AsyncState<bool>>(
-  listenWhen: (prev, curr) => prev.status != curr.status,  // ← optimize
+  listenWhen: (prev, curr) => prev.runtimeType != curr.runtimeType,    // sealed-state check
   listener: (ctx, state) {
-    if (state.isSuccess) {
+    if (state is AsyncSuccess<bool>) {
       MessageUtils.showSnackBar(message: LocaleKeys.saved.tr(), baseStatus: BaseStatus.success);
       Go.back();
+    }
+    if (state is AsyncFailure<bool>) {
+      MessageUtils.showSnackBar(message: state.failure.message, baseStatus: BaseStatus.error);
     }
   },
   child: LoadingButton(
@@ -82,17 +88,16 @@ BlocListener<SubmitCubit, AsyncState<bool>>(
 
 // ✅ BlocSelector — لو محتاج part من state بس
 BlocSelector<CartCubit, AsyncState<CartEntity>, int>(
-  selector: (state) => state.data.itemCount,
+  selector: (state) => state is AsyncSuccess<CartEntity> ? state.data.itemCount : 0,
   builder: (_, count) => BadgeIconWidget(badgeCount: count, child: const _CartIcon()),
 )
 
 // ✅ Split listener + builder — أنضف من BlocConsumer
-BlocListener<MyCubit, MyState>(
-  listenWhen: (p, c) => p.errorMessage != c.errorMessage,
-  listener: (ctx, s) => _showError(ctx, s.errorMessage),
-  child: BlocBuilder<MyCubit, MyState>(
-    buildWhen: (p, c) => p.data != c.data,
-    builder: (_, s) => _Body(data: s.data),
+BlocListener<MyCubit, AsyncState<MyData>>(
+  listenWhen: (p, c) => c is AsyncFailure && p is! AsyncFailure,       // only fire on new failures
+  listener: (ctx, s) => _showError(ctx, (s as AsyncFailure).failure),
+  child: AsyncBlocBuilder<MyCubit, MyData>(
+    builder: (_, data) => _Body(data: data),
   ),
 )
 ```
@@ -113,113 +118,210 @@ BlocListener<MyCubit, MyState>(
 
 ## Architecture Overview
 
-All cubits that do API calls extend `AsyncCubit<T>`. Never create raw `Cubit` for data-fetching.
+All cubits that load/manage server data extend **`AsyncCubit<T>`** (from `core/state/async/async_cubit.dart`). The Cubit depends on **UseCases** (`domain/usecases/`) — **never on `BaseRemoteSource` or Repository directly**. This keeps the presentation layer testable and the dependency direction pointing inward.
+
+```
+View ── reads ──▶ Cubit ── calls ──▶ UseCase ── calls ──▶ Repository(interface) ◀── impl ── DataSource(extends BaseRemoteSource)
+```
+
+The cubit holds **server state only**. Ephemeral UI state (TextEditingControllers, ScrollControllers, ValueNotifiers, FocusNodes, selected filters, search text) lives in **`presentation/controllers/<feature>_view_controller.dart`** — never in the cubit. See `coding-standards` section 22 and `flutter-patterns`.
 
 ---
 
-## AsyncCubit — Base Pattern
+## AsyncCubit — Base Class API
 
 ```dart
 abstract class AsyncCubit<T> extends Cubit<AsyncState<T>> {
-  // Built-in: setLoading(), setSuccess(data), setError(msg), reset(), updateData()
-  // Built-in: executeAsync(operation, successEmitter, showErrorToast)
-  // Built-in: baseCrudUseCase (auto-injected)
+  AsyncCubit() : super(const AsyncInitial());
+
+  /// Last successful payload — kept across loading/error states so the UI can render
+  /// the old data while refreshing.
+  T? get lastData;
+
+  /// Run an async call. Emits AsyncLoading(previous: lastData) → AsyncSuccess(data)
+  /// or AsyncFailure(failure, previous: lastData) by folding the Either.
+  /// `CancelledFailure` is silent (a newer call superseded this one).
+  Future<void> execute(Future<Either<Failure, T>> Function() call);
+
+  /// Local update without re-fetching (CRUD optimism). Emits AsyncSuccess(data).
+  void setData(T data);
+
+  /// Force a failure state (e.g. a validation error you composed locally).
+  void setFailure(Failure failure);
 }
 ```
 
-## AsyncState<T> — Built-in States
+## AsyncState<T> — Sealed (Exhaustive)
 
 ```dart
-state.status        // BaseStatus enum: initial, loading, loadingMore, success, error
-state.data          // T
-state.errorMessage  // String?
-state.isInitial / state.isLoading / state.isSuccess / state.isError / state.isLoadingMore
+// core/state/async/async_state.dart
+sealed class AsyncState<T> { const AsyncState(); }
+
+final class AsyncInitial<T> extends AsyncState<T> { const AsyncInitial(); }
+
+final class AsyncLoading<T> extends AsyncState<T> {
+  final T? previous;       // last successful payload, for "loading while populated"
+  const AsyncLoading({this.previous});
+}
+
+final class AsyncSuccess<T> extends AsyncState<T> {
+  final T data;
+  const AsyncSuccess(this.data);
+}
+
+final class AsyncFailure<T> extends AsyncState<T> {
+  final Failure failure;
+  final T? previous;       // last successful payload, for "error while populated"
+  const AsyncFailure(this.failure, {this.previous});
+}
 ```
+
+**Pattern matching in the UI:**
+```dart
+final label = switch (state) {
+  AsyncInitial() => '',
+  AsyncLoading() => 'Loading…',
+  AsyncSuccess(:final data) => 'Got ${data.length}',
+  AsyncFailure(:final failure) => failure.message,
+};
+```
+
+> Most of the time you don't pattern-match manually — `AsyncBlocBuilder` does it for you (see below).
 
 ---
 
 ## Standard Cubit Template
 
 ```dart
+// presentation/cubits/products_cubit.dart
+part of '../imports/products_imports.dart';
+
 @injectable
 class ProductsCubit extends AsyncCubit<List<ProductEntity>> {
-  ProductsCubit() : super([]);
+  ProductsCubit(this._getProducts, this._createProduct, this._deleteProduct);
 
-  Future<void> fetchProducts() async {
-    await executeAsync(
-      operation: () async => baseCrudUseCase.call(CrudBaseParams(
-        api: ApiConstants.products,
-        httpRequestType: HttpRequestType.get,
-        mapper: (json) => (json['data']['data'] as List)
-            .map((e) => ProductEntity.fromJson(e)).toList(),
-      )),
-    );
-  }
+  final GetProductsUseCase _getProducts;
+  final CreateProductUseCase _createProduct;
+  final DeleteProductUseCase _deleteProduct;
+
+  // The cubit just describes WHAT to call. execute() handles loading/success/failure.
+  Future<void> fetchProducts({String? search}) =>
+    execute(() => _getProducts(search: search));
 }
 ```
+
+> **The cubit gets `UseCase`s injected — not `Dio`, not `BaseRemoteSource`, not `Repository`.** The `@injectable` annotation tells `get_it`/`injectable` how to build it via `injector<ProductsCubit>()`.
 
 ---
 
 ## CRUD Local Update Rule (NON-NEGOTIABLE)
 
-**NEVER re-fetch the list after add/edit/delete.** Update state locally.
+**NEVER re-fetch the list after add/edit/delete.** Update state locally with `setData` — preferably **optimistically** (mutate first, then call the API, rollback on failure).
 
 ```dart
-// Add → insert at index 0
-(newItem) => setSuccess(data: [newItem, ...state.data])
+// Optimistic CREATE — show the item immediately, replace temp with server-confirmed entity
+Future<Either<Failure, ProductEntity>> create({
+  required String name, required String description, required double price,
+}) async {
+  final temp = ProductEntity(
+    id: -DateTime.now().millisecondsSinceEpoch,   // negative id = temp marker
+    name: name, description: description, price: price,
+    status: ProductStatus.draft,
+  );
+  final before = lastData ?? const <ProductEntity>[];
+  setData([temp, ...before]);   // optimistic insert
 
-// Edit → map + replace matching item
-(updated) => setSuccess(data: state.data.map((e) => e.id == id ? updated : e).toList())
+  final result = await _createProduct(name: name, description: description, price: price);
+  return result.fold(
+    (failure) {                  // rollback
+      setData(before);
+      return Left(failure);
+    },
+    (saved) {                    // replace temp with confirmed entity
+      final updated = (lastData ?? before)
+          .map((p) => p.id == temp.id ? saved : p)
+          .toList();
+      setData(updated);
+      return Right(saved);
+    },
+  );
+}
 
-// Delete → removeWhere
-mapper: (_) => state.data..removeWhere((e) => e.id == id)
+// Local EDIT (e.g. when an edit screen returns) — no API call
+void updateProduct(ProductEntity updated) {
+  final current = lastData ?? const <ProductEntity>[];
+  setData(current.map((p) => p.id == updated.id ? updated : p).toList());
+}
+
+// Optimistic DELETE — remove first, rollback on server failure
+Future<Either<Failure, Unit>> delete(int id) async {
+  final before = lastData ?? const <ProductEntity>[];
+  setData(before.where((p) => p.id != id).toList());
+
+  final result = await _deleteProduct(id);
+  return result.fold(
+    (failure) { setData(before); return Left(failure); },
+    Right.new,
+  );
+}
 ```
 
 ---
 
 ### CRUD Response Merge — Use API Response (CRITICAL)
 
-> **بعد الـ add/edit: استخدم الـ entity من response الـ API (اللي فيه id و server-generated fields).**
+> **بعد الـ add/edit: استخدم الـ entity من response الـ API (اللي فيه id و server-generated fields زي `created_at`، `slug`، `status`).**
 > **متستخدمش الـ user input اللي كتبه المستخدم — السيرفر ممكن يضيف/يعدل fields.**
 
 ```dart
-// ✅ CORRECT — use newItem FROM API response (has server-generated id, timestamps, etc.)
-result.when(
-  (newItem) => setSuccess(data: [newItem, ...state.data]),
-  (failure) => setError(errorMessage: failure.message, showToast: true),
+// ✅ CORRECT — replace temp with the entity returned by the server
+result.fold(
+  (failure) { setData(before); return Left(failure); },
+  (saved) {
+    final updated = (lastData ?? before)
+      .map((p) => p.id == temp.id ? saved : p)   // ← saved, not the user input
+      .toList();
+    setData(updated);
+    return Right(saved);
+  },
 );
 
-// ❌ WRONG — using the params the user submitted (missing id, created_at, etc.)
-result.when(
-  (_) => setSuccess(data: [ItemEntity(name: params.name, ...), ...state.data]),
+// ❌ WRONG — using the user's input (missing id, created_at, server-derived fields)
+result.fold(
   (failure) => ...,
+  (_) => setData([ProductEntity(name: params.name, ...), ...before]),
 );
 ```
 
-### Paginated CRUD — Add/Delete in PaginatedCubit
+### Paginated CRUD — Add/Delete in `PaginatedAsyncCubit`
 
-> **الـ PaginatedCubit عنده list من عدة pages. لازم تتعامل مع الـ CRUD فيه بحذر.**
+> **`PaginatedAsyncCubit<T>` (in `core/state/paginated/`) منه list من عدة pages.** الـ CRUD يتم على الـ in-memory list مثل `AsyncCubit` بالظبط — استخدم `setData(updated)` بعد ما تـ map / filter.
 
 ```dart
 // Add to paginated list — insert at index 0
-(newItem) {
-  final currentItems = state.data;
-  setSuccess(data: [newItem, ...currentItems]);
-}
+final before = lastData ?? const <ItemEntity>[];
+setData([newItem, ...before]);
 
 // Delete from paginated list — remove by id
-(id) {
-  final currentItems = state.data.where((e) => e.id != id).toList();
-  setSuccess(data: currentItems);
-}
+setData(before.where((e) => e.id != id).toList());
 ```
 
 ---
 
 ## AsyncBlocBuilder Usage
 
+> **`AsyncBlocBuilder<C, T>` (in `core/state/async/async_bloc_builder.dart`)** يستهلك `AsyncState<T>` ويستدعي الـ builder المناسب حسب الـ case. يأخذ `loadingBuilder` (optional, has default) + `errorBuilder` (optional, has default — receives `Failure`) + `onRetry` + `builder`.
+
 ```dart
 AsyncBlocBuilder<ProductsCubit, List<ProductEntity>>(
+  onRetry: () => context.read<ProductsCubit>().fetchProducts(),
+  // loadingBuilder: optional — defaults to a centered CircularProgressIndicator / Skeletonizer
+  loadingBuilder: (_) => const ProductsSkeletonList(),
+  // errorBuilder: optional — receives Failure (not String)
+  errorBuilder: (ctx, Failure failure) => ErrorView(
+    failure: failure,
+    onRetry: () => ctx.read<ProductsCubit>().fetchProducts(),
+  ),
   builder: (context, products) {
     if (products.isEmpty) return const EmptyWidget();
     return ListView.builder(
@@ -227,20 +329,24 @@ AsyncBlocBuilder<ProductsCubit, List<ProductEntity>>(
       itemBuilder: (_, i) => ProductCard(product: products[i]),
     );
   },
-  skeletonBuilder: (_) => const ProductsSkeletonList(),
-  errorBuilder: (ctx, error) => ErrorView(error: error, onRetry: () => ctx.read<ProductsCubit>().fetchProducts()),
 )
 ```
 
-### Sliver Version (CustomScrollView)
+### Sliver Version (if present)
+
+If a `AsyncSliverBlocBuilder` exists in `core/state/async/`, use it inside `CustomScrollView`:
 ```dart
-AsyncSliverBlocBuilder<ItemsCubit, List<ItemEntity>>(
-  builder: (ctx, items) => SliverList.builder(
-    itemCount: items.length,
-    itemBuilder: (_, i) => ItemCard(item: items[i]),
+CustomScrollView(slivers: [
+  const _Header().toSliver(),
+  AsyncSliverBlocBuilder<ItemsCubit, List<ItemEntity>>(
+    builder: (ctx, items) => SliverList.builder(
+      itemCount: items.length,
+      itemBuilder: (_, i) => ItemCard(item: items[i]),
+    ),
   ),
-)
+])
 ```
+> If the sliver variant isn't shipped yet, wrap `AsyncBlocBuilder` inside `SliverFillRemaining` or use `toSliver()` extension on a boxed result. Check `core/state/async/` for the exact API before assuming.
 
 ---
 
@@ -266,7 +372,7 @@ MultiBlocProvider(
 ```dart
 BlocListener<SubmitCubit, AsyncState<bool>>(
   listener: (context, state) {
-    if (state.isSuccess) {
+    if (state is AsyncSuccess) {
       MessageUtils.showSnackBar(message: LocaleKeys.success.tr(), baseStatus: BaseStatus.success);
       Go.back();
     }
@@ -297,28 +403,51 @@ class ProductsCubit extends PaginatedCubit<ProductEntity> { ... }
 - Multi-section sub-lists (banners inside home) — short list
 - Filter chips / tags — rarely exceeds 20 items
 
-### PaginatedCubit Template
+### PaginatedAsyncCubit Template
+
+> **Location:** `core/state/paginated/paginated_async_cubit.dart`. Inspect the concrete API there before scaffolding (override hooks may differ from `AsyncCubit`). The cubit still depends on **UseCases** — never on `BaseRemoteSource` directly.
 
 ```dart
 @injectable
-class ProductsCubit extends PaginatedCubit<ProductEntity> {
-  @override
-  Future<Result<Map<String, dynamic>, Failure>> fetchPageData(int page, {String? key}) async {
-    return baseCrudUseCase.call(CrudBaseParams(
-      api: ApiConstants.products,
-      httpRequestType: HttpRequestType.get,
-      queryParameters: ConstantManager.paginateJson(page),
-      mapper: (json) => json,
-    ));
-  }
+class ProductsCubit extends PaginatedAsyncCubit<ProductEntity> {
+  ProductsCubit(this._getProductsPage);
+  final GetProductsPageUseCase _getProductsPage;
 
+  // The UseCase returns Either<Failure, PaginatedData<ProductEntity>>
+  // (items + PaginationMeta).
   @override
-  List<ProductEntity> parseItems(json) =>
-      (json['data'] as List).map((e) => ProductEntity.fromJson(e)).toList();
-
-  @override
-  PaginationMeta parsePagination(json) => PaginationMeta.fromJson(json['pagination']);
+  Future<Either<Failure, PaginatedData<ProductEntity>>> fetchPage(int page, {String? key}) =>
+    _getProductsPage(page: page, search: key);
 }
+```
+
+```dart
+// domain/usecases/get_products_page_usecase.dart
+@lazySingleton
+class GetProductsPageUseCase {
+  GetProductsPageUseCase(this._repo);
+  final ProductsRepository _repo;
+  Future<Either<Failure, PaginatedData<ProductEntity>>> call({required int page, String? search}) =>
+    _repo.getProductsPage(page: page, search: search);
+}
+```
+
+```dart
+// data/datasources/products_remote_data_source_impl.dart
+@override
+Future<Either<Failure, PaginatedData<ProductEntity>>> getProductsPage({
+  required int page, String? search,
+}) => request<PaginatedData<ProductEntity>>(
+  method: HttpMethod.get,
+  endpoint: ApiEndpoints.products,
+  queryParameters: {'page': page, if (search != null && search.isNotEmpty) 'search': search},
+  fromJson: (j) => PaginatedData<ProductEntity>(
+    items: ((j['data'] as List?) ?? const [])
+        .whereType<Map<String, dynamic>>()
+        .map(ProductModel.fromJson).map((m) => m.toEntity()).toList(),
+    meta: PaginationMeta.fromJson(j['meta'] as Map<String, dynamic>),
+  ),
+);
 ```
 
 ### UI Widget
@@ -327,7 +456,7 @@ class ProductsCubit extends PaginatedCubit<ProductEntity> {
 PaginatedListWidget<ItemEntity>(
   cubit: context.read<ItemsCubit>(),
   itemBuilder: (item) => ItemCard(item: item),
-  skeletonBuilder: () => const ItemCardSkeleton(),
+  loadingBuilder: () => const ItemCardSkeleton(),
 )
 ```
 
@@ -359,7 +488,7 @@ class _MyForm extends StatelessWidget {
           items: state.data,                  // ← []  لو API فشلت
           label: LocaleKeys.city.tr(),
           itemAsString: (c) => c.name,
-          isLoading: state.isLoading,         // ← AppDropdown shows internal shimmer
+          isLoading: state is AsyncLoading,         // ← AppDropdown shows internal shimmer
           onChanged: (c) => params.city = c,
           validator: Validators.validateDropDown,
         );
@@ -375,7 +504,7 @@ class _MyForm extends StatelessWidget {
 // ❌ Don't add error UI to dropdowns
 AsyncBlocBuilder<GetCitiesCubit, List<CityEntity>>(
   errorBuilder: (ctx, err) => ErrorView(error: err),  // ← لا
-  skeletonBuilder: (_) => const _DropdownSkeleton(),
+  loadingBuilder: (_) => const _DropdownSkeleton(),
   builder: (ctx, cities) => AppDropdown(items: cities, ...),
 )
 
@@ -395,7 +524,7 @@ AsyncBlocBuilder<GetCitiesCubit, List<CityEntity>>(
 ### Rules
 
 - AppDropdown مع service: `BlocProvider` لتوفير الـ cubit + `context.watch` لاستهلاك state — مش `AsyncBlocBuilder`
-- مفيش `errorBuilder` ولا `skeletonBuilder` على الـ dropdown
+- مفيش `errorBuilder` ولا `loadingBuilder` على الـ dropdown
 - `isLoading` parameter في AppDropdown يـ handle الـ loading shimmer داخلياً
 - لو فشل API → items فاضية، يكمل المستخدم باقي الـ form أو يقفل ويرجع
 
@@ -404,11 +533,11 @@ AsyncBlocBuilder<GetCitiesCubit, List<CityEntity>>(
 ## Figma State Mapping
 
 ```
-Figma "Loading"      → state.isLoading  → skeletonBuilder
-Figma "Empty"        → state.isSuccess + data.isEmpty → EmptyWidget
-Figma "Error"        → state.isError    → errorBuilder / ErrorView
-Figma "Default"      → state.isSuccess + data.notEmpty → builder
-Figma "Loading More" → state.isLoadingMore → list + loader at bottom
+Figma "Loading"      → state is AsyncLoading  → loadingBuilder
+Figma "Empty"        → state is AsyncSuccess + data.isEmpty → EmptyWidget
+Figma "Error"        → state is AsyncFailure    → errorBuilder / ErrorView
+Figma "Default"      → state is AsyncSuccess + data.notEmpty → builder
+Figma "Loading More" → state is AsyncLoadingMore → list + loader at bottom
 ```
 
 ## Entity Safety

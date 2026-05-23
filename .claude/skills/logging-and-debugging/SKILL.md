@@ -45,8 +45,9 @@ if (kDebugMode) {
 ### 4. Error Logging
 
 - أخطاء الـ API:
-  - يتم تسجيلها في طبقة الـ repository / baseCrudUseCase (لو فيه logger).
-  - لا تكرر نفس الرسالة في كل cubit.
+  - يتم تسجيلها في `LoggingInterceptor` (debug only) داخل `DioClient` — هو آخر interceptor في الـ stack عشان يشوف الـ final request/response shape.
+  - الـ `BaseRemoteSource.request<T>` بيلتقط الـ DioException ويحوّلها لـ `Failure` عبر `ResponseParser` — مفيش حاجة لـ logger إضافي في الـ cubit.
+  - لا تكرر نفس الرسالة في كل cubit — `MessageUtils.showSnackBar` في الـ View كافية.
 - Exceptions غير متوقعة:
   - التقطها في مكان واحد مركزي إن أمكن (runZonedGuarded / FlutterError.onError).
 

@@ -1,12 +1,12 @@
 ---
 name: feature-prompt
-description: Cursor entry-point prompt for any new Flutter_Base feature. Mirrors CLAUDE.md content exactly so the agent has full project context (mindset, conventions, quick tactical reference, mandatory pre-flight reading, workflow entry) — plus the two questions you must ask before writing code.
+description: Cursor entry-point prompt for any new Flutter_Base feature. Mirrors CLAUDE.md content exactly so the agent has full project context (mindset, conventions, Strict Six Rules, quick tactical reference, networking pipeline, notifications, mandatory pre-flight reading, workflow entry) — plus the two questions you must ask before writing code.
 ---
 
 # Feature Development Prompt — Cursor Entry-Point
 
-> **هذا الملف هو نسخة طبق الأصل من `CLAUDE.md` في الـ structure والمحتوى، عشان لما الفيتشر تتبني الـ agent يكون شاحن كل القواعد ومفيش حاجة تعدي عليه.**
-> **الفرق الوحيد عن `CLAUDE.md`:** الـ Inputs + الأسئلة دي اللي فوق — لازم تتسأل قبل أي شغل.
+> **هذا الملف نسخة طبق الأصل من `md/CLAUDE.md` في الـ structure والمحتوى، عشان لما الفيتشر تتبني الـ agent يكون شاحن كل القواعد ومفيش حاجة تعدي عليه.**
+> **الفرق الوحيد عن `CLAUDE.md`:** الـ Inputs + الأسئلة الإلزامية اللي فوق — لازم تتسأل قبل أي شغل.
 
 ---
 
@@ -28,8 +28,8 @@ Postman URL:  [POSTMAN_URL]   ← only if API Source = EXISTING_POSTMAN
 
 ### 1. "عاوز تصميم UI بس ولا UI + API مع بعض؟"
 
-- **UI Only** → شاشات بـ static data مباشرة في الـ widgets، بدون cubits، بدون API calls، بدون Postman.
-- **UI + API** → كمّل للسؤال 2.
+- **UI Only** → شاشات بـ static data مباشرة في الـ widgets، بدون cubits، بدون API calls، بدون Postman. الـ ViewController في `presentation/controllers/` بيظل مطلوب لأي ephemeral UI state (controllers/notifiers).
+- **UI + API** → كمّل للسؤال 2. (Clean Architecture كاملة: `data/` + `domain/` + `presentation/`.)
 
 ### 2. (لو UI + API) "عندك Postman Collection جاهزة ولا أولّدلك الـ API؟"
 
@@ -38,11 +38,11 @@ Postman URL:  [POSTMAN_URL]   ← only if API Source = EXISTING_POSTMAN
 
 ### ملخص الأوضاع:
 
-| الوضع | Cubits | API Source | Postman |
-|-------|--------|------------|--------|
-| **UI Only** | ❌ لا | — | ❌ لا |
-| **UI + API (Existing Postman)** | ✅ نعم | Postman Collection جاهزة | ✅ جاهز |
-| **UI + API (Auto Generate)** | ✅ نعم | يتولّد من Figma | ✅ يتولّد في STEP 4 |
+| الوضع | Layers | Cubits | API Source | Postman |
+|-------|--------|--------|------------|--------|
+| **UI Only** | `presentation/` فقط (مع `controllers/`) | ❌ لا | — | ❌ لا |
+| **UI + API (Existing Postman)** | `data/` + `domain/` + `presentation/` كاملة | ✅ نعم | Postman Collection جاهزة | ✅ جاهز |
+| **UI + API (Auto Generate)** | `data/` + `domain/` + `presentation/` كاملة | ✅ نعم | يتولّد من Figma | ✅ يتولّد في STEP 4 |
 
 ---
 
@@ -76,11 +76,12 @@ Postman URL:  [POSTMAN_URL]   ← only if API Source = EXISTING_POSTMAN
 
 - **Type:** Flutter mobile app (Android + iOS, with desktop targets present)
 - **Language:** Arabic-first, RTL by default
-- **Architecture:** Clean Architecture — `presentation` (BLoC + widgets), `domain` (use-cases + entities), `data` (Dio + DTOs)
-- **State management:** `flutter_bloc` with custom `AsyncCubit<T>` / `PaginatedCubit<T>` base classes
+- **Architecture:** Clean Architecture — `presentation` (Cubits + ViewControllers + Screens + Widgets), `domain` (UseCases + Entities + Repository interfaces), `data` (DataSources + Models + Mappers + Repository impls)
+- **State management:** `flutter_bloc` with custom **`AsyncCubit<T>`** (sealed `AsyncState<T>`: Initial / Loading / Success / Failure) + `PaginatedAsyncCubit<T>` base classes. UI rebuilds via `AsyncBlocBuilder` (`loadingBuilder`/`errorBuilder`/`builder`) or pattern matching on the sealed state.
 - **DI:** `injectable` + `get_it` — accessed via `injector<T>()`
 - **Localization:** `easy_localization` with `lang.json` source → `LocaleKeys` generated file
-- **Networking:** `dio` via `baseCrudUseCase` + `CrudBaseParams` — never raw Dio calls in features
+- **Networking:** `Dio` wrapped by **`DioClient`** singleton + **`BaseRemoteSource.request<T>(method, endpoint, body, queryParameters, fromJson, ...)`**. Interceptor order: `LocaleInterceptor → AuthInterceptor → RetryInterceptor → AppCacheInterceptor → LoggingInterceptor (debug only)`. Returns `Either<Failure, T>`. **NEVER call raw `Dio` from features.**
+- **Notifications:** `awesome_notifications` + `awesome_notifications_fcm` via **`NotificationManager.instance`** singleton + **`NotificationRouter`** interface (sealed `NotificationAction`: `NavigateToChat` / `NavigateToScreen` / `OpenUrl` / `DismissAction`). **FORBIDDEN:** `firebase_messaging`, `flutter_local_notifications` (they conflict with awesome_notifications).
 - **Design source:** Figma via Figma MCP (mandatory read before writing UI code)
 
 ---
@@ -89,21 +90,62 @@ Postman URL:  [POSTMAN_URL]   ← only if API Source = EXISTING_POSTMAN
 
 ```
 lib/src/
-├── config/res/                   ← AppColors, AppSize, AppPadding, AppCircular, FontSizeManager, AppAssets, LocaleKeys
+├── config/
+│   ├── res/                      ← AppColors, AppSize, AppPadding, AppCircular, FontSizeManager, AppAssets, LocaleKeys, ConstantsManager, config_imports.dart (part-of hub)
+│   ├── language/                 ← Languages, locale_keys.g.dart
+│   └── themes/                   ← AppTheme
 ├── core/
-│   ├── widgets/                  ← shared widgets (LoadingButton, CustomTextFiled, AsyncBlocBuilder, CachedImage, DefaultScaffold, ...)
-│   ├── helpers/                  ← Validators, InputFormatters, Helpers, ImageHelper, LauncherHelper, CacheStorage
-│   ├── extensions/               ← TextStyleEx, FormatString, ContextExtension, PaddingExtension, MarginExtension, OnClick, SizedBoxHelper, SliverExtension, FormMixin
-│   ├── network/                  ← ApiConstants, baseCrudUseCase, CrudBaseParams, DioService
-│   └── shared/                   ← BaseModel, UserModel, ImageEntity, UserCubit, AppBlocObserver
+│   ├── network/                  ← DioClient (singleton) + BaseRemoteSource (request<T>) + ApiEndpoints + HttpMethod + Interceptors/ (Locale, Auth, Retry, Cache, Logging) + parser/ (ResponseParser, StatusCodeHandler) + error/failures.dart + exceptions/app_exception.dart + auth/token_storage.dart + cache/cache_config.dart + offline/ (queue manager + queued_operation) + cancel/request_cancellation_manager.dart + cubits/ (connectivity_cubit, offline_queue_cubit) + options/request_extra.dart + network_info.dart + base/base_remote_source.dart
+│   ├── state/
+│   │   ├── async/                ← AsyncCubit + AsyncState (sealed) + AsyncBlocBuilder
+│   │   └── paginated/            ← PaginatedAsyncCubit + PaginatedState + PaginationMeta + PaginatedListWidget + PaginatedListConfig + PaginatedData
+│   ├── notifications/            ← NotificationManager (singleton) + NotificationRouter (interface + sealed NotificationAction) + NotificationController (FCM handlers) + models/(notification_payload, notification_enums) + EXPLANATION.md
+│   ├── navigation/               ← Go (Navigator wrapper, GlobalKey) + PageRouter + Transitions (fade/slide/scale/shake/size/rotation/cupertino)
+│   ├── widgets/                  ← shared widgets — see "Core Widgets Catalog" below
+│   └── shared/
+│       ├── cubits/               ← base_url, user_cubit, …
+│       ├── observer/             ← AppBlocObserver
+│       ├── models/               ← BaseModel, UserModel, ImageEntity, …
+│       ├── extensions/           ← string_extension, TextStyleEx, FormatString, ContextExtension, PaddingExtension, MarginExtension, OnClick, SizedBoxHelper, SliverExtension, FormMixin, widgets/
+│       ├── helpers/              ← Validators, InputFormatters, Helpers, ImageHelper, LauncherHelper, CacheStorage
+│       └── service_locators/     ← setUpServiceLocator + injector
 └── features/
     └── <feature_name>/
-        ├── entity/
+        ├── data/
+        │   ├── datasources/      ← <feature>_remote_data_source_impl.dart  (extends BaseRemoteSource, implements domain interface)
+        │   ├── models/           ← <entity>_model.dart                     (DTO with fromJson)
+        │   ├── mappers/          ← <entity>_mapper.dart                    (Model ↔ Entity)
+        │   └── repositories/     ← <feature>_repository_impl.dart          (implements domain interface)
+        ├── domain/
+        │   ├── datasources/      ← <feature>_remote_data_source.dart       (abstract interface)
+        │   ├── entities/         ← <entity>_entity.dart                    (pure Dart, no Dio, no Map)
+        │   ├── enums/            ← <entity>_status.dart, …
+        │   ├── repositories/     ← <feature>_repository.dart               (abstract interface)
+        │   └── usecases/         ← <action>_usecase.dart                   (returns Either<Failure, T>)
         └── presentation/
-            ├── imports/view_imports.dart
-            ├── cubits/<feature>_cubit.dart
-            ├── view/<feature>_screen.dart
-            └── widgets/
+            ├── imports/<feature>_imports.dart   ← part/part-of hub — every presentation file declares `part of '../imports/<feature>_imports.dart';`
+            ├── cubits/<feature>_cubit.dart      ← AsyncCubit<T> — server state ONLY
+            ├── controllers/<feature>_view_controller.dart  ← TextEditingController / ScrollController / ValueNotifier / FocusNode / AnimationController — ephemeral UI state, NEVER in the View
+            ├── view/<feature>_screen.dart       ← Public Screens ONLY — wires cubit + ViewController + AppBar + body. NO layout, NO functions, NO setState.
+            └── widgets/                          ← Private `_X` widgets used by Screens (e.g. `_ProductsBody`, `_ProductCard`, `_ProductsFilterSheet`)
+```
+
+### Core Widgets Catalog (`lib/src/core/widgets/`)
+
+```
+buttons/                  → LoadingButton (ALL async submits), DefaultButton, CustomAnimatedButton, ButtonClose
+fields/text_fields/       → DefaultTextField (form fields with validator + inputFormatters)
+fields/drop_downs/        → AppDropdown<T> + DropdownLayout + widgets/ (sheet, item tile, checkbox, radio, drag handle, confirm button, header)
+dialogs/                  → SuccessDialog, AdaptiveAlert, VisitorPopUp
+pickers/                  → CustomDatePicker, DefaultBottomSheet, CustomDialog
+image_widgets/            → CachedImage (ALL network images), CustomAvatar, CustomImageSlider, ImageView, UploadImage
+scaffolds/                → DefaultScaffold (inner screens), ArrowWidget
+handling_views/           → AppErrorHandler, ErrorView, ExceptionView (release ErrorWidget.builder), EmptyWidget, NotContainData, InternetException
+universal_media/          → UniversalMediaWidget + controller + enums + widgets (display image/video/file uniformly)
+navigation_bar/           → CustomNavigationBar, NavigationBarEntity, AnimatedButton
+carousel/                 → CustomImageCarousel
+un_autheticated/          → UnauthenticatedBottomsheet, ShowModalBottomSheet
+(root)                    → CustomLoading, CustomMessages, CustomWidgetValidator, IconWidget (ALL icons), BadgeIconWidget, RiyalPriceText, OfflineSyncBanner, CustomHtmlWidget
 ```
 
 ---
@@ -115,11 +157,36 @@ lib/src/
 - **`BlocConsumer` / `BlocListener` للضرورة فقط.** الافتراضي `BlocBuilder` / `AsyncBlocBuilder`. See `bloc-patterns` skill — "BlocListener / BlocConsumer — Strict Usage Rules".
 - **RTL is the default — العربية يمين → شمال.** Use `start`/`end` directional APIs everywhere. Titles على اليمين، Row first child على اليمين. See `rtl-arabic` skill.
 - **No raw values in code.** Colors → `AppColors`, sizes → `AppSize`/`AppPadding`/`AppCircular`, text → `LocaleKeys.*.tr()`, icons → `AppAssets`.
-- **Read Figma MCP before writing UI.** If MCP fails → stop. See `figma-mcp-read-first`.
+- **Read Figma MCP before writing UI.** If MCP fails → stop. See `figma-mcp-mapping` / `figma-to-flutter`.
 - **One cubit per endpoint.** Local update on add/edit/delete (never re-fetch).
-- **Body widget = layout only.** Each section/card in its own file under `widgets/`.
-- **`view_imports.dart` part-of system.** Every feature file: `part of '../imports/view_imports.dart';`.
-- **ViewController class for stateful UI.** See `view-controller-pattern`.
+- **Per-feature imports hub:** every presentation file declares `part of '../imports/<feature>_imports.dart';` — هذا الاسم **يتغير بحسب اسم الـ feature** (مثلاً `products_imports.dart` لـ products feature). كل الـ imports المشتركة في الـ hub، والـ classes تقدر تبقى private (`_ProductCard`, `_ProductsBody`) لكن متاحة عبر الـ feature.
+- **Clean Architecture is the default** for every feature: `data/(datasources, models, mappers, repositories)` + `domain/(entities, enums, usecases, repositories, datasources)` + `presentation/(imports, cubits, controllers, view, widgets)`. الـ Cubit يأخذ `UseCase`s فقط (مش `BaseRemoteSource` مباشرة).
+- **ViewController in `presentation/controllers/`** — separate folder. Holds `TextEditingController`, `ScrollController`, `ValueNotifier<T>`, `FocusNode`, `AnimationController`, validators, and small UI handlers. **Never inside the View.** Disposed from the Screen's `dispose()`. See `flutter-patterns` + `coding-standards` (section 22).
+
+---
+
+## 🚨 Strict Six Rules (موصى بها بقوة — تطبّق على كل feature جديد)
+
+> **هذه القواعد هي أساس الجودة في كل feature. أي مخالفة لازم تتبرّر بمبرر فني واضح.**
+
+| # | القاعدة | الـ rationale | المرجع |
+|---|--------|--------------|--------|
+| 1 | **لا comments زائدة بدون داعي.** الـ Comments تشرح **"لماذا"** (intent, trade-off, gotcha)، مش **"ماذا"** (الكود نفسه يقول ماذا). امسح أي comment بيكرر اسم المتغير/الـ method. | الكود الجيد يشرح نفسه. الـ comments الزائدة تتعفن مع الوقت وتكذب. | `clean-code-and-refactoring` |
+| 2 | **لا hardcoded في الـ View.** ممنوع `Text('المنتجات')` / `Color(0xFFFFFFFF)` / `EdgeInsets.all(16)` / `'assets/...'` / `Icons.search` في الـ Screen أو widgets — كله من `LocaleKeys.*.tr()` / `AppColors` / `AppSize/AppPadding/AppCircular` / `AppAssets` / `IconWidget(icon: AppAssets.svg....path)`. | RTL + i18n + theming + design tokens — كله ينكسر لو فيه قيم خام. | `design-tokens`, `coding-standards` |
+| 3 | **الـ View clean — لا functions داخل الـ View.** ممنوع أي method جوّا الـ Screen غير `build()` + `initState()` + `dispose()`. كل action handler (onTap, validator, formatter, navigation, sheet opener) متعالج في **Cubit** أو **ViewController** أو في **widget منفصل**. | الـ View = composition فقط. أي logic داخل الـ View = state hidden = bugs + لا testability. | `flutter-patterns`, `bloc-patterns` |
+| 4 | **الأداء أولوية قصوى — ممنوع `setState` و rebuild بدون داعي.** الافتراضي: `ValueNotifier<T>` + `ValueListenableBuilder<T>` للـ ephemeral UI state، `BlocSelector` لجزء صغير من cubit state، `BlocBuilder` للـ full state. `setState` فقط في حالات **خاصة جداً** ولا بد من مبرر. | كل `setState` على parent يعيد بناء subtree كاملاً. `ValueListenableBuilder` يحدّث الـ leaf فقط. | `performance-and-memory`, `flutter-patterns` |
+| 5 | **معظم الـ classes Stateless.** `StatefulWidget` فقط حين يكون لازم (`AnimationController`, focus management, cubit/controller lifecycle owner). الـ state الفعلي في cubit أو ViewController، مش في الـ widget. | الـ Stateless = predictable + fast + testable. الـ Stateful بدون داعي = source of bugs. | `flutter-patterns` |
+| 6 | **ممنوع `Widget _buildSomething()` داخل الـ View.** أي widget داخل الـ View يصير ملفّ منفصل في `widgets/` كـ `private class _Something extends StatelessWidget`. الـ class private (يبدأ بـ `_`) لكن في ملف منفصل، part-of الـ imports hub. | الـ `_build*` functions ما بتاخدش `const`، ولا تستفيد من Flutter rebuild scope، وبتخبّي tree complexity. | `flutter-patterns`, `widget-efficiency` |
+
+**Quick mental check قبل أي commit:**
+```
+□ Comments: كل comment يقول "لماذا" مش "ماذا"
+□ View: مفيش string/color/size خام
+□ View: مفيش method غير build/initState/dispose
+□ Performance: مفيش setState — استخدم ValueNotifier/BlocSelector
+□ Stateless: الـ widget Stateful فقط لو فيه lifecycle حقيقي
+□ Widgets: مفيش Widget _buildX() — كله ملفات منفصلة
+```
 
 ---
 
@@ -169,9 +236,9 @@ CustomTextFiled(title:, hint:, controller:, validator:, ...)    // form fields
 AppDropdown<T>(items:, label:, itemAsString:, onChanged:)       // dropdowns
 CachedImage(url:, width:, height:, borderRadius:)               // ALL network images
 IconWidget(icon: AppAssets.x.path, height: AppSize.sH20)         // ALL icons — NO color, NO IconData
-AsyncBlocBuilder<C, T>(builder:, skeletonBuilder:, errorBuilder:)// API state
-AsyncSliverBlocBuilder<C, T>(builder:)                          // sliver version
-PaginatedListWidget<C, T>(itemBuilder:, skeletonBuilder:)       // paginated lists
+AsyncBlocBuilder<C, T>(builder:, loadingBuilder:, errorBuilder:, onRetry:)  // API state (errorBuilder receives Failure)
+AsyncSliverBlocBuilder<C, T>(builder:)                          // sliver version (if available)
+PaginatedListWidget<C, T>(itemBuilder:, loadingBuilder:)        // paginated lists
 EmptyWidget(title:, desc:, path:)                               // full-screen empty
 successDialog(context, title:)  showDefaultBottomSheet(child:)  // dialogs/sheets
 MessageUtils.showSnackBar(context:, baseStatus:, message:)      // snackbars
@@ -191,14 +258,18 @@ class _MyForm extends StatelessWidget {
     return BlocProvider(
       create: (_) => injector<GetCitiesCubit>()..fetchCities(),
       child: Builder(
-        builder: (ctx) => AppDropdown<CityEntity>(
-          items: ctx.watch<GetCitiesCubit>().state.data,  // ← هيبقى [] لو فشلت
-          label: LocaleKeys.city.tr(),
-          itemAsString: (c) => c.name,
-          isLoading: ctx.watch<GetCitiesCubit>().state.isLoading,
-          onChanged: (c) => params.selectedCity = c,
-          validator: Validators.validateDropDown,
-        ),
+        builder: (ctx) {
+          final s = ctx.watch<GetCitiesCubit>().state;
+          final cities = s is AsyncSuccess<List<CityEntity>> ? s.data : const <CityEntity>[];
+          return AppDropdown<CityEntity>(
+            items: cities,                       // ← []  لو فشلت
+            label: LocaleKeys.city.tr(),
+            itemAsString: (c) => c.name,
+            isLoading: s is AsyncLoading,
+            onChanged: (c) => params.selectedCity = c,
+            validator: Validators.validateDropDown,
+          );
+        },
       ),
     );
   }
@@ -269,23 +340,73 @@ Go.to(const X())  Go.off(const X())  Go.offAll(const X())  Go.back()
 Go.toNamed(Routes.x)  Go.offAllNamed(Routes.x)
 ```
 
-### 🔌 State (AsyncCubit + local CRUD updates)
+### 🔌 State (AsyncCubit + UseCase + local CRUD updates)
+
+> **الـ Cubit يأخذ UseCases — NOT BaseRemoteSource directly. الـ Repository/UseCase layer لازمة لكل feature.**
 
 ```dart
+// presentation/cubits/x_cubit.dart  (part of <feature>_imports.dart)
 @injectable
 class XCubit extends AsyncCubit<List<XEntity>> {
-  XCubit() : super([]);
-  Future<void> fetchX() async => executeAsync(
-    operation: () => baseCrudUseCase.call(CrudBaseParams(
-      api: ApiConstants.x, httpRequestType: HttpRequestType.get,
-      mapper: (json) => (json['data'] as List).map(XEntity.fromJson).toList(),
-    )),
+  XCubit(this._getXList, this._createX, this._deleteX);
+
+  final GetXListUseCase _getXList;
+  final CreateXUseCase _createX;
+  final DeleteXUseCase _deleteX;
+
+  // execute() handles Loading → Success/Failure by folding Either<Failure, T>
+  Future<void> fetchX({String? search}) =>
+    execute(() => _getXList(search: search));
+
+  // CRUD: NEVER re-fetch — optimistic local update + rollback on failure
+  Future<Either<Failure, XEntity>> create(XParams p) async {
+    final temp = XEntity.tempFromParams(p);
+    final before = lastData ?? const <XEntity>[];
+    setData([temp, ...before]);                // optimistic insert
+
+    final result = await _createX(p);
+    return result.fold(
+      (failure) { setData(before); return Left(failure); },         // rollback
+      (saved) {
+        setData((lastData ?? before)
+          .map((e) => e.id == temp.id ? saved : e).toList());
+        return Right(saved);
+      },
+    );
+  }
+
+  void updateLocal(XEntity updated) => setData(
+    (lastData ?? const <XEntity>[])
+      .map((e) => e.id == updated.id ? updated : e).toList(),
   );
+
+  Future<Either<Failure, Unit>> delete(int id) async {
+    final before = lastData ?? const <XEntity>[];
+    setData(before.where((e) => e.id != id).toList());
+    final result = await _deleteX(id);
+    return result.fold(
+      (failure) { setData(before); return Left(failure); },
+      Right.new,
+    );
+  }
 }
-// CRUD: NEVER re-fetch — always local update
-// add:    setSuccess(data: [newItem, ...state.data])
-// edit:   setSuccess(data: state.data.map((e) => e.id == id ? updated : e).toList())
-// delete: setSuccess(data: state.data..removeWhere((e) => e.id == id))
+```
+
+**AsyncCubit API (in `core/state/async/`):**
+- `execute(() => useCase())` — emits Loading → Success/Failure by folding `Either<Failure, T>`. `CancelledFailure` is silent.
+- `setData(T data)` — push a local mutation without re-fetching (CRUD optimism).
+- `setFailure(Failure failure)` — force an error state (e.g. local validation failure).
+- `lastData` — last successful payload, kept across Loading/Failure so UI can render old data while refreshing.
+- `state` is sealed `AsyncState<T>` → exhaustive `switch` in the UI: `AsyncInitial / AsyncLoading(previous) / AsyncSuccess(data) / AsyncFailure(failure, previous)`.
+
+**UI consumption — AsyncBlocBuilder (in `core/state/async/`):**
+```dart
+AsyncBlocBuilder<XCubit, List<XEntity>>(
+  onRetry: () => context.read<XCubit>().fetchX(),
+  loadingBuilder: (_) => const _XSkeleton(),           // optional, has default
+  errorBuilder:   (_, Failure f) => _XError(failure: f),// optional, has default
+  builder: (context, items) => _XList(items: items),
+)
 ```
 
 ### 🛡️ Entity Safety (every entity, no exceptions)
@@ -491,18 +612,65 @@ CustomScrollView(physics: const AlwaysScrollableScrollPhysics(), slivers: [
 ✗ Directionality حوالين layout/screen (مسموح فقط حوالين widget داخلي محدد)
 ```
 
-### 🎮 ViewController (مش setState في الـ View)
+### 🎮 ViewController (في `presentation/controllers/` — ممنوع setState في الـ View)
+
+> **مكانه ثابت:** `presentation/controllers/<feature>_view_controller.dart` — part of `<feature>_imports.dart`.
+> **محتواه:** كل الـ ephemeral UI state اللي لازمة الـ View ومش server data (server data → cubit).
 
 ```dart
-class XViewController {
-  final TextEditingController controller = TextEditingController();
-  final ValueNotifier<bool> isSending = ValueNotifier(false);
-  void onAction(BuildContext ctx) { ... }
-  void dispose() { controller.dispose(); isSending.dispose(); }
+// presentation/controllers/products_view_controller.dart
+part of '../imports/products_imports.dart';
+
+class ProductsViewController {
+  ProductsViewController({required this.onSearch});
+
+  final ValueChanged<String> onSearch;
+
+  // الـ controllers + notifiers + focus nodes + animations
+  final TextEditingController searchController = TextEditingController();
+  final ScrollController scrollController = ScrollController();
+  final ValueNotifier<ProductStatus?> statusFilter = ValueNotifier(null);
+  final FocusNode searchFocus = FocusNode();
+
+  // الـ handlers اللي بتعالج interactions صغيرة (UI-only)
+  void setStatusFilter(ProductStatus? s) => statusFilter.value = s;
+  void clearSearch() { searchController.clear(); onSearch(''); }
+
+  void dispose() {
+    searchController.dispose();
+    scrollController.dispose();
+    statusFilter.dispose();
+    searchFocus.dispose();
+  }
 }
-// View: late final _vc = XViewController(); @override dispose() { _vc.dispose(); super.dispose(); }
-// ValueListenableBuilder بدل setState دايماً
 ```
+
+```dart
+// presentation/view/products_screen.dart  (Screen owns lifecycle)
+class _ProductsScreenState extends State<ProductsScreen> {
+  late final ProductsCubit _cubit;
+  late final ProductsViewController _vc;
+
+  @override
+  void initState() {
+    super.initState();
+    _cubit = injector<ProductsCubit>()..fetchProducts();
+    _vc = ProductsViewController(onSearch: _searchSubject.add);
+  }
+
+  @override
+  void dispose() {
+    _vc.dispose();
+    _cubit.close();
+    super.dispose();
+  }
+}
+```
+
+**Rules:**
+- الـ widgets الجوّانيّة تستمع بـ `ValueListenableBuilder<T>(valueListenable: _vc.statusFilter, builder: ...)` — تحدّث leaf فقط، لا تعيد بناء الـ Screen.
+- ممنوع `TextEditingController` / `ScrollController` / `ValueNotifier` ينعمل في الـ View نفسه — كلهم في الـ ViewController.
+- ممنوع `setState` — استخدم `ValueNotifier` + `ValueListenableBuilder`.
 
 ### 🌍 Localization (lang.json format)
 
@@ -512,13 +680,176 @@ class XViewController {
 ```
 بعد التعديل: `dart run generate/strings/main.dart` → استعمل `LocaleKeys.featureTitle.tr()` فقط.
 
+### 🌐 Networking — `BaseRemoteSource.request<T>` (single entry point)
+
+> **لا `Dio()` خام في الـ features.** كل remote call يمر عبر `BaseRemoteSource.request<T>(...)`. الـ datasource يـ `extends BaseRemoteSource`، والـ repository يستدعيه. الـ UI ما يعرفش عن Dio.
+
+```dart
+// data/datasources/x_remote_data_source_impl.dart
+@LazySingleton(as: XRemoteDataSource)
+class XRemoteDataSourceImpl extends BaseRemoteSource implements XRemoteDataSource {
+  @override
+  Future<Either<Failure, List<XEntity>>> getList({int page = 1, String? search}) =>
+    request<List<XEntity>>(
+      method: HttpMethod.get,
+      endpoint: ApiEndpoints.x,
+      queryParameters: {
+        'page': page,
+        if (search != null && search.isNotEmpty) 'search': search,
+      },
+      fromJson: _parseList,
+    );
+
+  @override
+  Future<Either<Failure, XEntity>> create({required String name, required double price}) =>
+    request<XEntity>(
+      method: HttpMethod.post,
+      endpoint: ApiEndpoints.x,
+      body: {'name': name, 'price': price},
+      fromJson: _parseOne,
+    );
+
+  @override
+  Future<Either<Failure, Unit>> delete(int id) =>
+    request<Unit>(
+      method: HttpMethod.delete,
+      endpoint: ApiEndpoints.xById(id),
+      fromJson: (_) => unit,
+    );
+
+  // Public endpoints — skip Bearer token
+  Future<Either<Failure, AuthToken>> login(String email, String pwd) =>
+    request<AuthToken>(
+      method: HttpMethod.post,
+      endpoint: ApiEndpoints.login,
+      body: {'email': email, 'password': pwd},
+      skipAuth: true,
+      fromJson: (j) => AuthToken.fromJson(j),
+    );
+
+  // Multipart upload
+  Future<Either<Failure, UploadResult>> upload(String path, String note) =>
+    request<UploadResult>(
+      method: HttpMethod.post,
+      endpoint: ApiEndpoints.upload,
+      body: {'file': await MultipartFile.fromFile(path), 'note': note},
+      asFormData: true,
+      fromJson: (j) => UploadResult.fromJson(j),
+    );
+
+  static List<XEntity> _parseList(dynamic j) =>
+    ((j is Map ? j['data'] : j) as List? ?? const [])
+      .whereType<Map<String, dynamic>>()
+      .map(XModel.fromJson).map((m) => m.toEntity()).toList();
+  static XEntity _parseOne(dynamic j) =>
+    XModel.fromJson(((j is Map ? j['data'] ?? j : j) as Map<String, dynamic>)).toEntity();
+}
+```
+
+**`request<T>` Parameters (الـ unified entry):**
+| Param | Purpose |
+|---|---|
+| `method` | `HttpMethod.get / post / put / patch / delete` |
+| `endpoint` | relative path (DioClient prepends `baseUrl`) |
+| `queryParameters` | `?key=value&...` map |
+| `body` | request body (Map / List / String / FormData / MultipartFile-bearing Map) |
+| `headers` | extra request headers merged on top of globals |
+| `fromJson` | `T Function(dynamic json)` — parser (use `unit` for void) |
+| `skipAuth` | skip Bearer token (login/register/public) |
+| `asFormData` | wrap Map body in `FormData.fromMap(...)` automatically |
+| `normalizeArabicDigits` | (default `true`) convert ٠١٢٣ → 0123 in body & query strings |
+| `cancelKey` | dedupe key (default `"$METHOD:$endpoint"`) — auto-cancels previous in-flight |
+| `cancelPrevious` | (default `true`) cancel previous in-flight with same key |
+| `responseType` | override Dio response parsing (rarely needed) |
+
+**Interceptor chain (in `DioClient`):**
+```
+LocaleInterceptor   → adds Accept-Language so retries/refresh share it
+AuthInterceptor     → Bearer token + 401 refresh-token cycle (respects skipAuth)
+RetryInterceptor    → retries idempotent failures
+AppCacheInterceptor → short-circuits with cached payloads (Hive-backed)
+LoggingInterceptor  → debug-only; last so it sees the final shape
+```
+Status-code handling lives in `ResponseParser` / `StatusCodeHandler` — Dio's `validateStatus` accepts <500 so 4xx travel as `Failure` via `Either.Left`.
+
+**Repository → UseCase → Cubit:**
+```dart
+// domain/repositories/x_repository.dart
+abstract interface class XRepository {
+  Future<Either<Failure, List<XEntity>>> getList({String? search});
+}
+
+// data/repositories/x_repository_impl.dart
+@LazySingleton(as: XRepository)
+class XRepositoryImpl implements XRepository {
+  XRepositoryImpl(this._remote);
+  final XRemoteDataSource _remote;
+  @override
+  Future<Either<Failure, List<XEntity>>> getList({String? search}) =>
+    _remote.getList(search: search);
+}
+
+// domain/usecases/get_x_list_usecase.dart
+@lazySingleton
+class GetXListUseCase {
+  GetXListUseCase(this._repo);
+  final XRepository _repo;
+  Future<Either<Failure, List<XEntity>>> call({String? search}) =>
+    _repo.getList(search: search);
+}
+```
+
+### 🔔 Notifications — `NotificationManager` + `NotificationRouter` (FCM via awesome_notifications)
+
+> **النظام كله في `core/notifications/`** — singleton manager + sealed actions router + FCM controller.
+> **FORBIDDEN packages:** `firebase_messaging`, `flutter_local_notifications` (يتعارضوا مع `awesome_notifications`).
+
+**bootstrap (in `main.dart`):**
+```dart
+await Firebase.initializeApp();
+await NotificationManager.instance.initialize(
+  router: const AppNotificationRouter(),         // routes navigator via Go.navigatorKey
+  debug: kDebugMode,
+);
+NotificationManager.instance.requestPermissions();
+NotificationManager.instance.requestToken();
+```
+
+**Sealed actions (in `notification_router.dart`):**
+```dart
+sealed class NotificationAction { const NotificationAction(); }
+final class NavigateToChat extends NotificationAction { final String chatId; const NavigateToChat(this.chatId); }
+final class NavigateToScreen extends NotificationAction { final String route; const NavigateToScreen(this.route); }
+final class OpenUrl extends NotificationAction { final Uri url; const OpenUrl(this.url); }
+final class DismissAction extends NotificationAction { const DismissAction(); }
+```
+
+**Adding a new notification type:**
+1. Add enum case in `models/notification_enums.dart` (`NotificationType`).
+2. Add layout case in `NotificationController._buildContent` switch.
+3. Add buttons case in `NotificationController._buildActionButtons` (if needed).
+4. Add `final class XAction extends NotificationAction` + case in `_parseAction` (if new navigation target).
+5. Add case in `AppNotificationRouter.route(...)` switch (compiler enforces exhaustiveness).
+
+**Golden rules:**
+| Rule | Why |
+|---|---|
+| Every static handler called from native MUST have `@pragma('vm:entry-point')` | tree-shaker drops it from release otherwise |
+| `channelKey` in `NotificationContent` MUST match a channel registered in `initialize` | else notification silently fails to show |
+| `id` in `NotificationContent` MUST be `int` | use `payload.id.hashCode` if id is a String |
+| No `BuildContext` in static handlers | use `Go.navigatorKey` (or any `GlobalKey<NavigatorState>`) |
+| `IsolateNameServer` is the ONLY way to bridge background isolate → main | isolates have no shared memory |
+
+**See:** `core/notifications/EXPLANATION.md` (detailed walkthrough in Arabic) + `.claude/skills/notifications/SKILL.md`.
+
 ### 🔒 Code Hygiene
 
 - `const` على كل widget/constructor ممكن
-- Private `_Foo` للـ widgets الخاصة بالفيتشر
-- ممنوع `print` / `debugPrint` في الفاينل
+- Private `_Foo` للـ widgets الخاصة بالفيتشر (في `widgets/` كملف منفصل، مش `_buildX()` داخل الـ View)
+- ممنوع `print` / `debugPrint` في الفاينل (استخدم `LoggingInterceptor` للـ network)
 - ممنوع unused imports / parameters → شغّل `flutter analyze`
 - `compute()` للـ JSON parsing الثقيل (4+ APIs في شاشة واحدة)
+- Comments **تشرح "لماذا"** فقط — مش "ماذا". الكود الذي يحتاج comment ليُفهم = كود يحتاج refactor.
 
 ### 🧱 Widget Efficiency — Golden Rule (التفاصيل في `widget-efficiency` skill)
 
@@ -599,6 +930,8 @@ class XViewController {
 لو bloc scoping سؤال          → .claude/skills/bloc-provider-scoping/SKILL.md
 لو DI أو architecture         → .claude/skills/di-and-architecture/SKILL.md
 لو design tokens              → .claude/skills/design-tokens/SKILL.md
+لو FCM/Push notifications     → .claude/skills/notifications/SKILL.md
+لو performance/no-setState    → .claude/skills/performance-and-memory/SKILL.md
 ```
 
 ### ✅ بعد ما تخلص الـ Feature (إلزامي):
@@ -660,13 +993,16 @@ Cursor metadata (`globs`, `alwaysApply`) lives in `.claude/skills/<name>/.cursor
 ## Where to Look First
 
 - Adding a feature? `feature-prompt`.
-- API? `api-pipeline` (Postman جاهز من فريق الباك إند).
+- API / Repository / UseCase pipeline? `api-pipeline` (Postman جاهز من فريق الباك إند).
 - Form? `form-api-pipeline`.
 - RTL? `rtl-arabic`.
 - Review finished work? `post-feature-review`.
-- Master coding-standards? `coding-standards` (entity safety + slivers + part-of system + pointers to subdomain skills)
-- Extensions/helpers? `extensions-and-helpers`
-- Naming + cleanup? `naming-and-cleanup`
-- Widget catalog? `widget-reference`
-- ViewController? `view-controller-pattern`
-- Localization? `localization-keys`
+- Master coding-standards? `coding-standards` (entity safety + Strict Six Rules + slivers + part-of system + pointers to subdomain skills)
+- BLoC / AsyncCubit / AsyncBlocBuilder? `bloc-patterns`
+- FCM Notifications (NotificationManager + Router + Controller)? `notifications`
+- Performance (ValueNotifier-first, no setState, const, slivers, compute)? `performance-and-memory`
+- Extensions/helpers? `coding-standards` (section 12 + 13)
+- Naming + cleanup? `clean-code-and-refactoring`
+- Widget catalog? `flutter-patterns` (Key Widget Quick Reference) + `coding-standards` (section 11)
+- ViewController (`presentation/controllers/`)? `flutter-patterns` + `coding-standards` (section 22)
+- Localization? `coding-standards` (section 8) + `rtl-arabic`

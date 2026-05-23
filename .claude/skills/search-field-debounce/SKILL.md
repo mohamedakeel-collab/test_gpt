@@ -97,21 +97,31 @@ void search(String query) {
 }
 ```
 
-**AsyncCubit:**
+**AsyncCubit (delegates to UseCase — see `api-pipeline`):**
 ```dart
-Future<void> fetchItems({String search = ''}) async {
-  await executeAsync(
-    operation: () async => baseCrudUseCase.call(CrudBaseParams(
-      api: ApiConstants.myEndpoint,
-      queryParameters: { if (search.isNotEmpty) 'search': search },
-      mapper: (json) => (json['data']['data'] as List)
-          .map((e) => MyEntity.fromJson(e)).toList(),
-    )),
-  );
+@injectable
+class MyItemsCubit extends AsyncCubit<List<MyEntity>> {
+  MyItemsCubit(this._getItems);
+  final GetMyItemsUseCase _getItems;
+
+  Future<void> fetchItems({String search = ''}) =>
+    execute(() => _getItems(search: search.isEmpty ? null : search));
 }
+
+// DataSource (only thing that touches the network):
+@override
+Future<Either<Failure, List<MyEntity>>> getItems({String? search}) =>
+  request<List<MyEntity>>(
+    method: HttpMethod.get,
+    endpoint: ApiEndpoints.myEndpoint,
+    queryParameters: {if (search != null && search.isNotEmpty) 'search': search},
+    cancelKey: 'search:myItems',     // dedupe — cancels previous search
+    fromJson: (j) => ((j['data'] as List?) ?? const [])
+      .whereType<Map<String, dynamic>>().map(MyModel.fromJson).map((m) => m.toEntity()).toList(),
+  );
 ```
 
-### Required Imports (in view_imports.dart)
+### Required Imports (in `<feature>_imports.dart`)
 ```dart
 import 'dart:async';
 import 'package:rxdart/rxdart.dart';

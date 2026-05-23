@@ -20,7 +20,7 @@ description: Keep Flutter_Base features clean, modular, and easy to change.
      - لو فيه `_buildXxx()` methods ترجع widgets أكثر من 10 أسطر → استخرجها لملفات منفصلة.
      - كل section / card / component → ملف خاص في `widgets/`.
      - الـ body widget = layout فقط (يجمع الـ sections).
-   - أضف كل ملف جديد كـ `part` في `view_imports.dart`.
+   - أضف كل ملف جديد كـ `part` في `<feature>_imports.dart`.
 
 2. **Widget Deduplication (أولوية عالية جداً):**
    - **قبل إنشاء أي widget جديد** — ابحث عن مثيل موجود:

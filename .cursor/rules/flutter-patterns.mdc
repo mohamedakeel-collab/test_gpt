@@ -38,16 +38,17 @@ For full development workflow, see `flutter-feature-development.mdc`.
 ### Dart 3.10 في الـ Widgets
 
 ```dart
-// ✅ Pattern matching للـ state rendering
+// ✅ Pattern matching للـ state rendering — sealed AsyncState<T>
 Widget build(BuildContext context) {
-  return switch (state.status) {
-    BaseStatus.loading => const _SkeletonView(),
-    BaseStatus.error => ErrorView(error: state.errorMessage),
-    BaseStatus.success when state.data.isEmpty => const EmptyWidget(...),
-    BaseStatus.success => _ContentView(data: state.data),
-    _ => const SizedBox.shrink(),
+  return switch (state) {
+    AsyncInitial<List<X>>() => const SizedBox.shrink(),
+    AsyncLoading<List<X>>() => const _SkeletonView(),
+    AsyncFailure<List<X>>(:final failure) => ErrorView(failure: failure),
+    AsyncSuccess<List<X>>(:final data) when data.isEmpty => const EmptyWidget(...),
+    AsyncSuccess<List<X>>(:final data) => _ContentView(data: data),
   };
 }
+// (in practice you'd just use AsyncBlocBuilder — this is for educational demonstration)
 
 // ✅ Records للـ tuples القصيرة
 (double width, double height) _cardSize(BuildContext context) {
@@ -109,44 +110,78 @@ final w = MediaQuery.of(context).size.width;  // ← rebuilds on keyboard show
 ```
 
 
-## File Structure — Separate Files Per Widget (MANDATORY)
+## File Structure — Clean Architecture per Feature (MANDATORY)
 
 ```
 lib/src/features/{feature_name}/
-├── entity/
-│   └── {feature}_entity.dart
-├── presentation/
-│   ├── imports/
-│   │   └── view_imports.dart              ← all imports + part declarations
-│   ├── cubits/
-│   │   └── {feature}_cubit.dart           ← extends AsyncCubit<T>
-│   ├── view/
-│   │   └── {feature}_screen.dart          ← thin: scaffold + body
-│   └── widgets/
-│       ├── {feature}_body.dart            ← layout ONLY — assembles sections
-│       ├── {feature}_header_widget.dart   ← separate file per section
-│       ├── {feature}_filter_widget.dart
-│       ├── {feature}_list_widget.dart
-│       └── {feature}_card_widget.dart
+├── data/
+│   ├── datasources/{feature}_remote_data_source_impl.dart   (extends BaseRemoteSource)
+│   ├── models/{entity}_model.dart                            (DTO with fromJson)
+│   ├── mappers/{entity}_mapper.dart                          (Model ↔ Entity)
+│   └── repositories/{feature}_repository_impl.dart           (implements domain interface)
+├── domain/
+│   ├── datasources/{feature}_remote_data_source.dart         (abstract interface)
+│   ├── entities/{entity}_entity.dart                         (pure Dart — what the UI sees)
+│   ├── enums/{entity}_status.dart
+│   ├── repositories/{feature}_repository.dart                (abstract interface)
+│   └── usecases/{action}_usecase.dart                        (Either<Failure, T>)
+└── presentation/
+    ├── imports/
+    │   └── {feature}_imports.dart                            ← part/part-of hub — name changes per feature
+    ├── cubits/
+    │   └── {feature}_cubit.dart                              ← extends AsyncCubit<T> — server state only
+    ├── controllers/
+    │   └── {feature}_view_controller.dart                    ← TextEditingController / ScrollController / ValueNotifier / FocusNode / AnimationController — ephemeral UI state
+    ├── view/
+    │   └── {feature}_screen.dart                             ← Public Screen — wires cubit + ViewController + AppBar + body (NO layout, NO functions, NO setState)
+    └── widgets/
+        ├── {feature}_body.dart                               ← layout ONLY — assembles sections
+        ├── {feature}_header_widget.dart                      ← separate file per section
+        ├── {feature}_filter_widget.dart
+        ├── {feature}_list_widget.dart
+        └── {feature}_card_widget.dart
 ```
 
-**Body = layout only.** No `_buildXxx()` methods returning 10+ lines.
+**Body = layout only.** No `_buildXxx()` methods returning 10+ lines (Strict Rule #6).
+**Controllers folder is mandatory** for any feature that has form fields, scroll, focus, or animations.
+**Each widget = its own file** as `class _NameWidget extends StatelessWidget` (private — starts with `_`), part-of the imports hub.
 
 
-## view_imports.dart Part Ordering
+## <feature>_imports.dart Part Ordering
 
 ```dart
+// External packages (regular imports)
+import 'dart:async';
+import 'package:dartz/dartz.dart' show Either, Left, Right, Unit;
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
+import 'package:rxdart/rxdart.dart';
+
+// App-level helpers + core (regular imports)
+import '../../../../config/res/config_imports.dart';
+import '../../../../core/state/async/async.dart';
+import '../../../../core/network/error/failures.dart';
+
+// Feature domain (regular imports — keeps data/domain portable)
+import '../../domain/entities/{entity}_entity.dart';
+import '../../domain/enums/{entity}_status.dart';
+import '../../domain/usecases/get_{entity}_list_usecase.dart';
+// ... other use-cases
+
 // 1. Cubits
-part '../cubits/feature_cubit.dart';
-// 2. View (screen)
-part '../view/feature_screen.dart';
-// 3. Body
-part '../widgets/feature_body.dart';
-// 4. Section widgets (alphabetical)
-part '../widgets/feature_filter_widget.dart';
-part '../widgets/feature_header_widget.dart';
-// 5. Card/item widgets last
-part '../widgets/feature_card_widget.dart';
+part '../cubits/{feature}_cubit.dart';
+// 2. ViewControllers (non-bloc UI state holders)
+part '../controllers/{feature}_view_controller.dart';
+// 3. View (screens)
+part '../view/{feature}_screen.dart';
+// 4. Body
+part '../widgets/{feature}_body.dart';
+// 5. Section widgets (alphabetical)
+part '../widgets/{feature}_filter_widget.dart';
+part '../widgets/{feature}_header_widget.dart';
+// 6. Card/item widgets last
+part '../widgets/{feature}_card_widget.dart';
 ```
 
 
@@ -167,7 +202,7 @@ Same design → reuse. Minor differences → add optional params. Used in 2+ fea
 | Text field raw (no label) | `DefaultTextField(controller, hint)` | Base field — use directly for search bars or fields without labels |
 | OTP/PIN | `CustomPinTextField(controller, onCompleted)` | 4-digit input |
 | Dropdown | `AppDropdown<T>(items, label, onChanged, itemAsString, isLoading)` | NO BlocBuilder wrapper. Pass `items` + `isLoading` from `context.watch` directly. NO error UI. |
-| API state wrapper | `AsyncBlocBuilder<C, T>(builder, skeletonBuilder)` | Loading/error/success auto |
+| API state wrapper | `AsyncBlocBuilder<C, T>(builder, loadingBuilder, errorBuilder, onRetry)` | Loading/error/success auto (errorBuilder receives `Failure`) |
 | Sliver API wrapper | `AsyncSliverBlocBuilder<C, T>(builder)` | For CustomScrollView |
 | Paginated list | `PaginatedListWidget<C, T>(itemBuilder)` | Infinite scroll |
 | Network image | `CachedImage(url, width, height)` | Never use `Image.network` |
@@ -186,19 +221,72 @@ Same design → reuse. Minor differences → add optional params. Used in 2+ fea
 
 ## Screen Pattern
 
+> **The Screen owns the lifecycle of both the cubit and the ViewController.** When you have a ViewController (most feature screens do), the Screen must be `StatefulWidget` so it can `initState` (create) and `dispose` (cleanup). For pure read-only screens (rare — no controllers, no notifiers), a `StatelessWidget + BlocProvider` is fine.
+
+### Standard pattern (Screen with ViewController + Cubit — the common case)
+
+```dart
+// presentation/view/my_feature_screen.dart
+part of '../imports/my_feature_imports.dart';
+
+class MyFeatureScreen extends StatefulWidget {
+  const MyFeatureScreen({super.key});
+  @override
+  State<MyFeatureScreen> createState() => _MyFeatureScreenState();
+}
+
+class _MyFeatureScreenState extends State<MyFeatureScreen> {
+  late final MyFeatureCubit _cubit;
+  late final MyFeatureViewController _vc;
+
+  @override
+  void initState() {
+    super.initState();
+    _cubit = injector<MyFeatureCubit>()..fetchData();
+    _vc = MyFeatureViewController(onSearch: (q) => _cubit.fetchData(search: q));
+  }
+
+  @override
+  void dispose() {
+    _vc.dispose();
+    _cubit.close();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => BlocProvider<MyFeatureCubit>.value(
+    value: _cubit,
+    child: DefaultScaffold(
+      title: LocaleKeys.myFeatureTitle.tr(),
+      body: _MyFeatureBody(controller: _vc),     // ← ViewController passed to widgets
+    ),
+  );
+}
+```
+
+### Pure-read pattern (no ViewController, no controllers — rare)
+
 ```dart
 class MyFeatureScreen extends StatelessWidget {
   const MyFeatureScreen({super.key});
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => injector<MyFeatureCubit>()..fetchData(),
-      child: DefaultScaffold(
-        title: LocaleKeys.myFeatureTitle.tr(),
-        body: const _MyFeatureBody(),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => BlocProvider(
+    create: (_) => injector<MyFeatureCubit>()..fetchData(),
+    child: DefaultScaffold(
+      title: LocaleKeys.myFeatureTitle.tr(),
+      body: const _MyFeatureBody(),
+    ),
+  );
+}
+```
+
+**Anti-pattern (Strict Rule #3 + #6 violations):**
+```dart
+class _MyFeatureScreenState extends State<MyFeatureScreen> {
+  final _ctrl = TextEditingController();             // ❌ Rule #4 — يجب أن يكون في ViewController
+  bool _isFiltering = false;                          // ❌ Rule #4 — استخدم ValueNotifier في ViewController
+  void _onSearch(String q) { setState(() => ...); }   // ❌ Rule #3 + #4 — handler خارج Screen، no setState
+  Widget _buildFilterChip(...) => Chip(...);          // ❌ Rule #6 — انقله لـ widgets/ كملف منفصل
 }
 ```
 
@@ -230,7 +318,7 @@ class _MyFeatureBody extends StatelessWidget {
           ),
         );
       },
-      skeletonBuilder: (_) => ListView.builder(
+      loadingBuilder: (_) => ListView.builder(
         itemCount: 8,
         itemBuilder: (_, __) => _MyFeatureCard(item: MyFeatureEntity.initial()),
       ),
@@ -375,7 +463,7 @@ class _ChatInputState extends State<_ChatInput> {
 // ✅ CORRECT — LoadingButton with BlocListener for success/error
 BlocListener<SubmitCubit, AsyncState<bool>>(
   listener: (context, state) {
-    if (state.isSuccess) {
+    if (state is AsyncSuccess) {
       MessageUtils.showSnackBar(message: LocaleKeys.success.tr(), baseStatus: BaseStatus.success);
       Go.back();
     }
@@ -392,7 +480,7 @@ BlocListener<SubmitCubit, AsyncState<bool>>(
 ```
 
 **LoadingButton بيعمل إيه تلقائياً:**
-- بيسمع على `cubit.state.isLoading` → يعرض spinner بدل النص
+- بيسمع على `cubit.state is AsyncLoading` → يعرض spinner بدل النص
 - بيمنع tap تاني وهو loading
 - بيرجع للحالة الطبيعية لما الـ cubit يخلص (success أو error)
 
@@ -476,6 +564,6 @@ lib/src/features/home/presentation/
 > **See `flutter-base-coding-standards.mdc` section 8.1 for FormMixin pattern.**
 
 Quick reminders:
-- AsyncCubit: `@injectable` + `executeAsync()` + local CRUD updates (never re-fetch)
+- AsyncCubit: `@injectable` + `execute()` + local CRUD updates (never re-fetch)
 - Entity: `factory initial()` + `fromJson` with `??` + `tryParse` (never `parse`)
 - Form: `with FormMixin` + `params.validateAndScroll()` + `LoadingButton`

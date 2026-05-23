@@ -133,7 +133,7 @@ Step 1: Create ViewController (controllers + toParams)
     ↓
 Step 2: Create Params class (toJson / toFormData)
     ↓
-Step 3: Create Submit Cubit (executeAsync + POST/PUT)
+Step 3: Create Submit Cubit (execute + POST/PUT)
     ↓
 Step 4: Build Form widget (CustomTextFiled + validators)
     ↓
@@ -143,7 +143,7 @@ Step 6: Connect LoadingButton (validateAndScroll + submit)
     ↓
 Step 7: Handle Success (Go.back(result) or successDialog)
     ↓
-Step 8: Handle Error (toast auto-handled by executeAsync)
+Step 8: Handle Error (toast auto-handled by execute)
 ```
 
 ---
@@ -249,23 +249,39 @@ class ProductParams {
 
 ## Step 3: Submit Cubit
 
+> **The Cubit takes UseCases — not `BaseRemoteSource` directly.** UseCases live in `domain/usecases/` and call `Repository` which delegates to the DataSource. The DataSource is the only thing that touches `BaseRemoteSource.request<T>(...)`. See `api-pipeline` skill for the full pipeline.
+
 ### POST (Create):
 
 ```dart
+// domain/usecases/create_product_usecase.dart
+@lazySingleton
+class CreateProductUseCase {
+  CreateProductUseCase(this._repo);
+  final ProductsRepository _repo;
+  Future<Either<Failure, ProductEntity>> call(ProductParams p) =>
+    _repo.createProduct(name: p.name, description: p.description, price: p.price);
+}
+
+// data/datasources/products_remote_data_source_impl.dart
+@override
+Future<Either<Failure, ProductEntity>> createProduct({
+  required String name, required String description, required double price,
+}) => request<ProductEntity>(
+  method: HttpMethod.post,
+  endpoint: ApiEndpoints.products,
+  body: {'name': name, 'description': description, 'price': price},
+  fromJson: (j) => ProductModel.fromJson((j['data'] ?? j) as Map<String, dynamic>).toEntity(),
+);
+
+// presentation/cubits/create_product_cubit.dart
 @injectable
 class CreateProductCubit extends AsyncCubit<ProductEntity> {
-  CreateProductCubit() : super(ProductEntity.initial());
+  CreateProductCubit(this._createProduct);
+  final CreateProductUseCase _createProduct;
 
-  Future<void> createProduct(ProductParams params) async {
-    await executeAsync(
-      operation: () => baseCrudUseCase.call(CrudBaseParams(
-        api: ApiConstants.products,
-        httpRequestType: HttpRequestType.post,
-        body: params.toJson(),
-        mapper: (json) => ProductEntity.fromJson(json['data']),
-      )),
-    );
-  }
+  Future<void> submit(ProductParams params) =>
+    execute(() => _createProduct(params));
 }
 ```
 
@@ -274,43 +290,56 @@ class CreateProductCubit extends AsyncCubit<ProductEntity> {
 ```dart
 @injectable
 class EditProductCubit extends AsyncCubit<ProductEntity> {
-  EditProductCubit() : super(ProductEntity.initial());
+  EditProductCubit(this._editProduct);
+  final EditProductUseCase _editProduct;
 
-  Future<void> editProduct(String id, ProductParams params) async {
-    await executeAsync(
-      operation: () => baseCrudUseCase.call(CrudBaseParams(
-        api: ApiConstants.productDetail(id),
-        httpRequestType: HttpRequestType.put,
-        body: params.toJson(),
-        mapper: (json) => ProductEntity.fromJson(json['data']),
-      )),
-    );
-  }
+  Future<void> submit(int id, ProductParams params) =>
+    execute(() => _editProduct(id: id, params: params));
+}
+
+// UseCase + DataSource follow the same pattern as POST, with HttpMethod.put + ApiEndpoints.productById(id).
+```
+
+### Action-only (no entity returned — return Unit):
+
+```dart
+// domain/usecases/send_contact_usecase.dart
+@lazySingleton
+class SendContactUseCase {
+  SendContactUseCase(this._repo);
+  final ContactRepository _repo;
+  Future<Either<Failure, Unit>> call(ContactUsParams p) => _repo.send(p);
+}
+
+// data/datasources/contact_remote_data_source_impl.dart
+Future<Either<Failure, Unit>> send(ContactUsParams p) => request<Unit>(
+  method: HttpMethod.post,
+  endpoint: ApiEndpoints.contactUs,
+  body: p.toJson(),
+  fromJson: (_) => unit,
+);
+
+// presentation/cubits/contact_us_cubit.dart
+@injectable
+class ContactUsCubit extends AsyncCubit<Unit> {
+  ContactUsCubit(this._send);
+  final SendContactUseCase _send;
+  Future<void> submit(ContactUsParams p) => execute(() => _send(p));
 }
 ```
 
-### Action-only (no entity returned):
-
+**Side effects (snackbar / navigation) — handle in the View via `BlocListener` with a sealed-state check:**
 ```dart
-@injectable
-class ContactUsCubit extends AsyncCubit<BaseModel?> {
-  ContactUsCubit() : super(null);
-
-  Future<void> contactUs(ContactUsParams params) async {
-    await executeAsync(
-      operation: () => baseCrudUseCase.call(CrudBaseParams(
-        api: ApiConstants.contactUs,
-        httpRequestType: HttpRequestType.post,
-        body: params.toJson(),
-        mapper: (json) => BaseModel.fromJson(json),
-      )),
-      successEmitter: (success) {
-        Go.back();
-        successDialog(context: Go.context, title: LocaleKeys.messageSentSuccessfully.tr());
-      },
-    );
-  }
-}
+BlocListener<ContactUsCubit, AsyncState<Unit>>(
+  listenWhen: (p, c) => p.runtimeType != c.runtimeType,
+  listener: (ctx, s) {
+    if (s is AsyncSuccess<Unit>) {
+      Go.back();
+      successDialog(context: ctx, title: LocaleKeys.messageSentSuccessfully.tr());
+    }
+  },
+  child: LoadingButton(cubit: ctx.read<ContactUsCubit>(), title: LocaleKeys.send.tr(), onTap: () => ...),
+)
 ```
 
 ---
@@ -390,7 +419,7 @@ class _CreateProductBodyState extends State<_CreateProductBody> with FormMixin {
   Widget build(BuildContext context) {
     return BlocListener<CreateProductCubit, AsyncState<ProductEntity>>(
       listener: (context, state) {
-        if (state.isSuccess && state.data != null) {
+        if (state is AsyncSuccess && state.data != null) {
           Go.back(state.data);
         }
       },
@@ -472,7 +501,7 @@ validator: (v) {
 | Contact/feedback → success popup | `successDialog(context, title)` + `Go.back()` in successEmitter |
 | Action → just show toast | `MessageUtils.showSnackBar(message, baseStatus: BaseStatus.success)` |
 
-Error: `executeAsync` automatically shows error toast. LoadingButton automatically stops loading on error.
+Error: `execute` automatically shows error toast. LoadingButton automatically stops loading on error.
 
 ---
 
@@ -480,7 +509,7 @@ Error: `executeAsync` automatically shows error toast. LoadingButton automatical
 
 - [ ] ViewController created with all controllers + `toParams()` + `dispose()`
 - [ ] Params class created with `toJson()` (or `toFormData()` for files)
-- [ ] Submit cubit is `@injectable` + `executeAsync` + correct HTTP method
+- [ ] Submit cubit is `@injectable` + `execute` + correct HTTP method
 - [ ] `build_runner` ran after adding `@injectable`
 - [ ] Form widget uses `CustomTextFiled` with validators
 - [ ] Screen has `FormMixin` + `formKey`

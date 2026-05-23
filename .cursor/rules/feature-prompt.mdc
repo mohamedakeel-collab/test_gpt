@@ -5,6 +5,20 @@ globs: ["lib/**/*.dart"]
 
 # Feature Development Prompt
 
+## 🚨 The Strict Six Rules (تطبّق في كل feature)
+
+| # | القاعدة |
+|---|--------|
+| 1 | **No unnecessary comments** — Comments تشرح "لماذا"، مش "ماذا". الكود الجيد يشرح نفسه. |
+| 2 | **No hardcoded values in the View** — نصوص/ألوان/مقاسات/icons/assets من `LocaleKeys` / `AppColors` / `AppSize`/`AppPadding`/`AppCircular` / `AppAssets`. |
+| 3 | **The View is clean** — لا functions داخل الـ Screen غير `build/initState/dispose`. كل handler / validator / formatter / sheet-opener في Cubit أو ViewController أو widget منفصل. |
+| 4 | **Performance is top priority — no `setState`, no rebuilds بدون داعي** — `ValueNotifier` + `ValueListenableBuilder` للـ ephemeral UI state، `BlocSelector` للـ partial state، `AsyncBlocBuilder` للـ AsyncCubit. |
+| 5 | **Most classes Stateless** — `StatefulWidget` فقط لـ lifecycle حقيقي (cubit/ViewController ownership، animations، focus). الـ state في cubit/ViewController. |
+| 6 | **No `Widget _buildSomething()` inside the View** — كل widget ملف منفصل في `presentation/widgets/` كـ `class _Something extends StatelessWidget` (private — يبدأ بـ `_`)، part-of الـ imports hub. |
+
+التفاصيل + checklist في `coding-standards` skill — قسم "The Strict Six Rules".
+
+
 ## 🎯 STEP 0 — Mindset & Non-Negotiables (اقرأها قبل أي حاجة تانية)
 
 > **قبل ما تبدأ أي شغل في الفيتشر دي، خد القواعد دي كأنها قانون — مش suggestion.**
@@ -93,7 +107,7 @@ All skills in `.claude/skills/` are available. Ensure you've internalized:
 - `bloc-provider-scoping` — where to provide cubits, single vs multi, shared vs isolated, decision tree
 
 **API & Data Flow:**
-- `api-pipeline` — Complete Postman → ApiConstants → Entity → CrudBaseParams → Cubit → UI pipeline
+- `api-pipeline` — Complete Postman → ApiEndpoints → Model + Mapper → Entity → DataSource (`BaseRemoteSource.request<T>`) → Repository → UseCase → Cubit → UI pipeline
 - `api-design` — Auto-generate Postman Collection JSON from Figma screens (unified entities, pagination, multi-step forms, file upload)
 - `form-api-pipeline` — Complete form → ViewController → Params → validation → API submit → success
 - `navigation-patterns` — Go.to() with arguments, back with result, refresh parent, tab navigation
@@ -184,8 +198,8 @@ STEP 4 — API SOURCE — SKIP IF UI_ONLY MODE
 - Read full request/response schema from the provided Postman Collection
 - Check pagination → PaginatedCubit + PaginatedListWidget if yes
 - Check actions (delete/update/toggle) → plan local state update (NEVER re-fetch):
-  - Add: insert at index 0 → setSuccess(data: [newItem, ...state.data])
-  - Edit: map + replace → state.data.map((e) => e.id == id ? updated : e).toList()
+  - Add: insert at index 0 → setData([newItem, ...(lastData ?? const [])])
+  - Edit: map + replace → (lastData ?? const []).map((e) => e.id == id ? updated : e).toList()
   - Delete: removeWhere → state.data..removeWhere((e) => e.id == id)
 - One cubit per endpoint — never merge
 - Entity safety: factory initial(), fromJson with ?? defaults, tryParse only (never parse)
@@ -229,7 +243,7 @@ STEP 4 — API SOURCE — SKIP IF UI_ONLY MODE
 
 6. Create entities with `factory initial()` + safe `fromJson`
 
-7. Create cubits with `executeAsync` (AsyncCubit) or `fetchPageData` override (PaginatedCubit)
+7. Create cubits with `execute` (AsyncCubit) or `fetchPageData` override (PaginatedCubit)
 
 → **بعد ما تخلص، روح STEP 6 (Plan) — الـ entities والـ cubits جاهزين، فالـ plan هيركز على الـ UI**
 
@@ -273,16 +287,28 @@ Wait for my approval before writing code.
 STEP 7 — IMPLEMENT
 ══════════════════════════════════════════════════════════════
 
-Structure:
-- Every file: `part of '../imports/view_imports.dart'`
-- view_imports.dart: all imports + part declarations (cubits → view → body → section widgets → card widgets)
-- Feature folder: entity/, presentation/{imports/, cubits/, view/, widgets/}
+Structure (Clean Architecture — لكل feature):
+- Every presentation file: `part of '../imports/<feature>_imports.dart';` (الاسم يتغير بحسب الـ feature — مثل `products_imports.dart`).
+- `<feature>_imports.dart`: all external imports + part declarations (cubits → controllers → view → body → section widgets → card widgets).
+- Feature folder layout:
+  ```
+  features/<feature>/
+  ├── data/{datasources, models, mappers, repositories}/
+  ├── domain/{datasources, entities, enums, repositories, usecases}/
+  └── presentation/
+      ├── imports/<feature>_imports.dart
+      ├── cubits/<feature>_cubit.dart                  (AsyncCubit<T> — server state)
+      ├── controllers/<feature>_view_controller.dart   (TextEditingController, ValueNotifier, etc.)
+      ├── view/<feature>_screen.dart                   (Screen — wires cubit + ViewController)
+      └── widgets/                                     (private `_X` widgets)
+  ```
+- The Cubit depends on **UseCases** (`domain/usecases/`) — never on `BaseRemoteSource` directly.
 
 Widget Splitting (إلزامي):
 - Body widget = layout ONLY — assembles sections
 - Each section / card / component in a SEPARATE file inside widgets/
 - NO `_buildXxx()` methods returning 10+ lines in body files
-- Each widget file added as `part` in view_imports.dart
+- Each widget file added as `part` in <feature>_imports.dart
 
 Widget Reuse (إلزامي):
 - Before creating ANY widget → search app_shared/widgets/ AND existing features (especially recent screens)
@@ -291,16 +317,30 @@ Widget Reuse (إلزامي):
 - Used in 2+ features → move to app_shared/widgets/
 - NEVER duplicate card widgets across features
 
-Entity:
-- factory initial() with sensible defaults
-- fromJson: String ?? '', int/double ?? 0, bool ?? false, List ?? [], Object ?? Model.initial(), nullable → no ??
-- NEVER int.parse() / double.parse() → ONLY tryParse with fallback
+Entity (in `domain/entities/`):
+- factory initial() with sensible defaults — for Skeletonizer placeholders
+- The Entity is **pure Dart** — no Map, no JSON, no Dio. The UI sees Entities only.
+- All JSON parsing happens in the **Model** (`data/models/<entity>_model.dart`):
+  - String ?? '', int/double ?? 0 + tryParse, bool ?? false, List ?? [], nullable → no ??
+  - NEVER int.parse() / double.parse() → ONLY tryParse with fallback
+- The **Mapper** (`data/mappers/<entity>_mapper.dart`) does Model → Entity. Keep it pure.
 
 State:
-- AsyncCubit<T> for GET, one cubit per endpoint, @injectable
-- PaginatedCubit<T> if pagination
-- CRUD Local Updates (NEVER re-fetch after add/edit/delete)
-- Heavy screens (4+ services): use compute() for JSON parsing
+- **AsyncCubit<T>** (in `core/state/async/`) for fetched data — extends `AsyncCubit<T>`, takes **UseCases** in the constructor (`@injectable`).
+- `execute(() => _useCase(...))` — emits AsyncLoading → AsyncSuccess/AsyncFailure by folding `Either<Failure, T>`.
+- `setData(T)` / `setFailure(Failure)` for local updates (no API call).
+- `lastData` holds the last successful payload across loading/failure states.
+- AsyncState is **sealed**: `AsyncInitial / AsyncLoading(previous) / AsyncSuccess(data) / AsyncFailure(failure, previous)` — pattern-match exhaustively or use `AsyncBlocBuilder`.
+- One cubit per resource (list/detail). CRUD does **optimistic local updates** with `setData` + rollback on failure — NEVER re-fetch.
+- **PaginatedAsyncCubit<T>** (in `core/state/paginated/`) if pagination.
+- Heavy screens (4+ services): use `compute()` for JSON parsing.
+
+API/network (every endpoint):
+- DataSource extends `BaseRemoteSource` and calls `request<T>(method, endpoint, ..., fromJson)` — returns `Either<Failure, T>`.
+- The Cubit takes **UseCases**, never `BaseRemoteSource` or `Repository` directly.
+- `ApiEndpoints` is the only place URL paths live.
+- Interceptor order (already wired in `DioClient`): Locale → Auth → Retry → AppCache → Logging (debug).
+- Multipart uploads: `asFormData: true` on `request<T>(...)`.
 
 Scaffold:
 - Inner screens → DefaultScaffold(title, body) — NEVER build custom header in body
@@ -337,13 +377,15 @@ Body Widget Pattern:
 - Skeleton: Entity.initial() for Skeletonizer
 
 ViewController Pattern (إلزامي — ممنوع خرقها):
-- **ممنوع** وضع Controller أو ValueNotifier داخل الـ View — لازم في ViewController class
-- All TextEditingController, ValueNotifier, AnimationController, ScrollController, FocusNode → inside ViewController class ONLY
-- All UI logic functions (onSend, onSearch, selectTab, onFilter) → inside ViewController
-- View uses ONE ViewController object → يستدعيه بس (_vc.xxx)
-- Use ValueNotifier + ValueListenableBuilder instead of setState
-- ViewController provides dispose() for all controllers/notifiers
-- View calls _vc.dispose() in its dispose()
+- **Location:** `presentation/controllers/<feature>_view_controller.dart` — part of `<feature>_imports.dart`.
+- **ممنوع** وضع Controller أو ValueNotifier داخل الـ View — لازم في ViewController class.
+- All `TextEditingController`, `ValueNotifier`, `AnimationController`, `ScrollController`, `FocusNode` → inside ViewController class ONLY.
+- All small UI-only handlers (clear, toggle, setFilter) → inside ViewController.
+- View uses ONE ViewController object → ينشئه في `initState` ويـ `dispose` منه في `dispose`.
+- Use `ValueNotifier` + `ValueListenableBuilder` instead of `setState` — الافتراضي.
+- ViewController provides `dispose()` for all controllers/notifiers/focus-nodes.
+- The Screen is typically `StatefulWidget` to own this lifecycle (cubit + ViewController + subscriptions).
+- Server data stays in the **Cubit**, ephemeral UI state in the **ViewController** — never mix.
 
 Forms:
 - Params class MUST use `with FormMixin`
@@ -368,7 +410,7 @@ Values:
 - Margin: .marginAll(), .marginStart() extensions
 - const: add to EVERY widget/constructor that can be const
 - Navigation: Go.to/back/off/offAll — never Navigator.push
-- API: ApiConstants.xxx — never raw URL strings (skip if UI_ONLY)
+- API: ApiEndpoints.xxx — never raw URL strings (skip if UI_ONLY)
 - Models: status/color/label mappers in entity/ — NEVER helper methods inside widget
 - Imports: delete ALL unused imports | Parameters: remove unused optional params
 - Dropdown API: isolate BlocBuilder on the dropdown itself, not wrapping whole screen

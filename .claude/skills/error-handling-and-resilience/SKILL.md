@@ -20,18 +20,23 @@ description: Unified error handling, resilience, and UX rules for API-driven fea
 
 ### 2. Where to Handle Errors
 
-- **الطبقة الأساسية** (baseCrudUseCase / AsyncCubit) تتعامل مع:
-  - mapping لـ `Failure` (network, server, unknown).
-  - `setError(errorMessage: ..., showToast: true/false)`.
+- **الـ Network layer** (`BaseRemoteSource.request<T>` + `ResponseParser`) تتعامل مع:
+  - mapping للـ Dio exceptions و status codes لـ `Failure` types في `core/network/error/failures.dart` (`ServerFailure`, `NetworkFailure`, `CancelledFailure`, `ParseFailure`, `UnknownFailure`، …).
+  - الـ result بيرجع كـ `Either<Failure, T>` — الـ caller ما يعملش try/catch.
+- **`AsyncCubit.execute()`** تتعامل مع:
+  - emit `AsyncLoading` → `AsyncSuccess(data)` / `AsyncFailure(failure, previous: lastData)`.
+  - `CancelledFailure` silent — الـ state ما يتغيرش (newer call superseded this one).
+  - لو محتاج local validation failure → `setFailure(Failure)`.
 - **Cubit** يحدد:
-  - هل نعرض toast؟
-  - هل نغير state لـ error ونبني UI مناسب؟
+  - هل نطلق snackbar/toast بعد الـ AsyncFailure؟ (عبر `BlocListener` في الـ View — مش داخل الـ cubit).
+  - هل نغير state لـ error ونبني UI مناسب؟ (`AsyncBlocBuilder` يعمل ده automatically).
 - **View**:
-  - تعرض error UI (`ErrorView`, `EmptyWidget`, snack bar).
-  - توفر زر "إعادة المحاولة".
+  - تعرض error UI (`ErrorView`, `EmptyWidget`, snack bar via `MessageUtils`).
+  - توفر زر "إعادة المحاولة" عبر `onRetry` في `AsyncBlocBuilder`.
 
 قاعدة:
 - **لا تعمل try/catch في الـ UI** إلا في حالات نادرة جداً (local-only logic).
+- **لا تعمل try/catch حول `request<T>`** — هو بالفعل يلتقط الـ DioException ويرجع `Either.Left(Failure)`.
 
 ---
 
@@ -51,7 +56,7 @@ AsyncBlocBuilder<GetItemsCubit, List<ItemEntity>>(
       itemBuilder: (_, i) => ItemCard(item: items[i]),
     );
   },
-  skeletonBuilder: (context) => const ItemsSkeletonList(),
+  loadingBuilder: (context) => const ItemsSkeletonList(),
   errorBuilder: (context, error) => ErrorView(
     error: error,
     onRetry: () => context.read<GetItemsCubit>().fetchItems(),

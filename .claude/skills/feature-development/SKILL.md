@@ -5,6 +5,48 @@ description: Flutter feature development workflow — Figma MCP + Postman MCP + 
 
 # Flutter Feature Development — Full Workflow
 
+## 🚨 Strict Six Rules (تطبّق في كل feature)
+
+| # | القاعدة |
+|---|--------|
+| 1 | **No unnecessary comments** — اشرح "لماذا"، مش "ماذا". |
+| 2 | **No hardcoded in the View** — نصوص/ألوان/مقاسات/icons من `LocaleKeys` / `AppColors` / `AppSize`/`AppPadding`/`AppCircular` / `AppAssets`. |
+| 3 | **The View is clean — no functions inside it** — handlers/validators/formatters في Cubit أو ViewController، widgets في ملفات منفصلة. |
+| 4 | **Performance is top priority — no setState, no needless rebuilds** — `ValueNotifier` + `ValueListenableBuilder`، `BlocSelector` لجزء صغير، `AsyncBlocBuilder` للـ AsyncCubit. |
+| 5 | **Most classes Stateless** — `StatefulWidget` فقط لـ lifecycle حقيقي (animations/cubit/ViewController ownership). |
+| 6 | **No `Widget _buildSomething()` inside the View** — كل widget ملف منفصل في `presentation/widgets/` كـ `class _Something extends StatelessWidget`. |
+
+التفاصيل + checklist في `coding-standards` skill — قسم "The Strict Six Rules".
+
+---
+
+## Folder Structure (لكل feature — Clean Architecture كاملة)
+
+```
+features/<feature>/
+├── data/
+│   ├── datasources/<feature>_remote_data_source_impl.dart   (extends BaseRemoteSource)
+│   ├── models/<entity>_model.dart                            (DTO with fromJson)
+│   ├── mappers/<entity>_mapper.dart                          (Model ↔ Entity)
+│   └── repositories/<feature>_repository_impl.dart           (implements domain interface)
+├── domain/
+│   ├── datasources/<feature>_remote_data_source.dart         (abstract interface)
+│   ├── entities/<entity>_entity.dart                         (pure Dart)
+│   ├── enums/<entity>_status.dart
+│   ├── repositories/<feature>_repository.dart                (abstract interface)
+│   └── usecases/<action>_usecase.dart                        (Either<Failure, T>)
+└── presentation/
+    ├── imports/<feature>_imports.dart                        (part-of hub — per-feature name, e.g. products_imports.dart)
+    ├── cubits/<feature>_cubit.dart                           (AsyncCubit<T> — server state only)
+    ├── controllers/<feature>_view_controller.dart            (TextEditingController, ValueNotifier, ScrollController — ephemeral UI state)
+    ├── view/<feature>_screen.dart                            (Screens — public entry points; cubit + ViewController lifecycle owner)
+    └── widgets/                                              (private `_X` widgets — `_FooBody`, `_FooCard`, …)
+```
+
+**Imports hub:** every presentation file declares `part of '../imports/<feature>_imports.dart';` (e.g. `products_imports.dart` for products feature — the name **changes per feature**).
+
+---
+
 ## ⚠️ Mandatory Pre-Flight Reading (إلزامي قبل أي feature جديد)
 
 > **هذا الـ skill ده هو الـ workflow — لكن قبل ما تبدأ، اقرأ الـ skills دي بـ `Read` tool عشان تكون شاحن الـ context كله:**
@@ -112,7 +154,7 @@ description: Flutter feature development workflow — Figma MCP + Postman MCP + 
 - Icons: `IconWidget` (handles SVG/PNG/Lottie/network)
 - Messages: `MessageUtils.showSnackBar`
 
-**Must-Use Helpers:** `Validators.*`, `InputFormatters.*`, `FormMixin`, `Go.*`, `ApiConstants.*`
+**Must-Use Helpers:** `Validators.*`, `InputFormatters.*`, `FormMixin`, `Go.*`, `ApiEndpoints.*`
 
 **Golden Rule:** If it exists in `core/` or `config/` → use it. Never reinvent.
 
@@ -168,11 +210,11 @@ lib/src/features/feature_name/
 │   └── feature_name_entity.dart
 └── presentation/
     ├── imports/
-    │   └── view_imports.dart              ← all imports + part declarations
+    │   └── <feature>_imports.dart              ← all imports + part declarations
     ├── cubits/
-    │   └── feature_name_cubit.dart        ← part of view_imports.dart
+    │   └── feature_name_cubit.dart        ← part of <feature>_imports.dart
     ├── view/
-    │   └── feature_name_screen.dart       ← part of view_imports.dart
+    │   └── feature_name_screen.dart       ← part of <feature>_imports.dart
     └── widgets/
         ├── feature_name_body.dart         ← layout only — يجمع الـ sections
         ├── feature_name_header_widget.dart ← ملف منفصل لكل section
@@ -213,117 +255,109 @@ class _FeatureBody extends StatelessWidget {
 ### Standard Cubit
 
 ```dart
-// part of '../imports/view_imports.dart'
+// part of '../imports/<feature>_imports.dart'
 @injectable
 class MyFeatureCubit extends AsyncCubit<List<MyFeatureEntity>> {
-  MyFeatureCubit() : super([]);
+  MyFeatureCubit(this._getItems, this._deleteItem);
+  final GetItemsUseCase _getItems;
+  final DeleteItemUseCase _deleteItem;
 
-  Future<void> fetchItems() async {
-    await executeAsync(
-      operation: () => baseCrudUseCase.call(
-        CrudBaseParams(
-          api: ApiConstants.myEndpoint,
-          httpRequestType: HttpRequestType.get,
-          mapper: (json) => (json['data']['data'] as List)
-              .map((e) => MyFeatureEntity.fromJson(e))
-              .toList(),
-        ),
-      ),
-    );
-  }
+  Future<void> fetchItems({String? search}) =>
+    execute(() => _getItems(search: search));
 
-  // Local update on delete — NO re-fetch
-  Future<void> deleteItem(int id) async {
-    final result = await baseCrudUseCase.call(CrudBaseParams(
-      api: '${ApiConstants.myEndpoint}/$id',
-      httpRequestType: HttpRequestType.delete,
-      mapper: (_) => state.data..removeWhere((e) => e.id == id),
-    ));
-    result.when(
-      (data) => setSuccess(data: data),
-      (failure) => setError(errorMessage: failure.message, showToast: true),
+  // Local update on delete — NO re-fetch (optimistic)
+  Future<Either<Failure, Unit>> delete(int id) async {
+    final before = lastData ?? const <MyFeatureEntity>[];
+    setData(before.where((e) => e.id != id).toList());
+    final result = await _deleteItem(id);
+    return result.fold(
+      (failure) { setData(before); return Left(failure); },
+      Right.new,
     );
   }
 }
 ```
 
-**Pagination (MANDATORY for list screens):**
+**Pagination (when the list paginates server-side):**
 ```dart
-// List endpoints with standalone screens → ALWAYS PaginatedCubit
+// Use PaginatedAsyncCubit<T> from core/state/paginated/. The cubit takes a UseCase.
 @injectable
-class MyCubit extends PaginatedCubit<ItemEntity> {
-  @override
-  Future<Result<Map<String, dynamic>, Failure>> fetchPageData(int page, {String? key}) async {
-    return baseCrudUseCase.call(CrudBaseParams(
-      api: ApiConstants.myEndpoint,
-      httpRequestType: HttpRequestType.get,
-      queryParameters: ConstantManager.paginateJson(page),
-      mapper: (json) => json,
-    ));
-  }
+class MyListCubit extends PaginatedAsyncCubit<ItemEntity> {
+  MyListCubit(this._getPage);
+  final GetItemsPageUseCase _getPage;
 
   @override
-  List<ItemEntity> parseItems(json) =>
-      (json['data'] as List).map((e) => ItemEntity.fromJson(e)).toList();
-
-  @override
-  PaginationMeta parsePagination(json) => PaginationMeta.fromJson(json['pagination']);
+  Future<Either<Failure, PaginatedData<ItemEntity>>> fetchPage(int page, {String? key}) =>
+    _getPage(page: page, search: key);
 }
+
+// domain/usecases/get_items_page_usecase.dart
+@lazySingleton
+class GetItemsPageUseCase {
+  GetItemsPageUseCase(this._repo);
+  final ItemsRepository _repo;
+  Future<Either<Failure, PaginatedData<ItemEntity>>> call({required int page, String? search}) =>
+    _repo.getItemsPage(page: page, search: search);
+}
+
+// data/datasources/items_remote_data_source_impl.dart
+@override
+Future<Either<Failure, PaginatedData<ItemEntity>>> getItemsPage({
+  required int page, String? search,
+}) => request<PaginatedData<ItemEntity>>(
+  method: HttpMethod.get,
+  endpoint: ApiEndpoints.items,
+  queryParameters: {'page': page, if (search != null && search.isNotEmpty) 'search': search},
+  fromJson: (j) => PaginatedData<ItemEntity>(
+    items: ((j['data'] as List?) ?? const [])
+      .whereType<Map<String, dynamic>>().map(ItemModel.fromJson).map((m) => m.toEntity()).toList(),
+    meta: PaginationMeta.fromJson(j['meta'] as Map<String, dynamic>),
+  ),
+);
 // View: PaginatedListWidget(cubit: ..., itemBuilder: ...)
 ```
-> **Exception:** AsyncCubit<List<T>> only for dropdowns, sub-sections, filter chips.
+> **Exception:** Plain `AsyncCubit<List<T>>` is fine for dropdowns, small sub-sections, and filter chips that don't paginate.
 
 ### ⚠️ CRUD Local Update Rule (NON-NEGOTIABLE)
 
-> **NEVER re-fetch the entire list after add/edit/delete.** Always update the local state immediately.
-> The API response from the action (add/edit/delete) contains enough info to update the UI without re-calling the GET service.
+> **NEVER re-fetch the entire list after add/edit/delete.** Always update the local state immediately — preferably **optimistically** (mutate first, then call the API, rollback on failure).
+> The API response from the action (add/edit/delete) contains the server-confirmed entity. Use that, not the user's input.
 
-**Add (Insert at index 0):**
+**Add (optimistic insert + rollback on failure):**
 ```dart
-Future<void> addItem(AddItemParams params) async {
-  final result = await baseCrudUseCase.call(CrudBaseParams(
-    api: ApiConstants.items,
-    httpRequestType: HttpRequestType.post,
-    body: params.toJson(),
-    mapper: (json) => ItemEntity.fromJson(json['data']),
-  ));
-  result.when(
-    (newItem) => setSuccess(data: [newItem, ...state.data]),  // insert at index 0
-    (failure) => setError(errorMessage: failure.message, showToast: true),
-  );
-}
-```
+Future<Either<Failure, ItemEntity>> create(AddItemParams params) async {
+  final temp = ItemEntity.tempFromParams(params);     // negative id = temp marker
+  final before = lastData ?? const <ItemEntity>[];
+  setData([temp, ...before]);                          // optimistic insert
 
-**Edit (copyWith on matching item):**
-```dart
-Future<void> editItem(int id, EditItemParams params) async {
-  final result = await baseCrudUseCase.call(CrudBaseParams(
-    api: '${ApiConstants.items}/$id',
-    httpRequestType: HttpRequestType.put,
-    body: params.toJson(),
-    mapper: (json) => ItemEntity.fromJson(json['data']),
-  ));
-  result.when(
-    (updatedItem) {
-      final updatedList = state.data.map((e) => e.id == id ? updatedItem : e).toList();
-      setSuccess(data: updatedList);
+  final result = await _createItem(params);
+  return result.fold(
+    (failure) { setData(before); return Left(failure); },                              // rollback
+    (saved) {                                                                            // replace temp with confirmed entity
+      setData((lastData ?? before).map((e) => e.id == temp.id ? saved : e).toList());
+      return Right(saved);
     },
-    (failure) => setError(errorMessage: failure.message, showToast: true),
   );
 }
 ```
 
-**Delete (removeWhere):**
+**Edit (local — when an edit screen returns):**
 ```dart
-Future<void> deleteItem(int id) async {
-  final result = await baseCrudUseCase.call(CrudBaseParams(
-    api: '${ApiConstants.items}/$id',
-    httpRequestType: HttpRequestType.delete,
-    mapper: (_) => state.data..removeWhere((e) => e.id == id),
-  ));
-  result.when(
-    (data) => setSuccess(data: data),
-    (failure) => setError(errorMessage: failure.message, showToast: true),
+void updateItem(ItemEntity updated) {
+  final current = lastData ?? const <ItemEntity>[];
+  setData(current.map((e) => e.id == updated.id ? updated : e).toList());
+}
+```
+
+**Delete (optimistic remove + rollback):**
+```dart
+Future<Either<Failure, Unit>> delete(int id) async {
+  final before = lastData ?? const <ItemEntity>[];
+  setData(before.where((e) => e.id != id).toList());
+  final result = await _deleteItem(id);
+  return result.fold(
+    (failure) { setData(before); return Left(failure); },
+    Right.new,
   );
 }
 ```
@@ -380,7 +414,7 @@ AsyncBlocBuilder<BannersCubit, List<BannerEntity>>(
     if (banners.isEmpty) return const SizedBox.shrink();  // hidden!
     return BannerCarousel(banners: banners);
   },
-  skeletonBuilder: (_) => const BannerSkeleton(),
+  loadingBuilder: (_) => const BannerSkeleton(),
 )
 
 // ❌ WRONG — showing empty section or EmptyWidget inside a multi-section screen
@@ -457,7 +491,7 @@ Design & Tokens:
 
 Entity & API:
 □ Every entity has factory initial() + fromJson with ?? defaults + tryParse (never parse)
-□ One cubit per endpoint | Part-of system in view_imports.dart
+□ One cubit per endpoint | Part-of system in <feature>_imports.dart
 □ Local update on add/edit/delete (never re-fetch) | ApiConstants for all URLs
 □ List endpoints use PaginatedCubit (not AsyncCubit<List>) for standalone screens
 
@@ -480,7 +514,7 @@ Scroll & Performance:
 
 Widget Splitting (MANDATORY):
 □ Body = layout only — no _buildXxx() methods returning 10+ lines
-□ Every section/card in SEPARATE file | Each added as part in view_imports.dart
+□ Every section/card in SEPARATE file | Each added as part in <feature>_imports.dart
 
 Clean Code (MANDATORY):
 □ No unused imports | No unused optional parameters

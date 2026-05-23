@@ -5,6 +5,30 @@ alwaysApply: true
 
 # Flutter_Base — Coding Standards
 
+## 🚨 The Strict Six Rules (موصى بها بقوة في كل feature)
+
+> **هذه القواعد الست هي عمود الفقري. أي مخالفة لازم تتبرّر بمبرر فني واضح.**
+
+| # | القاعدة | كيف تطبّق |
+|---|--------|----------|
+| 1 | **No unnecessary comments.** Comments تشرح **"لماذا"** (intent, gotcha, trade-off) — مش "ماذا" (الكود نفسه يقول ماذا). | امسح أي comment بيكرر اسم متغير/method. لا comments تلقائية. |
+| 2 | **No hardcoded values in the View.** ممنوع `Text('hi')` / `Color(0xFFAA)` / `EdgeInsets.all(16)` / `Icons.x` / `'assets/...'` داخل أي Screen أو widget. | كله من `LocaleKeys.*.tr()` / `AppColors` / `AppSize`/`AppPadding`/`AppCircular` / `IconWidget(icon: AppAssets.svg....path)`. |
+| 3 | **The View is clean — no functions inside it.** ممنوع أي method داخل الـ Screen غير `build()`، `initState()`، `dispose()`. كل handler / formatter / validator / sheet-opener في **Cubit** أو **ViewController** أو **widget منفصل**. | لو لقيت `void _onTap()` أو `Widget _buildCard()` داخل الـ Screen → انقله. |
+| 4 | **Performance is top priority — no `setState`, no unnecessary rebuilds.** الافتراضي: `ValueNotifier<T>` + `ValueListenableBuilder` للـ ephemeral UI state، `BlocSelector` لجزء صغير من cubit state، `BlocBuilder` للـ full state، `AsyncBlocBuilder` للـ AsyncCubit. | `setState` فقط بمبرر فني واضح (مفيش له ولا حالة في الـ products feature). |
+| 5 | **Most classes should be Stateless.** `StatefulWidget` فقط لحاجة حقيقية: `AnimationController` lifecycle، focus management، cubit/ViewController ownership (initState/dispose). | الـ state الفعلي في cubit أو ViewController، مش في الـ widget. |
+| 6 | **Functions of type `Widget _buildSomething()` are FORBIDDEN inside the View.** أي widget داخل الـ View يصير ملفّ منفصل في `presentation/widgets/` كـ `class _Something extends StatelessWidget` (private — يبدأ بـ `_`)، part-of الـ imports hub. | الـ `_build*` ما بياخدش `const`، ما يستفيدش من Flutter rebuild scope، وبيخبّي tree complexity. |
+
+**Quick check قبل أي commit:**
+```
+□ Comments تشرح "لماذا" بس
+□ View: مفيش string/color/size/icon خام
+□ View: مفيش method غير build/initState/dispose
+□ ValueNotifier/BlocSelector — مفيش setState
+□ Stateless حيث ممكن
+□ ملفات منفصلة لكل widget — مفيش Widget _buildX()
+```
+
+
 ## 0. Developer Mindset — Advanced Senior Flutter Developer (الأهم)
 
 > **أنت بتشتغل كـ Advanced Senior Flutter Developer — مش junior ولا mid-level.**
@@ -188,21 +212,66 @@ class _MyState extends State<_MyWidget> {
 **التفاصيل + 12 part كامل** (layout, decoration, gestures, text, images, lists/slivers, inputs, navigation, visibility, animation, Stack, M3) **+ جدول M2→M3 migration → `.claude/skills/widget-efficiency/SKILL.md`**.
 
 
-## 1. Single Import Per Feature File
+## 1. Single Import Per Feature File — Per-Feature Imports Hub
+
+> **كل feature له imports hub خاص باسمه:** `presentation/imports/<feature>_imports.dart` (مثلاً `products_imports.dart`، `orders_imports.dart`). الاسم **يتغير بحسب اسم الفيتشر** — مش `view_imports.dart` ثابت.
 
 ```dart
-// ✅ CORRECT
-import '../imports/view_imports.dart';
+// ✅ CORRECT — header of any presentation file (cubits/, controllers/, view/, widgets/)
+part of '../imports/products_imports.dart';
 
-// ❌ WRONG: scattered imports
+// ❌ WRONG — scattered imports inside presentation files
 import 'package:flutter/material.dart';
 import '../../../../config/res/app_sizes.dart';
 ```
 
-`view_imports.dart` uses **`part of` system** — each file in the feature starts with:
+**The hub itself** (`presentation/imports/<feature>_imports.dart`):
 ```dart
-part of '../imports/view_imports.dart';
+library;
+
+// External packages
+import 'dart:async';
+import 'package:dartz/dartz.dart' show Either, Left, Right, Unit;
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
+import 'package:rxdart/rxdart.dart';
+
+// App-level helpers (config tokens, locale)
+import '../../../../config/res/config_imports.dart';
+
+// Cross-cutting core
+import '../../../../core/state/async/async.dart';
+import '../../../../core/network/error/failures.dart';
+
+// Feature domain (entities, enums, use-cases)
+import '../../domain/entities/product_entity.dart';
+import '../../domain/enums/product_status.dart';
+import '../../domain/usecases/get_products_usecase.dart';
+import '../../domain/usecases/create_product_usecase.dart';
+
+// Cubits (state)
+part '../cubits/products_cubit.dart';
+part '../cubits/product_details_cubit.dart';
+
+// ViewControllers (ephemeral UI state — TextEditingControllers, ValueNotifiers, ScrollControllers)
+part '../controllers/products_view_controller.dart';
+
+// Screens (public entry points)
+part '../view/products_screen.dart';
+part '../view/product_details_screen.dart';
+
+// Widgets (private to the feature, used by Screens above)
+part '../widgets/products_body.dart';
+part '../widgets/products_search_field.dart';
+part '../widgets/product_card.dart';
+part '../widgets/product_delete_dialog.dart';
+part '../widgets/products_filter_sheet.dart';
 ```
+
+**Rule of thumb:**
+- `part`/`part of` is for **presentation only**. The `domain/` and `data/` layers use normal imports so they stay portable and testable.
+- Private classes (`_ProductsBody`, `_ProductCard`, …) declared in `widgets/*.dart` are usable across the whole feature without exposing them outside.
 
 
 ## 2. Colors → AppColors ONLY (Reuse Before Creating)
@@ -1009,7 +1078,7 @@ AppDropdown<CityEntity>(
   itemAsString: (c) => c.name,
   onChanged: (c) => setState(() => selectedCity = c),
   validator: Validators.validateDropDown,
-  isLoading: state.isLoading,                  // ← AppDropdown shows internal shimmer
+  isLoading: state is AsyncLoading,                  // ← AppDropdown shows internal shimmer
 )
 ```
 
@@ -1047,7 +1116,7 @@ showDefaultBottomSheet(child: MySheetContent());
 
 | Widget | Usage |
 |--------|-------|
-| `AsyncBlocBuilder<Cubit, DataType>(builder: ..., skeletonBuilder: ...)` | Wraps loading/error/success states automatically |
+| `AsyncBlocBuilder<Cubit, DataType>(builder: ..., loadingBuilder: ...)` | Wraps loading/error/success states automatically |
 | `AsyncSliverBlocBuilder<Cubit, DataType>(...)` | Sliver version for CustomScrollView |
 | `PaginatedListWidget<Cubit, ItemType>(itemBuilder: ..., config: ...)` | Paginated list with infinite scroll |
 | `EmptyWidget(title: ..., desc: ..., path: ...)` | Empty state with image/lottie |
@@ -1056,7 +1125,7 @@ showDefaultBottomSheet(child: MySheetContent());
 ```dart
 // ✅ CORRECT — API-driven list
 AsyncBlocBuilder<GetItemsCubit, List<ItemEntity>>(
-  skeletonBuilder: (ctx) => ItemSkeleton(),
+  loadingBuilder: (ctx) => ItemSkeleton(),
   builder: (ctx, items) => items.isEmpty
       ? EmptyWidget(title: LocaleKeys.noItems.tr(), desc: '')
       : ListView.builder(itemBuilder: ...),
@@ -1270,27 +1339,216 @@ Navigator.push(context, MaterialPageRoute(...))
 ```
 
 
-## 15. Network — API Pattern
+## 15. Network — `BaseRemoteSource.request<T>` + Repository / UseCase Pipeline
+
+> **الـ network layer كله مبني على `DioClient` singleton + `BaseRemoteSource` abstract class.**
+> **الـ Cubit ما يستدعيش `BaseRemoteSource` مباشرة — يأخذ UseCases. الـ UseCase يستدعي Repository. الـ Repository يستدعي DataSource.**
+
+### 15.1 — DataSource (talks to the network)
 
 ```dart
-// ✅ All API calls via baseCrudUseCase inside AsyncCubit
-await executeAsync(
-  operation: () async => baseCrudUseCase.call(
-    CrudBaseParams(
-      api: ApiConstants.myEndpoint,      // from api_endpoints.dart — no raw strings
-      httpRequestType: HttpRequestType.get,
-      mapper: (json) => MyEntity.fromJson(json['data']),
-      body: params.toJson(),             // for POST/PUT
-      queryParameters: {'page': page},  // for GET with query
-    ),
-  ),
-);
+// data/datasources/products_remote_data_source_impl.dart
+@LazySingleton(as: ProductsRemoteDataSource)
+class ProductsRemoteDataSourceImpl extends BaseRemoteSource
+    implements ProductsRemoteDataSource {
 
-// ❌ FORBIDDEN
-Dio().get('https://api.example.com/endpoint')
+  // GET list with query params
+  @override
+  Future<Either<Failure, List<ProductEntity>>> getProducts({int page = 1, String? search}) =>
+    request<List<ProductEntity>>(
+      method: HttpMethod.get,
+      endpoint: ApiEndpoints.products,
+      queryParameters: {
+        'page': page,
+        if (search != null && search.isNotEmpty) 'search': search,
+      },
+      fromJson: _parseProductList,
+    );
+
+  // POST create with body
+  @override
+  Future<Either<Failure, ProductEntity>> createProduct({
+    required String name, required String description, required double price,
+  }) =>
+    request<ProductEntity>(
+      method: HttpMethod.post,
+      endpoint: ApiEndpoints.products,
+      body: {'name': name, 'description': description, 'price': price},
+      fromJson: _parseProduct,
+    );
+
+  // DELETE with no response body
+  @override
+  Future<Either<Failure, Unit>> deleteProduct(int id) =>
+    request<Unit>(
+      method: HttpMethod.delete,
+      endpoint: ApiEndpoints.productById(id),
+      fromJson: (_) => unit,
+    );
+
+  // POST public — skip Bearer token
+  Future<Either<Failure, AuthToken>> login(String email, String pwd) =>
+    request<AuthToken>(
+      method: HttpMethod.post,
+      endpoint: ApiEndpoints.login,
+      body: {'email': email, 'password': pwd},
+      skipAuth: true,
+      fromJson: (j) => AuthToken.fromJson(j),
+    );
+
+  // Multipart upload — opt-in via asFormData
+  Future<Either<Failure, UploadResult>> upload(String filePath) =>
+    request<UploadResult>(
+      method: HttpMethod.post,
+      endpoint: ApiEndpoints.upload,
+      body: {'file': await MultipartFile.fromFile(filePath)},
+      asFormData: true,
+      fromJson: (j) => UploadResult.fromJson(j),
+    );
+
+  // Private parsers — keep Model ↔ Entity mapping here
+  static List<ProductEntity> _parseProductList(dynamic j) =>
+    ((j is Map ? j['data'] : j) as List? ?? const [])
+      .whereType<Map<String, dynamic>>()
+      .map(ProductModel.fromJson)
+      .map((m) => m.toEntity())
+      .toList();
+  static ProductEntity _parseProduct(dynamic j) =>
+    ProductModel.fromJson(((j is Map ? j['data'] ?? j : j) as Map<String, dynamic>)).toEntity();
+}
 ```
 
-All endpoints → `ApiConstants` in `core/network/api_endpoints.dart`. Add new endpoints there.
+### 15.2 — `request<T>` parameters reference
+
+| Param | Purpose |
+|-------|---------|
+| `method` | `HttpMethod.get / post / put / patch / delete` |
+| `endpoint` | relative path — `DioClient` prepends `baseUrl` |
+| `queryParameters` | `?key=value&…` map |
+| `body` | Map / List / String / FormData / MultipartFile-bearing Map |
+| `headers` | extra request headers merged on top of globals |
+| `fromJson` | `T Function(dynamic json)` — required parser (use `(_) => unit` for void) |
+| `skipAuth` | skip Bearer token attachment (login/register/public endpoints) |
+| `asFormData` | wrap Map body in `FormData.fromMap(...)` automatically |
+| `normalizeArabicDigits` | default `true` — convert ٠١٢٣ → 0123 inside body & query strings |
+| `cancelKey` | dedupe key (default `"$METHOD:$endpoint"`) — auto-cancels previous in-flight |
+| `cancelPrevious` | default `true` — cancel previous in-flight with same key |
+| `responseType` | override Dio response parsing (rarely needed) |
+
+**Returns** `Future<Either<Failure, T>>` — caller `.fold` without try/catch.
+
+### 15.3 — Repository (data → domain bridge)
+
+```dart
+// domain/repositories/products_repository.dart
+abstract interface class ProductsRepository {
+  Future<Either<Failure, List<ProductEntity>>> getProducts({String? search});
+  Future<Either<Failure, ProductEntity>> createProduct({required String name, required String description, required double price});
+  Future<Either<Failure, Unit>> deleteProduct(int id);
+}
+
+// data/repositories/products_repository_impl.dart
+@LazySingleton(as: ProductsRepository)
+class ProductsRepositoryImpl implements ProductsRepository {
+  ProductsRepositoryImpl(this._remote);
+  final ProductsRemoteDataSource _remote;
+
+  @override
+  Future<Either<Failure, List<ProductEntity>>> getProducts({String? search}) =>
+    _remote.getProducts(search: search);
+
+  @override
+  Future<Either<Failure, ProductEntity>> createProduct({...}) =>
+    _remote.createProduct(...);
+
+  @override
+  Future<Either<Failure, Unit>> deleteProduct(int id) =>
+    _remote.deleteProduct(id);
+}
+```
+
+### 15.4 — UseCase (single-purpose, what the Cubit depends on)
+
+```dart
+// domain/usecases/get_products_usecase.dart
+@lazySingleton
+class GetProductsUseCase {
+  GetProductsUseCase(this._repo);
+  final ProductsRepository _repo;
+  Future<Either<Failure, List<ProductEntity>>> call({String? search}) =>
+    _repo.getProducts(search: search);
+}
+```
+
+### 15.5 — Endpoints registry
+
+All endpoints → `ApiEndpoints` in `core/network/api_endpoints.dart`. Add new endpoints there:
+```dart
+class ApiEndpoints {
+  static const String baseUrl = 'https://api.example.com/v1/';
+  static const String products = 'products';
+  static String productById(int id) => 'products/$id';
+  static const String login = 'auth/login';
+}
+```
+
+### 15.6 — Anti-patterns
+
+```dart
+// ❌ Raw Dio in features
+Dio().get('https://api.example.com/products');
+
+// ❌ Cubit talking to DataSource directly (skips Repository + UseCase layers)
+class XCubit extends AsyncCubit<List<X>> {
+  XCubit(this._dataSource);
+  final XRemoteDataSource _dataSource;  // ← wrong; should be UseCase
+}
+
+// ❌ Hardcoded endpoint string in DataSource
+request<X>(method: HttpMethod.get, endpoint: '/products', ...);  // ← wrong; use ApiEndpoints.products
+
+// ❌ Building FormData manually then passing it as body — let asFormData handle it
+final fd = FormData.fromMap({'file': ...});
+request<X>(method: HttpMethod.post, body: fd, ...);  // works but verbose; prefer asFormData: true
+```
+
+**Interceptor order (in `DioClient` — already wired):**
+```
+LocaleInterceptor → AuthInterceptor → RetryInterceptor → AppCacheInterceptor → LoggingInterceptor (debug only)
+```
+- `validateStatus: (s) => s != null && s < 500` — 4xx travel as `Failure` via `ResponseParser`, only 5xx hit Dio's `onError`.
+
+
+## 15.7. Notifications — `NotificationManager` + `NotificationRouter`
+
+> **Module:** `lib/src/core/notifications/` — singleton-based FCM via `awesome_notifications` + `awesome_notifications_fcm`.
+> **FORBIDDEN packages:** `firebase_messaging`, `flutter_local_notifications` (يتعارضوا مع awesome_notifications).
+> **Full deep-dive:** `.claude/skills/notifications/SKILL.md` + `lib/src/core/notifications/EXPLANATION.md`.
+
+**Quick reference:**
+```dart
+// Bootstrap (main.dart)
+await NotificationManager.instance.initialize(
+  router: const AppNotificationRouter(),   // uses Go.navigatorKey
+  debug: kDebugMode,
+);
+NotificationManager.instance.requestPermissions();  // iOS + Android 13+
+NotificationManager.instance.requestToken();        // FCM token to send to backend
+
+// Sealed routing
+sealed class NotificationAction { const NotificationAction(); }
+final class NavigateToChat extends NotificationAction { final String chatId; ... }
+final class OpenUrl extends NotificationAction { final Uri url; ... }
+// ... compiler enforces exhaustive switch in AppNotificationRouter.route
+```
+
+**Golden rules:**
+- كل static handler بتتنادى من native لازم `@pragma('vm:entry-point')`.
+- `channelKey` لازم يتطابق مع المسجل في `initialize` (Messaging / General / System).
+- `id` في `NotificationContent` لازم `int` — استخدم `payload.id.hashCode`.
+- ممنوع `BuildContext` في static handlers — استخدم `Go.navigatorKey`.
+- التواصل background→main عبر `IsolateNameServer.lookupPortByName` فقط.
+- السيرفر يبعت **data-only** messages (`data` بدون `notification` key).
 
 
 ## 16. Screen-Level Padding/Margin Adjustment (Figma → Code)
@@ -1497,70 +1755,143 @@ ProductCardWidget(product: item, showPrice: false, showRating: true)
 ```
 
 
-## 22. ViewController Class Pattern (MANDATORY)
+## 22. ViewController Class Pattern (MANDATORY — `presentation/controllers/`)
 
 > **⚠️ ممنوع نهائياً: أي Controller أو ValueNotifier أو AnimationController أو ScrollController أو FocusNode داخل الـ View مباشرة.**
-> **كل حاجة تتعلق بالـ UI state + handlers بتاعتها لازم تكون في class منفصل (ViewController). الـ View تستدعي الـ class بس.**
+> **كل حاجة تتعلق بالـ ephemeral UI state + handlers بتاعتها لازم تكون في class منفصل (ViewController) داخل `presentation/controllers/<feature>_view_controller.dart`. الـ View تستدعي الـ class بس.**
 
 ### القاعدة الأساسية:
-- **ممنوع** وضع `TextEditingController`, `ValueNotifier`, `ScrollController`, `AnimationController`, `FocusNode` داخل الـ State أو الـ Widget
-- **ممنوع** استخدام `setState` للـ UI state — استخدم `ValueNotifier` + `ValueListenableBuilder`
-- **إلزامي** إنشاء class منفصل (ViewController) يحتوي: الـ controllers + الـ notifiers + الـ handlers
-- الـ View تستخدم **object واحد** من الـ ViewController وتنادي منه فقط
+- **Location:** `presentation/controllers/<feature>_view_controller.dart` — part of `<feature>_imports.dart`.
+- **ممنوع** وضع `TextEditingController`, `ValueNotifier`, `ScrollController`, `AnimationController`, `FocusNode` داخل الـ State أو الـ Widget.
+- **ممنوع** استخدام `setState` للـ UI state — استخدم `ValueNotifier` + `ValueListenableBuilder`.
+- **إلزامي** إنشاء class منفصل (ViewController) يحتوي: الـ controllers + الـ notifiers + الـ handlers الصغيرة (clear, toggle, …).
+- الـ View تستخدم **object واحد** من الـ ViewController، تنشئه في `initState`، وتـ `dispose` منه في `dispose`.
+- **الـ server data في الـ Cubit، الـ ephemeral UI state في الـ ViewController.** ما تخلطش بين الاثنين.
 
 ```dart
-// ✅ CORRECT — Separate ViewController class
-class ChatViewController {
-  final TextEditingController messageController = TextEditingController();
-  final ValueNotifier<bool> isSending = ValueNotifier(false);
+// ✅ CORRECT — Separate ViewController class in presentation/controllers/
+// products_view_controller.dart
+part of '../imports/products_imports.dart';
 
-  void onSend(BuildContext context) {
-    final text = messageController.text.trim();
-    if (text.isEmpty) return;
-    context.read<ChatCubit>().sendMessage(text);
-    messageController.clear();
-  }
+class ProductsViewController {
+  ProductsViewController({required this.onSearch});
+  final ValueChanged<String> onSearch;
+
+  final TextEditingController searchController = TextEditingController();
+  final ScrollController scrollController = ScrollController();
+  final ValueNotifier<ProductStatus?> statusFilter = ValueNotifier(null);
+  final FocusNode searchFocus = FocusNode();
+
+  void setStatusFilter(ProductStatus? s) => statusFilter.value = s;
+  void clearSearch() { searchController.clear(); onSearch(''); }
 
   void dispose() {
-    messageController.dispose();
-    isSending.dispose();
+    searchController.dispose();
+    scrollController.dispose();
+    statusFilter.dispose();
+    searchFocus.dispose();
   }
 }
+```
 
-// ✅ View uses one ViewController object — يستدعي بس
-class _ChatInputState extends State<_ChatInput> {
-  late final ChatViewController _vc = ChatViewController();
+```dart
+// ✅ Screen owns the ViewController lifecycle (initState + dispose)
+// products_screen.dart
+part of '../imports/products_imports.dart';
+
+class ProductsScreen extends StatefulWidget {
+  const ProductsScreen({super.key});
+  @override
+  State<ProductsScreen> createState() => _ProductsScreenState();
+}
+
+class _ProductsScreenState extends State<ProductsScreen> {
+  late final ProductsCubit _cubit;
+  late final ProductsViewController _vc;
+  final BehaviorSubject<String> _searchSubject = BehaviorSubject.seeded('');
+  StreamSubscription<String>? _searchSub;
 
   @override
-  void dispose() { _vc.dispose(); super.dispose(); }
+  void initState() {
+    super.initState();
+    _cubit = injector<ProductsCubit>()..fetchProducts();
+    _vc = ProductsViewController(onSearch: _searchSubject.add);
+    _searchSub = _searchSubject
+        .debounceTime(const Duration(milliseconds: 350))
+        .distinct()
+        .listen((q) => _cubit.fetchProducts(search: q));
+  }
 
   @override
-  Widget build(BuildContext context) {
-    return Row(children: [
-      Expanded(child: DefaultTextField(controller: _vc.messageController, title: LocaleKeys.typeMessage.tr())),
-      8.szW,
-      ValueListenableBuilder<bool>(
-        valueListenable: _vc.isSending,
-        builder: (_, sending, _) => _SendButton(onTap: () => _vc.onSend(context), isLoading: sending),
+  void dispose() {
+    _searchSub?.cancel();
+    _searchSubject.close();
+    _vc.dispose();
+    _cubit.close();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => BlocProvider<ProductsCubit>.value(
+    value: _cubit,
+    child: Scaffold(
+      appBar: AppBar(title: Text(LocaleKeys.products.tr())),
+      body: _ProductsBody(controller: _vc),  // ← ViewController passed down
+    ),
+  );
+}
+```
+
+```dart
+// ✅ Inner widgets listen via ValueListenableBuilder — leaf-level rebuilds
+// widgets/products_body.dart
+part of '../imports/products_imports.dart';
+
+class _ProductsBody extends StatelessWidget {
+  const _ProductsBody({required this.controller});
+  final ProductsViewController controller;
+
+  @override
+  Widget build(BuildContext context) => Column(children: [
+    _ProductsSearchField(controller: controller),
+    Expanded(
+      child: AsyncBlocBuilder<ProductsCubit, List<ProductEntity>>(
+        onRetry: () => context.read<ProductsCubit>().fetchProducts(
+          search: controller.searchController.text,
+        ),
+        builder: (context, products) => ValueListenableBuilder<ProductStatus?>(
+          valueListenable: controller.statusFilter,
+          builder: (_, filter, _) {
+            final visible = filter == null
+                ? products
+                : products.where((p) => p.status == filter).toList(growable: false);
+            return _ProductsList(items: visible, controller: controller);
+          },
+        ),
       ),
-    ]);
-  }
+    ),
+  ]);
 }
+```
 
+```dart
 // ❌ FORBIDDEN — controllers/notifiers في الـ View
-class _ChatInputState extends State<_ChatInput> {
-  final _controller = TextEditingController();  // ❌ ممنوع — لازم في ViewController
-  bool _isSending = false;                        // ❌ ممنوع — استخدم ValueNotifier في ViewController
-  final ValueNotifier<int> _tabIndex = ValueNotifier(0);  // ❌ ممنوع — لازم في ViewController
-  void _onSend() { setState(() => ...); }        // ❌ ممنوع — استخدم ValueNotifier + handler في ViewController
+class _ProductsScreenState extends State<ProductsScreen> {
+  final _searchController = TextEditingController();              // ❌ يجب أن يكون في ViewController
+  bool _isFiltering = false;                                       // ❌ استخدم ValueNotifier في ViewController
+  final ValueNotifier<int> _tabIndex = ValueNotifier(0);           // ❌ يجب أن يكون في ViewController
+  void _onSearch(String q) { setState(() => ...); }                // ❌ no setState — ValueNotifier + handler في ViewController
+  Widget _buildFilterChip(String label) => Chip(...);              // ❌ Strict Rule #6 — انقله لـ widgets/<feature>_filter_chip.dart كـ _FilterChip
 }
 ```
 
 **Rules:**
-- كل `TextEditingController`, `ValueNotifier`, `ScrollController`, `FocusNode` → داخل ViewController **فقط**
-- كل UI logic function (onSend, onSearch, selectTab, etc.) → داخل ViewController
-- استخدم `ValueNotifier` + `ValueListenableBuilder` بدل `setState`
-- الـ View تنادي `_vc.dispose()` في `dispose()`
+- Folder location: `presentation/controllers/<feature>_view_controller.dart`. ملف واحد لكل screen (أو screen-group مرتبط).
+- كل `TextEditingController`, `ValueNotifier`, `ScrollController`, `FocusNode`, `AnimationController` → داخل ViewController **فقط**.
+- UI-only handlers الصغيرة (clear, toggle, setFilter) → ViewController. الـ server interactions → Cubit.
+- استخدم `ValueNotifier` + `ValueListenableBuilder` (أو `ListenableBuilder` للـ multiple notifiers) بدل `setState`.
+- الـ Screen ينشئ الـ ViewController في `initState` ويـ `dispose` منه في `dispose`.
+- الـ inner widgets تستقبل الـ ViewController كـ `final` parameter — تستهلكه بدون أي state خاصة بها.
 
 
 ## 23. Icon Inside Container — Center Widget (Edge Case Only)
@@ -1802,7 +2133,7 @@ class _MyForm extends StatelessWidget {
             items: state.data,                    // ← []  لو فشلت، items هتبقى
             label: LocaleKeys.city.tr(),
             itemAsString: (c) => c.name,
-            isLoading: state.isLoading,           // ← AppDropdown يعرض shimmer داخلياً
+            isLoading: state is AsyncLoading,           // ← AppDropdown يعرض shimmer داخلياً
             onChanged: (c) => params.city = c,
             validator: Validators.validateDropDown,
           );
@@ -1819,7 +2150,7 @@ class _MyForm extends StatelessWidget {
 // ❌ Adds error UI for a dropdown — لا
 AsyncBlocBuilder<GetCitiesCubit, List<CityEntity>>(
   errorBuilder: (ctx, err) => ErrorView(error: err),   // ← لا — الـ dropdown مش محتاج error UI
-  skeletonBuilder: (_) => const _CityDropdownSkeleton(),
+  loadingBuilder: (_) => const _CityDropdownSkeleton(),
   builder: (ctx, cities) => AppDropdown(items: cities, ...),
 )
 
