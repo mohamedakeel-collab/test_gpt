@@ -232,6 +232,10 @@ final class UnknownFailure extends Failure {
 extension AppExceptionToFailure on AppException {
   Failure toFailure() {
     final tech = technicalInfo;
+    // Only forward a genuine server-provided message as customMessage. When
+    // null, the Failure falls back to its own localized default — so the
+    // exception's default never overrides the UI's localized string.
+    final serverMsg = serverMessage;
     final exception = this;
     if (exception is NetworkException) return NetworkFailure(technical: tech);
     if (exception is ConnectionTimeoutException ||
@@ -247,18 +251,18 @@ extension AppExceptionToFailure on AppException {
       return UnauthorizedFailure(technical: tech);
     }
     if (exception is PermissionException) {
-      return PermissionFailure(customMessage: userMessage, technical: tech);
+      return PermissionFailure(customMessage: serverMsg, technical: tech);
     }
     if (exception is NotFoundException) return NotFoundFailure(technical: tech);
     if (exception is ConflictException) {
-      return ConflictFailure(customMessage: userMessage, technical: tech);
+      return ConflictFailure(customMessage: serverMsg, technical: tech);
     }
     if (exception is PayloadTooLargeException) {
       return PayloadTooLargeFailure(technical: tech);
     }
     if (exception is ValidationException) {
       return ValidationFailure(
-        customMessage: userMessage,
+        customMessage: serverMsg,
         fields: exception.fields,
         technical: tech,
         statusCode: exception.statusCode,
@@ -266,7 +270,7 @@ extension AppExceptionToFailure on AppException {
     }
     if (exception is UnprocessableException) {
       return ValidationFailure(
-        customMessage: userMessage,
+        customMessage: serverMsg,
         fields: exception.errors,
         technical: tech,
         statusCode: exception.statusCode,
@@ -288,7 +292,7 @@ extension AppExceptionToFailure on AppException {
         exception is BadGatewayException ||
         exception is ServerException) {
       return ServerFailure(
-        customMessage: userMessage,
+        customMessage: serverMsg,
         statusCode: statusCode,
         technical: tech,
       );

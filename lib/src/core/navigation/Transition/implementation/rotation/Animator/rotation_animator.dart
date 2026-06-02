@@ -1,8 +1,8 @@
 import 'package:flutter/animation.dart';
 
-import '../../../../Constants/imports_constants.dart';
-import '../../../../Helper/Interfaces/helper_imports.dart';
-import '../Option/rotation_animation_option.dart';
+import '../../../../constants/imports_constants.dart';
+import '../../../../helper/interfaces/helper_imports.dart';
+import '../option/rotation_animation_option.dart';
 
 class RotationAnimator extends Animator<double>
     implements TweenBehaviour<double>, CurveBehaviour {

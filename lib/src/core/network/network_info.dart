@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 
@@ -22,6 +23,28 @@ class NetworkInfo {
     final results = await _connectivity.checkConnectivity();
     _emit(results);
     return _lastKnown;
+  }
+
+  /// Connectivity-plus reports "online" the moment Wi-Fi/cellular is attached,
+  /// even behind a captive portal or a router with no upstream. This performs
+  /// an actual reachability probe (DNS lookup with a timeout) so callers such
+  /// as [OfflineQueueManager] only sync when the internet is truly reachable.
+  ///
+  /// [host] defaults to Cloudflare's `1.1.1.1`.
+  Future<bool> isReallyOnline({
+    String host = '1.1.1.1',
+    Duration timeout = const Duration(seconds: 3),
+  }) async {
+    final results = await _connectivity.checkConnectivity();
+    if (!results.any((r) => r != ConnectivityResult.none)) return false;
+    try {
+      final lookup = await InternetAddress.lookup(host).timeout(timeout);
+      return lookup.isNotEmpty && lookup.first.rawAddress.isNotEmpty;
+    } on SocketException catch (_) {
+      return false;
+    } on TimeoutException catch (_) {
+      return false;
+    }
   }
 
   void _emit(List<ConnectivityResult> results) {

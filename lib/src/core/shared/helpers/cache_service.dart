@@ -10,10 +10,16 @@ class SecureStorage {
   SecureStorage._();
 
   // EncryptedSharedPreferences was deprecated upstream (Jetpack Security
-  // discontinued by Google). flutter_secure_storage v10+ migrates the data
-  // to custom ciphers automatically on first access — no Android-specific
-  // options are needed.
-  static const FlutterSecureStorage _storage = FlutterSecureStorage();
+  // discontinued by Google). flutter_secure_storage v10+ encrypts via custom
+  // ciphers automatically, so no Android `encryptedSharedPreferences` flag is
+  // needed. On iOS we pin the Keychain accessibility class explicitly so
+  // secrets are only readable after the device's first unlock.
+  static const FlutterSecureStorage _storage = FlutterSecureStorage(
+    aOptions: AndroidOptions(),
+    iOptions: IOSOptions(
+      accessibility: KeychainAccessibility.first_unlock,
+    ),
+  );
 
   /// Underlying storage exposed for advanced callers (e.g. tests that
   /// inject a custom implementation). Prefer the `read`/`write` helpers.

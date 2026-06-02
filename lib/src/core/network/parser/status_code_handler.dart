@@ -63,7 +63,10 @@ class StatusCodeHandler {
 
   static Map<String, List<String>>? _extractValidationFields(dynamic data) {
     if (data is! Map) return null;
-    final raw = data['errors'] ?? data['validation'] ?? data['fields'];
+    // Project API contract: 422 errors live under `data.items.{field}`.
+    // Fall back to the common Laravel-style shapes for other backends.
+    final inner = data['data'] is Map ? (data['data'] as Map)['items'] : null;
+    final raw = inner ?? data['errors'] ?? data['validation'] ?? data['fields'];
     if (raw is! Map) return null;
     final out = <String, List<String>>{};
     raw.forEach((key, value) {

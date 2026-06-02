@@ -24,6 +24,17 @@ class ProductsViewController {
     statusFilter.value = status;
   }
 
+  /// Opens the status-filter sheet and applies the picked value. Lives here
+  /// (not in the screen) so the screen stays a pure compose-only widget.
+  Future<void> openFilterSheet(BuildContext context) async {
+    final selected = await showModalBottomSheet<ProductStatus?>(
+      context: context,
+      isScrollControlled: true,
+      builder: (_) => _ProductsFilterSheet(current: statusFilter.value),
+    );
+    if (selected != null) setStatusFilter(selected);
+  }
+
   void clearSearch() {
     searchController.clear();
     onSearch('');

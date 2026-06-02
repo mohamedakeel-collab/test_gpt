@@ -22,6 +22,26 @@ class OfflineQueueManager {
   static const String _boxName = 'offline_queue';
   static const int _maxRetries = 5;
 
+  /// Body/header keys that must never be written to disk in a queued op.
+  /// Auth headers are re-attached by the AuthInterceptor at replay time, so
+  /// dropping them here is safe and keeps secrets out of the Hive box.
+  static const Set<String> _sensitiveKeys = {
+    'password',
+    'password_confirmation',
+    'current_password',
+    'new_password',
+    'token',
+    'access_token',
+    'refresh_token',
+    'authorization',
+    'api_key',
+    'secret',
+    'otp',
+    'pin',
+    'cvv',
+    'card_number',
+  };
+
   late final Box<QueuedOperation> _box;
   final _uuid = const Uuid();
   final NetworkInfo _network = NetworkInfo();
@@ -60,8 +80,8 @@ class OfflineQueueManager {
       if (online) _processQueue();
     });
 
-    // App-start sync.
-    if (await _network.check() && _box.isNotEmpty) {
+    // App-start sync (the queue itself re-verifies real reachability).
+    if (_box.isNotEmpty && await _network.isReallyOnline()) {
       unawaited(_processQueue());
     }
   }
@@ -77,8 +97,8 @@ class OfflineQueueManager {
       id: _uuid.v4(),
       endpoint: endpoint,
       method: method.toUpperCase(),
-      body: body,
-      headers: headers,
+      body: _stripSensitive(body),
+      headers: _stripSensitive(headers),
       createdAt: DateTime.now(),
       retryCount: 0,
       localId: localId,
@@ -91,8 +111,30 @@ class OfflineQueueManager {
     return op;
   }
 
+  /// Recursively removes [_sensitiveKeys] (case-insensitively) from a map
+  /// before it is persisted to the Hive box.
+  Map<String, dynamic>? _stripSensitive(Map<String, dynamic>? input) {
+    if (input == null) return null;
+    final out = <String, dynamic>{};
+    input.forEach((key, value) {
+      if (_sensitiveKeys.contains(key.toLowerCase())) return;
+      if (value is Map<String, dynamic>) {
+        out[key] = _stripSensitive(value);
+      } else {
+        out[key] = value;
+      }
+    });
+    return out;
+  }
+
   Future<void> _processQueue() async {
     if (_processing || _box.isEmpty) return;
+
+    // connectivity_plus can report "online" behind a captive portal / dead
+    // router. Probe real reachability before burning retries on requests
+    // that are guaranteed to fail.
+    if (!await _network.isReallyOnline()) return;
+
     _processing = true;
     _statusController.add(SyncStatus.syncing);
 

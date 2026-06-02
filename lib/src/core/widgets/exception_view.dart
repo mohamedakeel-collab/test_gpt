@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 
- import '../../../config/language/locale_keys.g.dart';
-import '../../../config/res/assets.gen.dart';
-import '../../../config/res/config_imports.dart';
-import '../../shared/extensions/context_extension.dart';
-import '../../shared/extensions/text_style_extensions.dart';
+import '../../config/language/locale_keys.g.dart';
+import '../../config/res/assets.gen.dart';
+import '../../config/res/config_imports.dart';
+import '../shared/extensions/context_extension.dart';
+import '../shared/extensions/text_style_extensions.dart';
 
+/// Full-screen fallback used as the global `ErrorWidget.builder` in release
+/// builds (see `main.dart`). Distinct from the data-state views under
+/// `handling_views/` — this catches widget *build* failures, not API errors.
 class ExceptionView extends StatelessWidget {
   const ExceptionView({super.key});
 

@@ -10,11 +10,13 @@ import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
 import 'src/app.dart';
 import 'src/config/language/languages.dart';
+import 'src/config/res/config_imports.dart';
+import 'src/core/shared/cubits/user_cubit/user_cubit.dart';
 import 'src/core/shared/helpers/helpers.dart';
 import 'src/core/network/auth/token_storage.dart';
-import 'src/core/navigation/Constants/imports_constants.dart';
+import 'src/core/navigation/constants/imports_constants.dart';
 import 'src/core/navigation/go.dart';
-import 'src/core/navigation/page_router/Implementation/imports_page_router.dart';
+import 'src/core/navigation/page_router/implementation/imports_page_router.dart';
 import 'src/core/navigation/page_router/imports_page_router_builder.dart';
 import 'src/core/network/cache/cache_config.dart';
 import 'src/core/network/network_info.dart';
@@ -23,10 +25,12 @@ import 'src/core/notifications/notification_manager.dart';
 import 'src/core/notifications/notification_router.dart';
 import 'src/core/shared/observer/bloc_observer.dart';
 import 'src/core/shared/service_locators/setup_service_locators.dart';
-import 'src/core/widgets/handling_views/exeption_view.dart';
+import 'src/core/widgets/exception_view.dart';
 
 void main() async {
-  Bloc.observer = AppBlocObserver();
+  // Only attach the logging observer in debug — keeps bloc event/state data
+  // (which can include PII) out of release logs.
+  if (kDebugMode) Bloc.observer = AppBlocObserver();
   WidgetsFlutterBinding.ensureInitialized();
 
   // Hive needs to be ready before any cache/queue store opens a box.
@@ -53,6 +57,11 @@ void main() async {
 
   // DI: TokenStorage, DioClient, NotificationManager, ConnectivityCubit, UserCubit, …
   setUpServiceLocator();
+
+  // Restore the previous session (user payload + tokens) from encrypted
+  // storage BEFORE the first frame, so the initial route already knows the
+  // auth status without a flicker.
+  await injector<UserCubit>().init();
 
   // Notifications route through Go.navigatorKey (shared with the rest of the app).
   await NotificationManager.instance.initialize(

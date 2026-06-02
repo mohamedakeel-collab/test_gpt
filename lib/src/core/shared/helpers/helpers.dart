@@ -43,6 +43,16 @@ class Helpers {
     }
   }
 
+  /// Normalizes a Saudi mobile number to the canonical `9665XXXXXXXX` form.
+  /// Handles inputs starting with `05`, `5`, `+966` and `966`.
+  static String normalizeSaudiPhone(String input) {
+    final digits = input.replaceAll(RegExp(r'[^0-9]'), '');
+    if (digits.startsWith('966')) return digits;
+    if (digits.startsWith('05')) return '966${digits.substring(1)}';
+    if (digits.startsWith('5')) return '966$digits';
+    return digits;
+  }
+
   static String showByLang({required String ar, required String en}) {
     if (Languages.currentLanguage.languageCode == 'ar') {
       return ar;

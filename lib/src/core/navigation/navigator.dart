@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
-import 'Constants/imports_constants.dart';
-import 'Helper/Interfaces/helper_imports.dart';
+import 'constants/imports_constants.dart';
+import 'helper/interfaces/helper_imports.dart';
 import 'named_routes.dart';
 import 'page_router/imports_page_router_builder.dart';
 
@@ -11,7 +11,23 @@ class Go {
       GlobalKey<NavigatorState>();
 
   static GlobalKey<NavigatorState> get navigatorKey => _navigatorKey;
-  static BuildContext get context => _navigatorKey.currentContext!;
+
+  /// The global Navigator context. Throws a clear assertion (instead of an
+  /// opaque null-deref) if read before the Navigator is mounted. Prefer
+  /// [contextOrNull] in code paths that may run pre-mount.
+  static BuildContext get context {
+    final ctx = _navigatorKey.currentContext;
+    assert(
+      ctx != null,
+      'Go.context read before the Navigator was mounted. '
+      'Use Go.contextOrNull and null-check, or call after the first frame.',
+    );
+    return ctx!;
+  }
+
+  /// Null-safe variant — returns `null` instead of throwing when the
+  /// Navigator is not mounted yet.
+  static BuildContext? get contextOrNull => _navigatorKey.currentContext;
 
   static final PageRouterBuilder _pageRouter = PageRouterBuilder();
 

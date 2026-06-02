@@ -4,6 +4,7 @@ import '../../../config/res/config_imports.dart';
 import '../../network/cancel/request_cancellation_manager.dart';
 import '../../network/cubits/connectivity_cubit.dart';
 import '../../network/cubits/offline_queue_cubit.dart';
+import '../../network/auth/token_storage.dart';
 import '../../network/dio_client.dart';
 import '../../network/offline/offline_queue_manager.dart';
 import '../../notifications/notification_manager.dart';
@@ -35,8 +36,10 @@ void setUpGeneralDependencies() {
   // Infrastructure singletons that have private constructors / factory
   // patterns — `@injectable` can't reach them, so we wire by hand.
   //
-  // `TokenStorage` is annotated `@lazySingleton` and registered by the
-  // generated `init()` below — no manual entry needed.
+  // `TokenStorage` exposes a single static `instance` (hydrated from disk
+  // in `main()`). Register it here so DI lookups resolve to the SAME object
+  // — otherwise the AuthInterceptor would read an un-hydrated second copy.
+  injector.registerLazySingleton<TokenStorage>(() => TokenStorage.instance);
   injector.registerLazySingleton<DioClient>(() => DioClient());
   injector.registerLazySingleton<RequestCancellationManager>(
     () => RequestCancellationManager(),

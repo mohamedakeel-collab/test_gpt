@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../Factory/transition_creator.dart';
-import 'Animator/fade_animator.dart';
-import 'Option/fade_animation_option.dart';
+import '../../factory/transition_creator.dart';
+import 'animator/fade_animator.dart';
+import 'option/fade_animation_option.dart';
 
 class FadeTransitionAnimation implements TransitionCreator {
   final FadeAnimationOptions options;

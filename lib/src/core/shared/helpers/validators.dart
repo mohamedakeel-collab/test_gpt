@@ -1,5 +1,6 @@
  import '../../../config/language/locale_keys.g.dart';
- 
+ import '../extensions/string_extension.dart';
+
 class Validators {
   static String? validateEmpty(String? value, {String? fieldTitle}) {
     if (value == null || value.isEmpty) {
@@ -89,6 +90,94 @@ class Validators {
     // Accept: 05XXXXXXXX, 5XXXXXXXX, 9665XXXXXXXX, +9665XXXXXXXX
     if (!RegExp(r'^(\+?966|0)?5\d{8}$').hasMatch(cleaned)) {
       return LocaleKeys.phoneValidation;
+    }
+    return null;
+  }
+
+  /// Saudi national ID / Iqama: 10 digits, must start with 1 or 2.
+  static String? validateNationalId(String? value, {String? fieldTitle}) {
+    if (value == null || value.trim().isEmpty) {
+      return fieldTitle == null
+          ? LocaleKeys.fillField
+          : '${LocaleKeys.filedValidation} $fieldTitle';
+    }
+    if (!RegExp(r'^[12]\d{9}$').hasMatch(value.trim())) {
+      return LocaleKeys.validatorInvalidNid;
+    }
+    return null;
+  }
+
+  /// Saudi commercial registration number: 10 digits.
+  static String? validateCommercialReg(String? value, {String? fieldTitle}) {
+    if (value == null || value.trim().isEmpty) {
+      return fieldTitle == null
+          ? LocaleKeys.fillField
+          : '${LocaleKeys.filedValidation} $fieldTitle';
+    }
+    if (!RegExp(r'^\d{10}$').hasMatch(value.trim())) {
+      return LocaleKeys.validatorInvalidCr;
+    }
+    return null;
+  }
+
+  /// Saudi IBAN: `SA` followed by 22 digits (spaces are ignored).
+  static String? validateIban(String? value, {String? fieldTitle}) {
+    if (value == null || value.trim().isEmpty) {
+      return fieldTitle == null
+          ? LocaleKeys.fillField
+          : '${LocaleKeys.filedValidation} $fieldTitle';
+    }
+    final clean = value.replaceAll(' ', '').toUpperCase();
+    if (!RegExp(r'^SA\d{22}$').hasMatch(clean)) {
+      return LocaleKeys.validatorInvalidIban;
+    }
+    return null;
+  }
+
+  /// Saudi VAT number: 15 digits.
+  static String? validateVat(String? value, {String? fieldTitle}) {
+    if (value == null || value.trim().isEmpty) {
+      return fieldTitle == null
+          ? LocaleKeys.fillField
+          : '${LocaleKeys.filedValidation} $fieldTitle';
+    }
+    if (!RegExp(r'^\d{15}$').hasMatch(value.trim())) {
+      return LocaleKeys.validatorInvalidVat;
+    }
+    return null;
+  }
+
+  /// Positive price. Accepts thousand separators and Arabic digits;
+  /// optionally enforces a [maxValue] cap.
+  static String? validatePrice(
+    String? value, {
+    double? maxValue,
+    String? fieldTitle,
+  }) {
+    if (value == null || value.trim().isEmpty) {
+      return fieldTitle == null
+          ? LocaleKeys.fillField
+          : '${LocaleKeys.filedValidation} $fieldTitle';
+    }
+    final clean = value.replaceAll(',', '').toEnglishNumbers();
+    final n = double.tryParse(clean);
+    if (n == null || n <= 0) return LocaleKeys.validatorInvalidPrice;
+    if (maxValue != null && n > maxValue) {
+      return LocaleKeys.validatorPriceTooHigh;
+    }
+    return null;
+  }
+
+  /// Absolute URL with a scheme (e.g. `https://example.com`).
+  static String? validateUrl(String? value, {String? fieldTitle}) {
+    if (value == null || value.trim().isEmpty) {
+      return fieldTitle == null
+          ? LocaleKeys.fillField
+          : '${LocaleKeys.filedValidation} $fieldTitle';
+    }
+    final uri = Uri.tryParse(value.trim());
+    if (uri == null || !uri.hasScheme || !uri.isAbsolute) {
+      return LocaleKeys.validatorInvalidUrl;
     }
     return null;
   }

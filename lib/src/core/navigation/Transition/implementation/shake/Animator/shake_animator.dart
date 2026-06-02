@@ -1,4 +1,4 @@
-import '../Options/shake_animation_options.dart';
+import '../options/shake_animation_options.dart';
 
 class ShakeAnimator {
   final ShakeAnimationOptions options;

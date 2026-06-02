@@ -134,6 +134,23 @@ dart run build_runner build --delete-conflicting-outputs
 flutter run
 ```
 
+### Environments (API base URL)
+
+The API base URL is **not hardcoded** — it is read from the `API_BASE_URL`
+compile-time variable via `--dart-define` (falls back to
+`https://api.example.com/api/v1/` when omitted). All endpoints in
+`ApiEndpoints` are **relative** (e.g. `auth/login`); `DioClient` prepends the
+base, so the value **must end with a trailing `/`**.
+
+```bash
+flutter run   --dart-define=API_BASE_URL=https://dev.api.com/api/v1/
+flutter run   --dart-define=API_BASE_URL=https://staging.api.com/api/v1/
+flutter build apk --dart-define=API_BASE_URL=https://api.production.com/api/v1/
+```
+
+> Tip: keep per-environment values in a `--dart-define-from-file` JSON to avoid
+> retyping them.
+
 ### Translations
 
 The master file is `assets/translations/lang.json` in the format `"snake_case_key #$ English text": "Arabic text"`.
@@ -398,6 +415,25 @@ This README is a **template**. Sections 1–6 are project-specific — every `{P
 4. **Update the Android bundle ID** in `android/app/build.gradle` and the **iOS bundle ID** in `ios/Runner/Info.plist`.
 5. **Drop the Firebase config files** for the new project (`google-services.json`, `GoogleService-Info.plist`).
 6. **Clear `assets/translations/lang.json`** of any project-specific keys and start fresh — keep only the core entries (failures / common UI / validation).
+
+### Customization checklist (base → your project)
+
+Everything below is **project-specific**. The rest of `core/` is infrastructure
+you should not need to touch.
+
+| What | Where | Notes |
+| --- | --- | --- |
+| **Brand color** | `lib/src/config/res/color_manager.dart` → `AppColors.brand` (+ `brandLight` / `brandDark`) | Single anchor — the gradient and the legacy aliases (`buttonColor`, `loginPrimary`, …) all derive from it. Change these three and the theme follows. |
+| **App name** | `lib/src/config/res/constants_manager.dart` → `ConstantManager.appName` | Used in `MaterialApp.title` and as a fallback screen title. |
+| **Font** | `ConstantManager.fontFamily` (`Beiruti`) + `pubspec.yaml` `fonts:` + `assets/fonts/` | Swap the family and the 8 weight files. |
+| **User shape** | `lib/src/core/shared/models/user_model.dart` | Ships a sample shape (`fullName`, `phoneNumber`, `city`, `userType`, `allowNotify`). Trim/extend to match *your* backend's user object. |
+| **API base URL** | `--dart-define=API_BASE_URL=…` (see *Environments* above) | No code change — set per environment at build time. |
+| **App icons (SVG)** | `assets/svg/app_svg/` + regenerate with `flutter_gen` | Feature-specific glyphs live here; shared ones in `base_svg/`. |
+| **Demo feature** | `lib/src/features/products/` | The reference implementation. Delete it once you've copied the pattern: `./scripts/remove_demo.sh` (then re-run `build_runner`). |
+| **New features** | `./scripts/new_feature.sh <name> [entity]` | Generates a compileable, rule-following scaffold. |
+
+> **Goal:** a fresh clone should run with only `pubspec.yaml`, the Firebase
+> files, and `AppColors.brand` changed. Everything else is optional polish.
 
 ---
 

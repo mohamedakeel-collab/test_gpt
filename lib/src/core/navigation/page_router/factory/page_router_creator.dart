@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../Constants/imports_constants.dart';
-import '../../Helper/Interfaces/helper_imports.dart';
+import '../../constants/imports_constants.dart';
+import '../../helper/interfaces/helper_imports.dart';
 
 abstract class PageRouterCreator {
   Route<T> create<T>(

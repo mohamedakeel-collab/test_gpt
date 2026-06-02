@@ -338,7 +338,9 @@ BlocListener<ContactUsCubit, AsyncState<Unit>>(
       successDialog(context: ctx, title: LocaleKeys.messageSentSuccessfully.tr());
     }
   },
-  child: LoadingButton(cubit: ctx.read<ContactUsCubit>(), title: LocaleKeys.send.tr(), onTap: () => ...),
+  // LoadingButton drives its spinner purely from the awaited `onTap` Future
+  // (there is no `cubit:` param). Return the cubit call so it can be awaited.
+  child: LoadingButton(title: LocaleKeys.send.tr(), onTap: () async => ctx.read<ContactUsCubit>().submit(params)),
 )
 ```
 

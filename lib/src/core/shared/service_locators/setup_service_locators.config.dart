@@ -42,7 +42,6 @@ extension GetItInjectableX on _i174.GetIt {
   }) {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     gh.factory<_i200.BaseUrlCubit>(() => _i200.BaseUrlCubit());
-    gh.lazySingleton<_i235.TokenStorage>(() => _i235.TokenStorage());
     gh.lazySingleton<_i947.ProductsRemoteDataSource>(
       () => _i126.ProductsRemoteDataSourceImpl(),
     );

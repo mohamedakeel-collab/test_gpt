@@ -12,6 +12,7 @@ dependencies:
 
 #--------------------- Networks & Firebase -----------------------
   dio: ^5.7.0
+  crypto: ^3.0.6 # SHA-256 for opt-in TLS certificate pinning (DioClient)
   pretty_dio_logger: ^1.4.0
   firebase_core: ^4.9.0
   firebase_remote_config: ^6.5.1
@@ -80,6 +81,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  mocktail: ^1.0.4
+  bloc_test: ^10.0.0
   build_runner: ^2.4.13
   flutter_gen_runner: ^5.4.0
   injectable_generator: ^3.0.0

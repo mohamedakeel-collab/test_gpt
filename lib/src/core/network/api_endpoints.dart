@@ -1,25 +1,38 @@
 class ApiEndpoints {
   ApiEndpoints._();
 
-  // Base URLs
-  static const String baseUrl = 'https://api.example.com';
-  static const String apiV1 = '$baseUrl/api/v1';
+  /// Base URL, switchable per environment via `--dart-define`:
+  ///
+  /// ```bash
+  /// flutter run   --dart-define=API_BASE_URL=https://dev.api.com/api/v1/
+  /// flutter build --dart-define=API_BASE_URL=https://api.production.com/api/v1/
+  /// ```
+  ///
+  /// MUST end with a trailing `/` so relative endpoints resolve correctly.
+  /// `DioClient` prepends this base to every (relative) endpoint below.
+  static const String baseUrl = String.fromEnvironment(
+    'API_BASE_URL',
+    defaultValue: 'https://api.example.com/api/v1/',
+  );
+
+  // Endpoints are RELATIVE — DioClient already prepends [baseUrl].
+  // No leading slash, no base prefix.
 
   // Auth
-  static const String login = '$apiV1/auth/login';
-  static const String register = '$apiV1/auth/register';
-  static const String refreshToken = '$apiV1/auth/refresh-token';
-  static const String logout = '$apiV1/auth/logout';
-  static const String forgotPassword = '$apiV1/auth/forgot-password';
-  static const String resetPassword = '$apiV1/auth/reset-password';
+  static const String login = 'auth/login';
+  static const String register = 'auth/register';
+  static const String refreshToken = 'auth/refresh-token';
+  static const String logout = 'auth/logout';
+  static const String forgotPassword = 'auth/forgot-password';
+  static const String resetPassword = 'auth/reset-password';
 
   // User
-  static const String me = '$apiV1/users/me';
-  static const String users = '$apiV1/users';
-  static String userById(int id) => '$apiV1/users/$id';
-  static const String updateProfile = '$apiV1/users/profile';
+  static const String me = 'users/me';
+  static const String users = 'users';
+  static String userById(int id) => 'users/$id';
+  static const String updateProfile = 'users/profile';
 
   // Generic resource paths — replace with real ones per project
-  static const String products = '$apiV1/products';
-  static String productById(int id) => '$apiV1/products/$id';
+  static const String products = 'products';
+  static String productById(int id) => 'products/$id';
 }

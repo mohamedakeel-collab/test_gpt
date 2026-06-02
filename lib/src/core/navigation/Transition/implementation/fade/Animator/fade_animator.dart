@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../../Constants/imports_constants.dart';
-import '../../../../Helper/Interfaces/helper_imports.dart';
-import '../Option/fade_animation_option.dart';
+import '../../../../constants/imports_constants.dart';
+import '../../../../helper/interfaces/helper_imports.dart';
+import '../option/fade_animation_option.dart';
 
 class FadeAnimator extends Animator<double>
     implements TweenBehaviour<double>, CurveBehaviour {

@@ -31,7 +31,10 @@ class _ProductsBody extends StatelessWidget {
                           .toList(growable: false);
 
                   if (visible.isEmpty) {
-                    return const Center(child: Text('لا توجد منتجات'));
+                    return EmptyWidget(
+                      title: LocaleKeys.productsEmpty,
+                      desc: LocaleKeys.errorexceptionNotcontaindesc,
+                    );
                   }
 
                   return RefreshIndicator(
@@ -41,12 +44,12 @@ class _ProductsBody extends StatelessWidget {
                             ),
                     child: ListView.separated(
                       controller: controller.scrollController,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
+                      padding: EdgeInsetsDirectional.symmetric(
+                        horizontal: AppPadding.pW12,
+                        vertical: AppPadding.pH8,
                       ),
                       itemCount: visible.length,
-                      separatorBuilder: (_, _) => const SizedBox(height: 8),
+                      separatorBuilder: (_, _) => 8.szH,
                       itemBuilder: (_, i) => _ProductCard(product: visible[i]),
                     ),
                   );

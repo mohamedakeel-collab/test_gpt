@@ -14,82 +14,58 @@ class _ProductCard extends StatelessWidget {
     return Card(
       clipBehavior: Clip.antiAlias,
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 12,
-          vertical: 8,
+        contentPadding: EdgeInsetsDirectional.symmetric(
+          horizontal: AppPadding.pW12,
+          vertical: AppPadding.pH8,
         ),
-        leading: _Thumb(url: product.imageUrl),
+        leading: CachedImage(
+          url: product.imageUrl ?? '',
+          width: AppSize.sH50,
+          height: AppSize.sH50,
+          borderRadius: BorderRadius.circular(AppCircular.r8),
+        ),
         title: Text(
           product.name,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: Theme.of(context).textTheme.titleMedium,
+          style: const TextStyle().setMainTextColor.s14.semiBold,
         ),
         subtitle: Text(
-          '${product.price.toStringAsFixed(2)} • ${product.status.name}',
-          style: Theme.of(context).textTheme.bodySmall,
+          '${product.price.toCurrency()} ${LocaleKeys.productsCurrency}'
+          ' • ${_productStatusLabel(product.status)}',
+          style: const TextStyle().setSecondryColor.s12.regular,
         ),
-        trailing: const Icon(Icons.chevron_left_rounded),
-        onTap: () => Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => ProductDetailsScreen(productId: product.id),
-          ),
-        ),
-        onLongPress: () async {
-          final confirmed = await showDialog<bool>(
-            context: context,
-            builder: (_) => _ProductDeleteDialog(name: product.name),
-          );
-          if (confirmed != true) return;
-          // Optimistic delete: cubit removes locally, fires DELETE, rolls
-          // back on failure. Surface any failure via a snackbar.
-          final result = await cubit.delete(product.id);
-          if (!context.mounted) return;
-          result.fold(
-            (failure) => ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(failure.userMessage)),
-            ),
-            (_) {},
-          );
-        },
+        onTap: () => Go.to(ProductDetailsScreen(productId: product.id)),
+        onLongPress: () => _confirmDelete(context, cubit),
       ),
+    );
+  }
+
+  Future<void> _confirmDelete(BuildContext context, ProductsCubit cubit) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (_) => const _ProductDeleteDialog(),
+    );
+    if (confirmed != true) return;
+    // Optimistic delete: cubit removes locally, fires DELETE, rolls back on
+    // failure. Surface any failure via the shared snackbar utility.
+    final result = await cubit.delete(product.id);
+    result.fold(
+      (failure) => MessageUtils.showSnackBar(
+        baseStatus: BaseStatus.error,
+        message: failure.userMessage,
+      ),
+      (_) {},
     );
   }
 }
 
-class _Thumb extends StatelessWidget {
-  const _Thumb({required this.url});
-
-  final String? url;
-
-  @override
-  Widget build(BuildContext context) {
-    final size = 48.0;
-    if (url == null || url!.isEmpty) {
-      return Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-          color: Colors.grey.shade200,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: const Icon(Icons.image_outlined, color: Colors.grey),
-      );
-    }
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(8),
-      child: Image.network(
-        url!,
-        width: size,
-        height: size,
-        fit: BoxFit.cover,
-        errorBuilder: (_, _, _) => Container(
-          width: size,
-          height: size,
-          color: Colors.grey.shade200,
-          child: const Icon(Icons.broken_image_outlined, color: Colors.grey),
-        ),
-      ),
-    );
-  }
-}
+/// Maps the domain [ProductStatus] to a localized label. Lives in the
+/// presentation layer so the domain enum stays free of `LocaleKeys`.
+String _productStatusLabel(ProductStatus status) => switch (status) {
+      ProductStatus.available => LocaleKeys.productStatusAvailable,
+      ProductStatus.outOfStock => LocaleKeys.productStatusOutOfStock,
+      ProductStatus.draft => LocaleKeys.productStatusDraft,
+      ProductStatus.archived => LocaleKeys.productStatusArchived,
+      ProductStatus.unknown => LocaleKeys.failureUnknown,
+    };

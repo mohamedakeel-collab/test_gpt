@@ -29,6 +29,13 @@ class ResponseParser {
     }
 
     if (status >= 200 && status < 300) {
+      // Business-level failure smuggled inside an HTTP 200 envelope, e.g.
+      // `{"status":"fail","code":422,"message":"...","data":{...}}`.
+      // Map it to the right Failure BEFORE handing the body to fromJson,
+      // otherwise the parser would treat corrupt data as success.
+      final businessFailure = _businessEnvelopeFailure(data, status);
+      if (businessFailure != null) return Left(businessFailure);
+
       if (status == 204 || _isEmpty(data)) {
         try {
           return Right(fromJson(const <String, dynamic>{}));
@@ -86,6 +93,21 @@ class ResponseParser {
   }
 
   // ── helpers ──────────────────────────────────────────────────────
+
+  /// Detects a success-HTTP-status response whose JSON envelope still
+  /// signals a business failure (`status: "fail" | "error"`). Returns the
+  /// mapped [Failure], or `null` when the envelope is a genuine success.
+  static Failure? _businessEnvelopeFailure(dynamic data, int httpStatus) {
+    if (data is! Map) return null;
+    final status = data['status']?.toString().toLowerCase();
+    if (status != 'fail' && status != 'error') return null;
+
+    final businessCode = (data['code'] as num?)?.toInt() ?? httpStatus;
+    return StatusCodeHandler.handle(
+      statusCode: businessCode,
+      responseData: data,
+    ).toFailure();
+  }
 
   static AppException _classifyConnectionError(DioException e) {
     final inner = e.error;

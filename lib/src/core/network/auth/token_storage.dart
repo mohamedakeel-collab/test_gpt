@@ -1,5 +1,3 @@
-import 'package:injectable/injectable.dart';
-
 import '../../shared/helpers/cache_service.dart';
 
 /// Source of truth for the user's access + refresh tokens.
@@ -13,16 +11,21 @@ import '../../shared/helpers/cache_service.dart';
 ///
 /// All writes go to both layers atomically so the in-memory side is
 /// never stale.
-@lazySingleton
+///
+/// Registered manually as a lazy singleton in `setUpGeneralDependencies()`
+/// that simply returns [instance], so DI lookups (`injector<TokenStorage>()`)
+/// and the static accessor (`TokenStorage.instance`) resolve to the **same**
+/// object. This guarantees the in-memory cache hydrated in `main()` is the
+/// one the `AuthInterceptor` reads on every request.
 class TokenStorage {
-  TokenStorage();
+  TokenStorage._();
 
   static const String _accessKey = 'auth_access_token';
   static const String _refreshKey = 'auth_refresh_token';
 
-  /// Kept around for legacy callers (`TokenStorage.instance`). Prefer
-  /// constructor injection via `@lazySingleton` in production code.
-  static final TokenStorage instance = TokenStorage();
+  /// The single shared instance. Both [instance] and the DI registration
+  /// resolve to this object.
+  static final TokenStorage instance = TokenStorage._();
 
   String? _accessToken;
   String? _refreshToken;

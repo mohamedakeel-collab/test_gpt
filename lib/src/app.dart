@@ -34,6 +34,8 @@ class App extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           navigatorKey: Go.navigatorKey,
           theme: AppTheme.light,
+          darkTheme: AppTheme.dark,
+          themeMode: ThemeMode.system,
           locale: context.locale,
           supportedLocales: context.supportedLocales,
           localizationsDelegates: context.localizationDelegates,

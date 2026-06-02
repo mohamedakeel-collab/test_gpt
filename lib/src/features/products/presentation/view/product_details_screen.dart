@@ -1,7 +1,7 @@
 part of '../imports/products_imports.dart';
 
 /// Open from a list tile:
-///   `Navigator.push(ctx, MaterialPageRoute(builder: (_) => ProductDetailsScreen(productId: id)))`
+///   `Go.to(ProductDetailsScreen(productId: id))`
 class ProductDetailsScreen extends StatelessWidget {
   const ProductDetailsScreen({super.key, required this.productId});
 

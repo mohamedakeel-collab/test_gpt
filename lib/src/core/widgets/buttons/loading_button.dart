@@ -22,13 +22,13 @@ class LoadingButton extends StatelessWidget {
   final String? fontFamily;
   final FontWeight? fontWeight;
   final ValueNotifier<double>? onSendProgress;
-  final bool isDissabled;
+  final bool isDisabled;
   const LoadingButton({
     super.key,
     required this.title,
     required this.onTap,
     this.color,
-    this.isDissabled = false,
+    this.isDisabled = false,
     this.textColor,
     this.borderRadius,
     this.margin,
@@ -47,7 +47,7 @@ class LoadingButton extends StatelessWidget {
     this.title = "",
     required this.onTap,
     required this.titleAsWidget,
-    this.isDissabled = false,
+    this.isDisabled = false,
     this.color,
     this.textColor,
     this.borderRadius,
@@ -65,18 +65,17 @@ class LoadingButton extends StatelessWidget {
     return Padding(
       padding: margin ?? EdgeInsets.zero,
       child: CustomAnimatedButton(
-        gradient: isDissabled
+        gradient: isDisabled
             ? AppColors.disableGradient
             : color != null
                 ? LinearGradient(colors: [color!, color!])
                 : AppColors.gradient,
-        onTap: isDissabled ? () async {} : onTap,
+        onTap: isDisabled ? () async {} : onTap,
         elevation: 0,
         padding: EdgeInsets.zero,
         width: width ?? MediaQuery.sizeOf(context).width,
         minWidth: 46.h,
         height: height ?? 46.h,
-        // color:gradient != null ? null:  isDissabled ? AppColors.grey2 : color ?? AppColors.primaryColor,
         borderRadius: borderRadius ?? AppSize.sH12,
         disabledColor: color ?? AppColors.primary,
         borderSide: borderSide,
@@ -94,23 +93,6 @@ class LoadingButton extends StatelessWidget {
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // SizedBox(
-                      //   width: 24.w,
-                      //   height: 24.w,
-                      //   child: CircularProgressIndicator(
-                      //     // color: (color ?? AppColors.primaryColor).isDark
-                      //     //     ? AppColors.white
-                      //     //     : AppColors.black,
-                      //     strokeWidth: 3,
-                      //     value: value > 1 ? 1 : value,
-                      //     valueColor: AlwaysStoppedAnimation<Color>(
-                      //       (color ?? AppColors.primaryColor).isDark
-                      //           ? AppColors.white
-                      //           : AppColors.black,
-                      //     ),
-                      //   ),
-                      // ),
-                      // 8.w.szW,
                       SizedBox(
                         width: 60.w,
                         child: Text(
@@ -134,7 +116,7 @@ class LoadingButton extends StatelessWidget {
               title,
               style: TextStyle(
                 color:
-                    isDissabled ? AppColors.black : textColor ?? Colors.white,
+                    isDisabled ? AppColors.black : textColor ?? Colors.white,
                 fontSize: fontSize ?? FontSizeManager.s14,
                 fontWeight: FontWeight.w600,
               ),

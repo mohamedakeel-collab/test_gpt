@@ -275,6 +275,77 @@ class DecimalNumberFormatter extends TextInputFormatter {
   }
 }
 
+/// Currency formatter - adds thousand separators on every keystroke
+/// (e.g. `3000000` → `3,000,000`) and optionally caps the value at [maxValue].
+class CurrencyFormatter extends TextInputFormatter {
+  CurrencyFormatter({this.maxValue});
+
+  final num? maxValue;
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text.isEmpty) return newValue;
+
+    // Keep digits and a single decimal point only.
+    String raw = newValue.text.replaceAll(',', '');
+    if (!RegExp(r'^\d*\.?\d*$').hasMatch(raw)) return oldValue;
+
+    // Enforce the optional cap on the numeric value.
+    if (maxValue != null) {
+      final parsed = double.tryParse(raw);
+      if (parsed != null && parsed > maxValue!) return oldValue;
+    }
+
+    final parts = raw.split('.');
+    final intPart = parts.first;
+    final grouped = _groupThousands(intPart);
+    final formatted = parts.length > 1 ? '$grouped.${parts[1]}' : grouped;
+
+    return TextEditingValue(
+      text: formatted,
+      selection: TextSelection.collapsed(offset: formatted.length),
+    );
+  }
+
+  String _groupThousands(String digits) {
+    if (digits.isEmpty) return digits;
+    final buffer = StringBuffer();
+    final reversed = digits.split('').reversed.toList();
+    for (var i = 0; i < reversed.length; i++) {
+      if (i != 0 && i % 3 == 0) buffer.write(',');
+      buffer.write(reversed[i]);
+    }
+    return buffer.toString().split('').reversed.join();
+  }
+}
+
+/// IBAN formatter - inserts a space every 4 characters and upper-cases input
+/// (e.g. `SA0380000000608010167519` → `SA03 8000 0000 6080 1016 7519`).
+class IbanFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    final raw = newValue.text.replaceAll(' ', '').toUpperCase();
+    if (!RegExp(r'^[A-Z0-9]*$').hasMatch(raw)) return oldValue;
+
+    final buffer = StringBuffer();
+    for (var i = 0; i < raw.length; i++) {
+      if (i != 0 && i % 4 == 0) buffer.write(' ');
+      buffer.write(raw[i]);
+    }
+    final formatted = buffer.toString();
+    return TextEditingValue(
+      text: formatted,
+      selection: TextSelection.collapsed(offset: formatted.length),
+    );
+  }
+}
+
 /// No special characters formatter - allows only letters, numbers, and spaces
 class NoSpecialCharactersFormatter extends TextInputFormatter {
   final bool allowSpaces;

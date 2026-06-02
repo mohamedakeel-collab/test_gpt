@@ -231,7 +231,7 @@ const TextStyle().setErrorColor.s12.bold
 
 ```dart
 DefaultScaffold(title: LocaleKeys.x.tr(), body: const _Body())  // inner screens
-LoadingButton(title: ..., cubit: ..., onTap: ...)               // ALL async submits
+LoadingButton(title: ..., onTap: () async => ...)              // ALL async submits (spinner runs while onTap's Future is awaited)
 CustomTextFiled(title:, hint:, controller:, validator:, ...)    // form fields
 AppDropdown<T>(items:, label:, itemAsString:, onChanged:)       // dropdowns
 CachedImage(url:, width:, height:, borderRadius:)               // ALL network images

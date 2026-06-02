@@ -91,6 +91,75 @@ abstract class LocaleKeys {
   static const String _scripInjectionValidate = 'scrip_injection_validate';
   static String get scripInjectionValidate => _scripInjectionValidate.tr();
 
+  static const String _validatorInvalidNid = 'validator_invalid_nid';
+  static String get validatorInvalidNid => _validatorInvalidNid.tr();
+
+  static const String _validatorInvalidCr = 'validator_invalid_cr';
+  static String get validatorInvalidCr => _validatorInvalidCr.tr();
+
+  static const String _validatorInvalidIban = 'validator_invalid_iban';
+  static String get validatorInvalidIban => _validatorInvalidIban.tr();
+
+  static const String _validatorInvalidVat = 'validator_invalid_vat';
+  static String get validatorInvalidVat => _validatorInvalidVat.tr();
+
+  static const String _validatorInvalidPrice = 'validator_invalid_price';
+  static String get validatorInvalidPrice => _validatorInvalidPrice.tr();
+
+  static const String _validatorPriceTooHigh = 'validator_price_too_high';
+  static String get validatorPriceTooHigh => _validatorPriceTooHigh.tr();
+
+  static const String _validatorInvalidUrl = 'validator_invalid_url';
+  static String get validatorInvalidUrl => _validatorInvalidUrl.tr();
+
+  static const String _products = 'products';
+  static String get products => _products.tr();
+
+  static const String _productsFilter = 'products_filter';
+  static String get productsFilter => _productsFilter.tr();
+
+  static const String _productsEmpty = 'products_empty';
+  static String get productsEmpty => _productsEmpty.tr();
+
+  static const String _productsSearchHint = 'products_search_hint';
+  static String get productsSearchHint => _productsSearchHint.tr();
+
+  static const String _productsFilterByStatus = 'products_filter_by_status';
+  static String get productsFilterByStatus => _productsFilterByStatus.tr();
+
+  static const String _productsClear = 'products_clear';
+  static String get productsClear => _productsClear.tr();
+
+  static const String _productsDescription = 'products_description';
+  static String get productsDescription => _productsDescription.tr();
+
+  static const String _productsNoDescription = 'products_no_description';
+  static String get productsNoDescription => _productsNoDescription.tr();
+
+  static const String _productsDeleteTitle = 'products_delete_title';
+  static String get productsDeleteTitle => _productsDeleteTitle.tr();
+
+  static const String _productsDeleteConfirm = 'products_delete_confirm';
+  static String get productsDeleteConfirm => _productsDeleteConfirm.tr();
+
+  static const String _productsDelete = 'products_delete';
+  static String get productsDelete => _productsDelete.tr();
+
+  static const String _productsCurrency = 'products_currency';
+  static String get productsCurrency => _productsCurrency.tr();
+
+  static const String _productStatusAvailable = 'product_status_available';
+  static String get productStatusAvailable => _productStatusAvailable.tr();
+
+  static const String _productStatusOutOfStock = 'product_status_out_of_stock';
+  static String get productStatusOutOfStock => _productStatusOutOfStock.tr();
+
+  static const String _productStatusDraft = 'product_status_draft';
+  static String get productStatusDraft => _productStatusDraft.tr();
+
+  static const String _productStatusArchived = 'product_status_archived';
+  static String get productStatusArchived => _productStatusArchived.tr();
+
   static const String _cancel = 'cancel';
   static String get cancel => _cancel.tr();
 

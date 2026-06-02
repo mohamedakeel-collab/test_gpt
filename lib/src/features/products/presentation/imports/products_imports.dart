@@ -26,7 +26,22 @@ import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 
 // ── App-level helpers ────────────────────────────────────────────────
+import '../../../../config/language/locale_keys.g.dart';
+import '../../../../config/res/assets.gen.dart';
 import '../../../../config/res/config_imports.dart';
+import '../../../../core/shared/extensions/base_state.dart';
+import '../../../../core/shared/extensions/string_extension.dart';
+import '../../../../core/shared/extensions/text_style_extensions.dart';
+import '../../../../core/shared/extensions/widgets/padding_extension.dart';
+import '../../../../core/shared/extensions/widgets/widget_extentions.dart';
+
+// ── Reusable core widgets (the building blocks every feature reuses) ──
+import '../../../../core/navigation/navigator.dart';
+import '../../../../core/widgets/custom_messages.dart';
+import '../../../../core/widgets/handling_views/empty_widget.dart';
+import '../../../../core/widgets/icon_widget.dart';
+import '../../../../core/widgets/image_widgets/cached_image.dart';
+import '../../../../core/widgets/scaffolds/default_scaffold.dart';
 
 // ── Cross-cutting core (network result + async state machinery) ──────
 import '../../../../core/state/async/async.dart';

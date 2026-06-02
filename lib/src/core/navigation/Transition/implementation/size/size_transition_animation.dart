@@ -2,9 +2,9 @@
 import 'package:flutter/material.dart';
 
 import '../../../constants/imports_constants.dart';
-import '../../Factory/transition_creator.dart';
-import 'Animator/size_animator.dart';
-import 'Option/size_animation_option.dart';
+import '../../factory/transition_creator.dart';
+import 'animator/size_animator.dart';
+import 'option/size_animation_option.dart';
 
 class SizeTransitionAnimation implements TransitionCreator {
   final SizeAnimationOptions options;

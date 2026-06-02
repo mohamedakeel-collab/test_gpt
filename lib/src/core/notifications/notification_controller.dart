@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
 import 'package:flutter/material.dart' hide DismissAction;
@@ -88,12 +89,13 @@ class NotificationController {
 
   @pragma('vm:entry-point')
   static Future<void> myFcmTokenHandle(String token) async {
-    debugPrint('FCM Token: $token');
+    // Never log raw tokens in release — they're sensitive credentials.
+    if (kDebugMode) debugPrint('FCM Token: $token');
   }
 
   @pragma('vm:entry-point')
   static Future<void> myNativeTokenHandle(String token) async {
-    debugPrint('Native Token: $token');
+    if (kDebugMode) debugPrint('Native Token: $token');
   }
 
   // ── Click Handler ───────────────────────────────────────────────

@@ -57,26 +57,45 @@ class UserModel {
     );
   }
 
+  /// Null-safe parsing with type coercion and support for both
+  /// `snake_case` (most backends) and `camelCase` keys. Never throws on a
+  /// missing/mistyped field — falls back to the same defaults as
+  /// [UserModel.initial].
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-        id: json['id'],
-        image: json['image'],
-        fullName: json['fullName'],
-        phoneNumber: json['phoneNumber'],
-        email: json['email'],
-        city: json['city'],
-        userType: json['userType'],
-        allowNotify: json['allowNotify'],
-        token: json['token'],
+        id: (json['id'] ?? '').toString(),
+        image: (json['image'] ?? '').toString(),
+        fullName: (json['full_name'] ?? json['fullName'] ?? '').toString(),
+        phoneNumber:
+            (json['phone_number'] ?? json['phoneNumber'] ?? '').toString(),
+        email: (json['email'] ?? '').toString(),
+        city: (json['city'] ?? '').toString(),
+        userType: _toInt(json['user_type'] ?? json['userType']),
+        allowNotify: _toBool(json['allow_notify'] ?? json['allowNotify']),
+        token: (json['token'] ?? json['access_token'])?.toString(),
       );
+
+  static int _toInt(dynamic value) {
+    if (value is int) return value;
+    if (value is num) return value.toInt();
+    return int.tryParse(value?.toString() ?? '') ?? 0;
+  }
+
+  static bool _toBool(dynamic value) {
+    if (value is bool) return value;
+    if (value is num) return value != 0;
+    final s = value?.toString().toLowerCase();
+    return s == 'true' || s == '1';
+  }
 
   Map<String, dynamic> toJson() => {
         'id': id,
         'image': image,
-        'fullName': fullName,
-        'phoneNumber': phoneNumber,
+        'full_name': fullName,
+        'phone_number': phoneNumber,
         'email': email,
         'city': city,
-        'userType': userType,
-        'allowNotify': allowNotify,
+        'user_type': userType,
+        'allow_notify': allowNotify,
+        // token intentionally excluded — persisted in TokenStorage.
       };
 }

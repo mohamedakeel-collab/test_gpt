@@ -9,54 +9,57 @@ class _ProductDetailsBody extends StatelessWidget {
       builder: (context, product) {
         return CustomScrollView(
           slivers: [
-            SliverAppBar.large(title: Text(product.name), pinned: true),
+            SliverAppBar.large(
+              title: Text(
+                product.name,
+                style: const TextStyle().setMainTextColor.s16.semiBold,
+              ),
+              pinned: true,
+            ),
             SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (product.imageUrl != null &&
-                        product.imageUrl!.isNotEmpty)
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: AspectRatio(
-                          aspectRatio: 16 / 9,
-                          child: Image.network(
-                            product.imageUrl!,
-                            fit: BoxFit.cover,
-                            errorBuilder: (_, _, _) => Container(
-                              color: Colors.grey.shade200,
-                              child: const Icon(Icons.broken_image_outlined),
-                            ),
-                          ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (product.imageUrl != null && product.imageUrl!.isNotEmpty)
+                    AspectRatio(
+                      aspectRatio: 16 / 9,
+                      child: CachedImage(
+                        url: product.imageUrl!,
+                        fit: BoxFit.cover,
+                        borderRadius: BorderRadius.circular(AppCircular.r12),
+                      ),
+                    ),
+                  16.szH,
+                  Row(
+                    children: [
+                      Text(
+                        '${product.price.toCurrency()} '
+                        '${LocaleKeys.productsCurrency}',
+                        style: const TextStyle().setMainTextColor.s20.bold,
+                      ),
+                      const Spacer(),
+                      Chip(
+                        label: Text(
+                          _productStatusLabel(product.status),
+                          style: const TextStyle().setMainTextColor.s12.medium,
                         ),
                       ),
-                    const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        Text(
-                          product.price.toStringAsFixed(2),
-                          style: Theme.of(context).textTheme.headlineSmall,
-                        ),
-                        const Spacer(),
-                        Chip(label: Text(product.status.name)),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'الوصف',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      product.description.isEmpty
-                          ? 'لا يوجد وصف'
-                          : product.description,
-                    ),
-                  ],
-                ),
-              ),
+                    ],
+                  ),
+                  16.szH,
+                  Text(
+                    LocaleKeys.productsDescription,
+                    style: const TextStyle().setMainTextColor.s14.semiBold,
+                  ),
+                  8.szH,
+                  Text(
+                    product.description.isEmpty
+                        ? LocaleKeys.productsNoDescription
+                        : product.description,
+                    style: const TextStyle().setSecondryColor.s13.regular,
+                  ),
+                ],
+              ).paddingAll(AppPadding.pH16),
             ),
           ],
         );
