@@ -155,13 +155,21 @@ class OfflineQueueManager {
   }
 
   Future<void> _runOne(QueuedOperation op) async {
+    // Stable idempotency key for THIS op, reused across every retry, so a reply
+    // lost after the server already committed cannot create a duplicate
+    // (double charge / double sign-up). op.id is a v4 UUID set at enqueue time;
+    // a server that honours Idempotency-Key collapses the retried write.
+    final headers = <String, dynamic>{
+      ...?op.headers,
+      'Idempotency-Key': op.id,
+    };
     try {
       final res = await _dio.request<dynamic>(
         op.endpoint,
         data: op.body,
         options: Options(
           method: op.method,
-          headers: op.headers,
+          headers: headers,
         ),
       );
 

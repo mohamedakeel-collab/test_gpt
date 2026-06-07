@@ -6,24 +6,29 @@ import '../api_endpoints.dart';
 import '../auth/token_storage.dart';
 import '../options/request_extra.dart';
 
-/// Adds Bearer token to every request and refreshes it once when the
-/// server replies with 401. If the refresh fails the original error
-/// is propagated and the stored tokens are cleared (caller can react
-/// by routing to the login screen on UnauthorizedException).
+/// Adds the Bearer token to every request and performs a single-flight
+/// 401 → refresh → retry cycle. If the refresh fails the original error is
+/// propagated and the stored tokens are cleared (callers can react by routing
+/// to the login screen on UnauthorizedFailure).
 ///
-/// Concurrent 401s share a single in-flight refresh via a [Completer] — no
-/// busy-wait polling — so the refresh endpoint is hit at most once even when
-/// a burst of requests fails together.
-class AuthInterceptor extends QueuedInterceptor {
+/// This is a PLAIN [Interceptor], NOT a [QueuedInterceptor]. A
+/// `QueuedInterceptor` serialises every `onResponse` through one shared queue;
+/// because `DioClient` uses `validateStatus < 500`, a 401 is delivered to
+/// `onResponse`, and awaiting a refresh whose own 200 response must pass back
+/// through that same (still-busy) queue deadlocks the request forever. A plain
+/// interceptor has no such queue, and single-flight is provided instead by
+/// [_refreshCompleter]: concurrent 401s all await the same in-flight refresh,
+/// so the refresh endpoint is hit at most once.
+class AuthInterceptor extends Interceptor {
   AuthInterceptor(
     this._dio, {
     TokenStorage? storage,
     this.onAuthFailure,
   }) : _storage = storage ?? TokenStorage.instance;
 
-  /// Shared client used for both the refresh-token call and the retry of the
-  /// original request. Reusing it (instead of `Dio()`) means those calls go
-  /// through the same interceptor chain (locale, logging, …) and never leak.
+  /// Shared client used to retry the original request (full interceptor chain,
+  /// no leak). The refresh call itself runs on a throwaway [Dio] — see
+  /// [_doRefresh] — so its response never re-enters this interceptor.
   final Dio _dio;
   final TokenStorage _storage;
   final Future<void> Function()? onAuthFailure;
@@ -79,6 +84,8 @@ class AuthInterceptor extends QueuedInterceptor {
     DioException err,
     ErrorInterceptorHandler handler,
   ) async {
+    // Defensive: only reached if validateStatus is ever tightened so a 401
+    // arrives as an error instead of a response.
     final isUnauthorized = err.response?.statusCode == 401;
     if (!isUnauthorized || !_shouldAttemptRefresh(err.requestOptions)) {
       return handler.next(err);
@@ -126,15 +133,16 @@ class AuthInterceptor extends QueuedInterceptor {
     final refreshToken = _storage.refreshToken;
     if (refreshToken == null || refreshToken.isEmpty) return false;
 
-    final res = await _dio.post(
+    // Throwaway client for the refresh call so its 200 response does NOT pass
+    // back through THIS interceptor. Routing it through `_dio` would re-enter
+    // onResponse while we are still awaiting here — the original deadlock.
+    final tokenDio = Dio(BaseOptions(baseUrl: _dio.options.baseUrl))
+      ..httpClientAdapter = _dio.httpClientAdapter;
+
+    final res = await tokenDio.post(
       ApiEndpoints.refreshToken,
       data: {'refresh_token': refreshToken},
-      options: Options(
-        // Skip auth attachment + the 401 retry cycle for the refresh call
-        // itself, otherwise a failing refresh would recurse.
-        extra: {_skipAuthFlag: true, _retriedFlag: true},
-        validateStatus: (s) => s != null && s < 500,
-      ),
+      options: Options(validateStatus: (s) => s != null && s < 500),
     );
     if (res.statusCode != 200 || res.data is! Map) return false;
     final data = res.data as Map;
@@ -153,6 +161,13 @@ class AuthInterceptor extends QueuedInterceptor {
     // re-issue through the shared client (full interceptor chain, no leak).
     req.extra[_retriedFlag] = true;
     req.headers['Authorization'] = 'Bearer ${_storage.accessToken}';
+    // FormData is single-use: once finalised on the first send it cannot be
+    // re-read. Clone it so the retried multipart body is rebuilt instead of
+    // throwing a StateError (which would silently log the user out).
+    final data = req.data;
+    if (data is FormData) {
+      req.data = data.clone();
+    }
     return _dio.fetch(req);
   }
 

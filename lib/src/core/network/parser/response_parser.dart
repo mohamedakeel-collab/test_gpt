@@ -67,9 +67,8 @@ class ResponseParser {
       DioExceptionType.receiveTimeout => ReceiveTimeoutException(e.message),
       DioExceptionType.badCertificate => BadCertificateException(e.message),
       DioExceptionType.cancel => const CancelledRequest(),
-      DioExceptionType.connectionError ||
-      DioExceptionType.unknown =>
-        _classifyConnectionError(e),
+      DioExceptionType.connectionError => _classifyConnectionError(e),
+      DioExceptionType.unknown => _classifyUnknown(e),
       DioExceptionType.badResponse => () {
           if (res == null) return const UnknownException('badResponse no res');
           final data = _safeDecode(res.data);
@@ -112,6 +111,22 @@ class ResponseParser {
   static AppException _classifyConnectionError(DioException e) {
     final inner = e.error;
     if (inner is SocketException) return NetworkException(inner.message);
+    return NetworkException(e.message);
+  }
+
+  /// `DioExceptionType.unknown` covers errors raised while Dio processes the
+  /// response — most importantly a [FormatException] from `jsonDecode` when the
+  /// server returns a non-JSON body (an HTML WAF/login page, a truncated
+  /// payload) under a JSON `Content-Type`. That decode throws upstream of the
+  /// [_safeDecode]/[_looksLikeHtml] guards in [parse], so it must be caught
+  /// here and surfaced as a parse failure — NOT a misleading "no internet".
+  /// A genuine transport problem ([SocketException]) still maps to a network
+  /// failure.
+  static AppException _classifyUnknown(DioException e) {
+    final inner = e.error;
+    if (inner is SocketException) return NetworkException(inner.message);
+    if (inner is FormatException) return const HtmlResponseException();
+    if (_looksLikeHtml(e.response?.data)) return const HtmlResponseException();
     return NetworkException(e.message);
   }
 

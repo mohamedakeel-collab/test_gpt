@@ -178,8 +178,13 @@ abstract class BaseRemoteSource {
   static Object? _normalizeArabicDigits(Object? value) {
     if (value is String) return value.toEnglishNumbers();
     if (value is Map) {
-      return value.map(
-        (k, v) => MapEntry(k, _normalizeArabicDigits(v)),
+      // Keep the result a Map<String, dynamic> (and stringify keys) so the
+      // `as Map<String, dynamic>` cast on queryParameters and the
+      // `requestData is Map<String, dynamic>` asFormData guard both still hold
+      // after normalization. A plain `.map(...)` yields Map<dynamic, Object?>,
+      // which throws on the query cast and silently skips the FormData wrap.
+      return value.map<String, dynamic>(
+        (k, v) => MapEntry(k.toString(), _normalizeArabicDigits(v)),
       );
     }
     if (value is List) {
