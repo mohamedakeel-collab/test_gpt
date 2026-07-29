@@ -3,6 +3,7 @@ part of '../imports/home_imports.dart';
 class _BalanceCard extends StatelessWidget {
   const _BalanceCard();
 
+
   @override
   Widget build(BuildContext context) {
     return Container(
