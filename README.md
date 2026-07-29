@@ -311,7 +311,7 @@ lib/
         └── <feature_name>/          See "Feature folder convention" below
 
 assets/
-├── fonts/                           Beiruti family (8 weights)
+├── fonts/                           IBMPlexSans family (7 weights)
 ├── lottie/
 ├── svg/                             base_svg/, app_svg/
 └── translations/
@@ -425,7 +425,7 @@ you should not need to touch.
 | --- | --- | --- |
 | **Brand color** | `lib/src/config/res/color_manager.dart` → `AppColors.brand` (+ `brandLight` / `brandDark`) | Single anchor — the gradient and the legacy aliases (`buttonColor`, `loginPrimary`, …) all derive from it. Change these three and the theme follows. |
 | **App name** | `lib/src/config/res/constants_manager.dart` → `ConstantManager.appName` | Used in `MaterialApp.title` and as a fallback screen title. |
-| **Font** | `ConstantManager.fontFamily` (`Beiruti`) + `pubspec.yaml` `fonts:` + `assets/fonts/` | Swap the family and the 8 weight files. |
+| **Font** | `ConstantManager.fontFamily` (`IBMPlexSans`) + `pubspec.yaml` `fonts:` + `assets/fonts/` | Swap the family and the weight files. |
 | **User shape** | `lib/src/core/shared/models/user_model.dart` | Ships a sample shape (`fullName`, `phoneNumber`, `city`, `userType`, `allowNotify`). Trim/extend to match *your* backend's user object. |
 | **API base URL** | `--dart-define=API_BASE_URL=…` (see *Environments* above) | No code change — set per environment at build time. |
 | **App icons (SVG)** | `assets/svg/app_svg/` + regenerate with `flutter_gen` | Feature-specific glyphs live here; shared ones in `base_svg/`. |

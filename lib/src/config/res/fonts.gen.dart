@@ -11,6 +11,6 @@
 class FontFamily {
   FontFamily._();
 
-  /// Font family: Beiruti
-  static const String beiruti = 'Beiruti';
+  /// Font family: IBMPlexSans
+  static const String iBMPlexSans = 'IBMPlexSans';
 }

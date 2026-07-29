@@ -37,7 +37,7 @@ void main() async {
   await Hive.initFlutter();
 
   await Future.wait([
-    Firebase.initializeApp(),
+  //  Firebase.initializeApp(),
     EasyLocalization.ensureInitialized(),
     ScreenUtil.ensureScreenSize(),
     NetworkInfo().check(),
@@ -64,10 +64,10 @@ void main() async {
   await injector<UserCubit>().init();
 
   // Notifications route through Go.navigatorKey (shared with the rest of the app).
-  await NotificationManager.instance.initialize(
-    router: const AppNotificationRouter(),
-    debug: kDebugMode,
-  );
+ // await NotificationManager.instance.initialize(
+ //   router: const AppNotificationRouter(),
+ //   debug: kDebugMode,
+ // );
 
   PageRouterBuilder().initAppRouter(
     config: PlatformConfig(
@@ -93,6 +93,7 @@ void main() async {
     EasyLocalization(
       supportedLocales: Languages.supportLocales,
       path: 'assets/translations',
+      startLocale: const Locale('ar'),
       fallbackLocale: const Locale('ar'),
       saveLocale: true,
       child: const App(),

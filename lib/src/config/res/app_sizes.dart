@@ -41,7 +41,9 @@ class AppPadding {
   static double pH16 = 16.0.h;
   static double pH18 = 18.0.h;
   static double pH20 = 20.0.h;
+  static double pH25 = 25.0.h;
   static double pH35 = 35.0.h;
+  static double pH45 = 45.0.h;
 
   // VALUES FOR WIDTH
   static double pW2 = 2.0.h;
@@ -53,6 +55,9 @@ class AppPadding {
   static double pW16 = 16.0.w;
   static double pW18 = 18.0.w;
   static double pW20 = 20.0.w;
+  static double pW24 = 24.0.w;
+  static double pW25 = 25.0.w;
+  static double pW32 = 32.0.w;
   static double pW60 = 60.0.w;
 }
 
@@ -71,17 +76,24 @@ class AppSize {
   static double sH18 = 18.0.h;
   static double sH20 = 20.0.h;
   static double sH22 = 22.0.h;
+  static double sH24 = 24.0.h;
   static double sH25 = 25.0.h;
+  static double sH28 = 28.0.h;
   static double sH30 = 30.0.h;
   static double sH35 = 35.0.h;
   static double sH40 = 40.0.h;
+  static double sH42 = 42.0.h;
   static double sH44 = 44.0.h;
   static double sH45 = 45.0.h;
   static double sH50 = 50.0.h;
   static double sH55 = 55.0.h;
   static double sH60 = 60.0.h;
   static double sH70 = 70.0.h;
+  static double sH80 = 80.0.h;
   static double sH85 = 85.0.h;
+  static double sH90 = 90.0.h;
+  static double sH100 = 100.0.h;
+  static double sH150 = 150.0.h;
 
   // VALUES FOR WIDTH
   static double sW0 = 0.0.w;
@@ -97,11 +109,16 @@ class AppSize {
   static double sW18 = 18.0.w;
   static double sW20 = 20.0.w;
   static double sW25 = 25.0.w;
+  static double sW28 = 28.0.w;
   static double sW30 = 30.0.w;
   static double sW40 = 40.0.w;
   static double sW50 = 50.0.w;
+  static double sW55 = 55.0.w;
   static double sW60 = 60.0.w;
   static double sW70 = 70.0.w;
+  static double sW80 = 80.0.w;
+  static double sW90 = 90.0.w;
+  static double sW150 = 150.0.w;
 }
 
 class FontSizeManager {
@@ -139,6 +156,7 @@ class AppCircular {
   static double r12 = 12.0.r;
   static double r15 = 15.0.r;
   static double r20 = 20.0.r;
+  static double r30 = 30.0.r;
   static double r40 = 40.0.r;
   static double infinity = 200.0.r;
 }

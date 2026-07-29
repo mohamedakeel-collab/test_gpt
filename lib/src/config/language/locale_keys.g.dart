@@ -214,4 +214,157 @@ abstract class LocaleKeys {
   static const String _selectImage = 'select_image';
   static String get selectImage => _selectImage.tr();
 
+  static const String _loginEmailHint = 'login_email_hint';
+  static String get loginEmailHint => _loginEmailHint.tr();
+
+  static const String _loginPasswordHint = 'login_password_hint';
+  static String get loginPasswordHint => _loginPasswordHint.tr();
+
+  static const String _loginForgotPassword = 'login_forgot_password';
+  static String get loginForgotPassword => _loginForgotPassword.tr();
+
+  static const String _loginDontHaveAccount = 'login_dont_have_account';
+  static String get loginDontHaveAccount => _loginDontHaveAccount.tr();
+
+  static const String _loginCreateAccount = 'login_create_account';
+  static String get loginCreateAccount => _loginCreateAccount.tr();
+
+  static const String _home = 'home';
+  static String get home => _home.tr();
+
+  static const String _homePermissions = 'home_permissions';
+  static String get homePermissions => _homePermissions.tr();
+
+  static const String _balanceDays = 'balance_days';
+  static String get balanceDays => _balanceDays.tr();
+
+  static const String _balanceTitle = 'balance_title';
+  static String balanceTitle({required String count}) => _balanceTitle.tr(namedArgs: {'count': count});
+
+  static const String _homeWelcome = 'home_welcome';
+  static String get homeWelcome => _homeWelcome.tr();
+
+  static const String _homeProfile = 'home_profile';
+  static String get homeProfile => _homeProfile.tr();
+
+  static const String _homeLeaves = 'home_leaves';
+  static String get homeLeaves => _homeLeaves.tr();
+
+  static const String _homeTools = 'home_tools';
+  static String get homeTools => _homeTools.tr();
+
+  static const String _introSkip = 'intro_skip';
+  static String get introSkip => _introSkip.tr();
+
+  static const String _homeLatestRequests = 'home_latest_requests';
+  static String get homeLatestRequests => _homeLatestRequests.tr();
+
+  static const String _homeShowAll = 'home_show_all';
+  static String get homeShowAll => _homeShowAll.tr();
+
+  static const String _orders = 'orders';
+  static String get orders => _orders.tr();
+
+  static const String _introGetStarted = 'intro_get_started';
+  static String get introGetStarted => _introGetStarted.tr();
+
+  static const String _introNext = 'intro_next';
+  static String get introNext => _introNext.tr();
+
+  static const String _introTitle1 = 'intro_title_1';
+  static String get introTitle1 => _introTitle1.tr();
+
+  static const String _introDesc1 = 'intro_desc_1';
+  static String get introDesc1 => _introDesc1.tr();
+
+  static const String _introTitle2 = 'intro_title_2';
+  static String get introTitle2 => _introTitle2.tr();
+
+  static const String _introDesc2 = 'intro_desc_2';
+  static String get introDesc2 => _introDesc2.tr();
+
+  static const String _introTitle3 = 'intro_title_3';
+  static String get introTitle3 => _introTitle3.tr();
+
+  static const String _introDesc3 = 'intro_desc_3';
+  static String get introDesc3 => _introDesc3.tr();
+
+  static const String _splashTitle = 'splash_title';
+  static String get splashTitle => _splashTitle.tr();
+
+  static const String _welcomeBack = 'welcome_back';
+  static String get welcomeBack => _welcomeBack.tr();
+
+  static const String _password = 'password';
+  static String get password => _password.tr();
+
+  static const String _arabic = 'arabic';
+  static String get arabic => _arabic.tr();
+
+  static const String _newRequestTitle = 'new_request_title';
+  static String get newRequestTitle => _newRequestTitle.tr();
+
+  static const String _chooseLanguage = 'choose_language';
+  static String get chooseLanguage => _chooseLanguage.tr();
+
+  static const String _homePendingRequests = 'home_pending_requests';
+  static String homePendingRequests({required String count}) => _homePendingRequests.tr(namedArgs: {'count': count});
+
+  static const String _english = 'english';
+  static String get english => _english.tr();
+
+  static const String _requestType = 'request_type';
+  static String get requestType => _requestType.tr();
+
+  static const String _sickLeave = 'sick_leave';
+  static String get sickLeave => _sickLeave.tr();
+
+  static const String _annualLeave = 'annual_leave';
+  static String get annualLeave => _annualLeave.tr();
+
+  static const String _permission = 'permission';
+  static String get permission => _permission.tr();
+
+  static const String _startDate = 'start_date';
+  static String get startDate => _startDate.tr();
+
+  static const String _endDate = 'end_date';
+  static String get endDate => _endDate.tr();
+
+  static const String _requestReason = 'request_reason';
+  static String get requestReason => _requestReason.tr();
+
+  static const String _writeReason = 'write_reason';
+  static String get writeReason => _writeReason.tr();
+
+  static const String _approvalParty = 'approval_party';
+  static String get approvalParty => _approvalParty.tr();
+
+  static const String _teamLeader = 'team_leader';
+  static String get teamLeader => _teamLeader.tr();
+
+  static const String _teamLeaderApproval = 'team_leader_approval';
+  static String get teamLeaderApproval => _teamLeaderApproval.tr();
+
+  static const String _hrApproval = 'hr_approval';
+  static String get hrApproval => _hrApproval.tr();
+
+  static const String _hrDepartment = 'hr_department';
+  static String get hrDepartment => _hrDepartment.tr();
+
+  static const String _remainingBalance = 'remaining_balance';
+  static String get remainingBalance => _remainingBalance.tr();
+
+  static const String _remainingVacationBalance = 'remaining_vacation_balance';
+  static String get remainingVacationBalance => _remainingVacationBalance.tr();
+
+  static const String _sendRequest = 'send_request';
+  static String get sendRequest => _sendRequest.tr();
+
+  static const String _pending = 'pending';
+  static String get pending => _pending.tr();
+
+  static const String _loginTitle = 'login_title';
+  static String get loginTitle => _loginTitle.tr();
+
 }

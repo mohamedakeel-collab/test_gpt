@@ -11,10 +11,12 @@ class CustomNavigationBar extends StatefulWidget {
     required this.tabs,
     this.selectedIndex = 0,
     this.onTabChange,
+    required this.activeColor,
   });
 
   final List<NavigationBarEntity> tabs;
   final int selectedIndex;
+  final Color? activeColor;
   final ValueChanged<int>? onTabChange;
 
   @override
@@ -62,9 +64,9 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
     return Semantics(
       child: AnimatedButton(
         icon: tab.icon,
-        text: Text(tab.text, style: const TextStyle().setWhiteColor.s13.medium),
+        text: Text(tab.text, style:isActive==true?  TextStyle().setWhiteColor.s13.medium: TextStyle().subHintColor.s13.medium),
         active: isActive,
-        color: const Color(0xff5C40C2),
+        color: widget.activeColor,
         onPressed: () => _handleTabPress(index),
       ),
     );

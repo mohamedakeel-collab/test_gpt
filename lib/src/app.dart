@@ -10,6 +10,8 @@ import 'core/navigation/route_generator.dart';
 import 'core/network/cubits/connectivity_cubit.dart';
 import 'core/network/cubits/offline_queue_cubit.dart';
 import 'core/shared/cubits/user_cubit/user_cubit.dart';
+import 'features/intro/presentation/imports/intro_imports.dart';
+import 'features/splash/presentation/imports/splash_imports.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -37,10 +39,12 @@ class App extends StatelessWidget {
           darkTheme: AppTheme.dark,
           themeMode: ThemeMode.system,
           locale: context.locale,
+
+
           supportedLocales: context.supportedLocales,
           localizationsDelegates: context.localizationDelegates,
-          onGenerateRoute: RouterGenerator.getRoute,
-          initialRoute: NamedRoutes.splash.routeName,
+         home: SplashScreen(),
+
         ),
       ),
     );

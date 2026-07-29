@@ -4,9 +4,9 @@ final GetIt injector = GetIt.instance;
 
 class ConstantManager {
   static const String bundleId = 'com.cs.flutter.jawaher';
-  static const String appName = 'Jawaher';
+  static const String appName = 'TAG WINNER';
   static const String baseUrl = 'https://jthot.com/api/';
-  static const String fontFamily = 'Beiruti';
+  static const String fontFamily = 'IBMPlexSans';
   
   static const int splashTimer = 3000;
   static const String emptyText = '';

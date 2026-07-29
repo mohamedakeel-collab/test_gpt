@@ -7,24 +7,31 @@ class AppColors {
   static const Color brand = Color(0xFFB77F4A);
   static const Color brandLight = Color(0xFFD4A374);
   static const Color brandDark = Color(0xFFB17B48);
-  static const Color brandSurface = Color(0xFFFFF9F0);
+  static const Color brandSurface = Color(0xFF4E6700);
 
   // ── Text ─────────────────────────────────────────────────────────────────
   static const Color main = Color(0xFF1C1C1C);
-  static const Color primary = Color(0xFF474747);
-  static const Color hintText = Color(0xFF8B8B8B);
+  static const Color primary = Color(0xFFC6FF00);
+  static const Color second = Color(0xFFBEF500);
+  static const Color hintText = Color(0xFF191D10);
+  static const Color labelText = Color(0xFF434933);
+  static const Color subHintText = Color(0xFF5F5E5E);
+  static const Color subLabelText = Color(0xFFC8C6C5);
   static const Color textDisabled = Color(0xFFCCCCCC);
   static const Color textOnDark = Color(0xFFFFFFFF);
   static const Color textBrand = Color(0xFFB77F4A);
 
   // ── Surface ──────────────────────────────────────────────────────────────
-  static const Color scaffoldBackground = Color(0xFFFBFBFB);
+  static const Color scaffoldBackground = Color(0xFFF6F7F9);
+  static const Color warningBackground = Color(0xFFFFF4E5);
+  static const Color splashBackground = Color(0xFF0D0D0D);
   static const Color card = Color(0xFFFFFFFF);
-  static const Color fill = Color(0xFFF7F7F8);
+  static const Color fill = Color(0xFFEDF0DA);
+  static const Color icons = Color(0xFF5F5E5E);
   static const Color surfaceBrand = Color(0xFFB77F4A);
 
   // ── Border ───────────────────────────────────────────────────────────────
-  static const Color border = Color(0xFFEBEBEB);
+  static const Color border = Color(0xFFC3CAAC);
   static const Color borderStrong = Color(0xFFCCCCCC);
 
   // ── Status ───────────────────────────────────────────────────────────────

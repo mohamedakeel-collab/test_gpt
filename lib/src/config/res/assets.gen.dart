@@ -18,40 +18,41 @@ import 'package:vector_graphics/vector_graphics.dart' as _vg;
 class $AssetsFontsGen {
   const $AssetsFontsGen();
 
-  /// File path: assets/fonts/Beiruti-Black.ttf
-  String get beirutiBlack => 'assets/fonts/Beiruti-Black.ttf';
+  /// File path: assets/fonts/IBMPlexSansArabic-Bold.ttf
+  String get iBMPlexSansArabicBold => 'assets/fonts/IBMPlexSansArabic-Bold.ttf';
 
-  /// File path: assets/fonts/Beiruti-Bold.ttf
-  String get beirutiBold => 'assets/fonts/Beiruti-Bold.ttf';
+  /// File path: assets/fonts/IBMPlexSansArabic-ExtraLight.ttf
+  String get iBMPlexSansArabicExtraLight =>
+      'assets/fonts/IBMPlexSansArabic-ExtraLight.ttf';
 
-  /// File path: assets/fonts/Beiruti-ExtraBold.ttf
-  String get beirutiExtraBold => 'assets/fonts/Beiruti-ExtraBold.ttf';
+  /// File path: assets/fonts/IBMPlexSansArabic-Light.ttf
+  String get iBMPlexSansArabicLight =>
+      'assets/fonts/IBMPlexSansArabic-Light.ttf';
 
-  /// File path: assets/fonts/Beiruti-ExtraLight.ttf
-  String get beirutiExtraLight => 'assets/fonts/Beiruti-ExtraLight.ttf';
+  /// File path: assets/fonts/IBMPlexSansArabic-Medium.ttf
+  String get iBMPlexSansArabicMedium =>
+      'assets/fonts/IBMPlexSansArabic-Medium.ttf';
 
-  /// File path: assets/fonts/Beiruti-Light.ttf
-  String get beirutiLight => 'assets/fonts/Beiruti-Light.ttf';
+  /// File path: assets/fonts/IBMPlexSansArabic-Regular.ttf
+  String get iBMPlexSansArabicRegular =>
+      'assets/fonts/IBMPlexSansArabic-Regular.ttf';
 
-  /// File path: assets/fonts/Beiruti-Medium.ttf
-  String get beirutiMedium => 'assets/fonts/Beiruti-Medium.ttf';
+  /// File path: assets/fonts/IBMPlexSansArabic-SemiBold.ttf
+  String get iBMPlexSansArabicSemiBold =>
+      'assets/fonts/IBMPlexSansArabic-SemiBold.ttf';
 
-  /// File path: assets/fonts/Beiruti-Regular.ttf
-  String get beirutiRegular => 'assets/fonts/Beiruti-Regular.ttf';
-
-  /// File path: assets/fonts/Beiruti-SemiBold.ttf
-  String get beirutiSemiBold => 'assets/fonts/Beiruti-SemiBold.ttf';
+  /// File path: assets/fonts/IBMPlexSansArabic-Thin.ttf
+  String get iBMPlexSansArabicThin => 'assets/fonts/IBMPlexSansArabic-Thin.ttf';
 
   /// List of all assets
   List<String> get values => [
-    beirutiBlack,
-    beirutiBold,
-    beirutiExtraBold,
-    beirutiExtraLight,
-    beirutiLight,
-    beirutiMedium,
-    beirutiRegular,
-    beirutiSemiBold,
+    iBMPlexSansArabicBold,
+    iBMPlexSansArabicExtraLight,
+    iBMPlexSansArabicLight,
+    iBMPlexSansArabicMedium,
+    iBMPlexSansArabicRegular,
+    iBMPlexSansArabicSemiBold,
+    iBMPlexSansArabicThin,
   ];
 }
 
@@ -156,18 +157,6 @@ class $AssetsSvgBaseSvgGen {
   SvgGenImage get checkBoxEmpty =>
       const SvgGenImage('assets/svg/base_svg/Check Box_empty.svg');
 
-  /// File path: assets/svg/base_svg/Onboarding_1.png
-  AssetGenImage get onboarding1 =>
-      const AssetGenImage('assets/svg/base_svg/Onboarding_1.png');
-
-  /// File path: assets/svg/base_svg/Onboarding_2.png
-  AssetGenImage get onboarding2 =>
-      const AssetGenImage('assets/svg/base_svg/Onboarding_2.png');
-
-  /// File path: assets/svg/base_svg/Onboarding_3.png
-  AssetGenImage get onboarding3 =>
-      const AssetGenImage('assets/svg/base_svg/Onboarding_3.png');
-
   /// File path: assets/svg/base_svg/Upload_doted.png
   AssetGenImage get uploadDoted =>
       const AssetGenImage('assets/svg/base_svg/Upload_doted.png');
@@ -175,6 +164,10 @@ class $AssetsSvgBaseSvgGen {
   /// File path: assets/svg/base_svg/arrow_back.svg
   SvgGenImage get arrowBack =>
       const SvgGenImage('assets/svg/base_svg/arrow_back.svg');
+
+  /// File path: assets/svg/base_svg/arrow_back_app.svg
+  SvgGenImage get arrowBackApp =>
+      const SvgGenImage('assets/svg/base_svg/arrow_back_app.svg');
 
   /// File path: assets/svg/base_svg/arrow_down.svg
   SvgGenImage get arrowDown =>
@@ -191,6 +184,10 @@ class $AssetsSvgBaseSvgGen {
   /// File path: assets/svg/base_svg/chats_empty.png
   AssetGenImage get chatsEmpty =>
       const AssetGenImage('assets/svg/base_svg/chats_empty.png');
+
+  /// File path: assets/svg/base_svg/company.svg
+  SvgGenImage get company =>
+      const SvgGenImage('assets/svg/base_svg/company.svg');
 
   /// File path: assets/svg/base_svg/complain_empty.png
   AssetGenImage get complainEmpty =>
@@ -211,6 +208,21 @@ class $AssetsSvgBaseSvgGen {
   /// File path: assets/svg/base_svg/drop_down_close.svg
   SvgGenImage get dropDownClose =>
       const SvgGenImage('assets/svg/base_svg/drop_down_close.svg');
+
+  /// File path: assets/svg/base_svg/holiday.svg
+  SvgGenImage get holiday =>
+      const SvgGenImage('assets/svg/base_svg/holiday.svg');
+
+  /// File path: assets/svg/base_svg/home.svg
+  SvgGenImage get home => const SvgGenImage('assets/svg/base_svg/home.svg');
+
+  /// File path: assets/svg/base_svg/home_selected.svg
+  SvgGenImage get homeSelected =>
+      const SvgGenImage('assets/svg/base_svg/home_selected.svg');
+
+  /// File path: assets/svg/base_svg/logo_login.png
+  AssetGenImage get logoLogin =>
+      const AssetGenImage('assets/svg/base_svg/logo_login.png');
 
   /// File path: assets/svg/base_svg/notification_delete.svg
   SvgGenImage get notificationDelete =>
@@ -235,6 +247,36 @@ class $AssetsSvgBaseSvgGen {
   /// File path: assets/svg/base_svg/notify.svg
   SvgGenImage get notify => const SvgGenImage('assets/svg/base_svg/notify.svg');
 
+  /// File path: assets/svg/base_svg/on_boarding_1.svg
+  SvgGenImage get onBoarding1 =>
+      const SvgGenImage('assets/svg/base_svg/on_boarding_1.svg');
+
+  /// File path: assets/svg/base_svg/on_boarding_2.svg
+  SvgGenImage get onBoarding2 =>
+      const SvgGenImage('assets/svg/base_svg/on_boarding_2.svg');
+
+  /// File path: assets/svg/base_svg/on_boarding_3.svg
+  SvgGenImage get onBoarding3 =>
+      const SvgGenImage('assets/svg/base_svg/on_boarding_3.svg');
+
+  /// File path: assets/svg/base_svg/order.svg
+  SvgGenImage get order => const SvgGenImage('assets/svg/base_svg/order.svg');
+
+  /// File path: assets/svg/base_svg/order_selected.svg
+  SvgGenImage get orderSelected =>
+      const SvgGenImage('assets/svg/base_svg/order_selected.svg');
+
+  /// File path: assets/svg/base_svg/permission.svg
+  SvgGenImage get permission =>
+      const SvgGenImage('assets/svg/base_svg/permission.svg');
+
+  /// File path: assets/svg/base_svg/person.svg
+  SvgGenImage get person => const SvgGenImage('assets/svg/base_svg/person.svg');
+
+  /// File path: assets/svg/base_svg/person_selected.svg
+  SvgGenImage get personSelected =>
+      const SvgGenImage('assets/svg/base_svg/person_selected.svg');
+
   /// File path: assets/svg/base_svg/profile.png
   AssetGenImage get profile =>
       const AssetGenImage('assets/svg/base_svg/profile.png');
@@ -246,6 +288,13 @@ class $AssetsSvgBaseSvgGen {
   AssetGenImage get sessionsEmpty =>
       const AssetGenImage('assets/svg/base_svg/sessions_empty.png');
 
+  /// File path: assets/svg/base_svg/tag_logo.png
+  AssetGenImage get tagLogo =>
+      const AssetGenImage('assets/svg/base_svg/tag_logo.png');
+
+  /// File path: assets/svg/base_svg/team.svg
+  SvgGenImage get team => const SvgGenImage('assets/svg/base_svg/team.svg');
+
   /// List of all assets
   List<dynamic> get values => [
     carousel1,
@@ -253,29 +302,42 @@ class $AssetsSvgBaseSvgGen {
     carousel3,
     checkBox,
     checkBoxEmpty,
-    onboarding1,
-    onboarding2,
-    onboarding3,
     uploadDoted,
     arrowBack,
+    arrowBackApp,
     arrowDown,
     changeEmail,
     changePass,
     chatsEmpty,
+    company,
     complainEmpty,
     correct,
     deleteAll,
     dropDownArrowDown,
     dropDownClose,
+    holiday,
+    home,
+    homeSelected,
+    logoLogin,
     notificationDelete,
     notificationDialog,
     notificationEmpty,
     notificationsCopy,
     notifications,
     notify,
+    onBoarding1,
+    onBoarding2,
+    onBoarding3,
+    order,
+    orderSelected,
+    permission,
+    person,
+    personSelected,
     profile,
     search,
     sessionsEmpty,
+    tagLogo,
+    team,
   ];
 }
 

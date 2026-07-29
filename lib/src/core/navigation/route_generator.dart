@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../features/home/presentation/imports/home_imports.dart';
+import '../../features/login/presentation/imports/login_imports.dart';
 import 'named_routes.dart';
 import 'page_router/imports_page_router_builder.dart';
 
@@ -16,6 +18,14 @@ class RouterGenerator {
     return switch (namedRoute) {
       NamedRoutes.splash => _pageRouter.build(
           const _SplashPlaceholder(),
+          settings: settings,
+        ),
+      NamedRoutes.login => _pageRouter.build(
+          const LoginScreen(),
+          settings: settings,
+        ),
+      NamedRoutes.home => _pageRouter.build(
+          const HomeScreen(),
           settings: settings,
         ),
     };

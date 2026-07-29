@@ -48,6 +48,10 @@ extension TextStyleEx on TextStyle {
   TextStyle get setThirdColor => copyWith(color: AppColors.third);
   TextStyle get setForthColor => copyWith(color: AppColors.forth);
   TextStyle get setHintColor => copyWith(color: AppColors.hintText);
+  TextStyle get subLabelColor => copyWith(color: AppColors.subLabelText);
+  TextStyle get setLabelColor => copyWith(color: AppColors.labelText);
+  TextStyle get setBrandSurfaceColor => copyWith(color: AppColors.brandSurface);
+  TextStyle get subHintColor => copyWith(color: AppColors.subHintText);
   TextStyle get setGreyColor => copyWith(color: AppColors.grey1);
   TextStyle get setBlackColor => copyWith(color: AppColors.black);
   TextStyle get setWhiteColor => copyWith(color: AppColors.white);

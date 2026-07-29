@@ -102,24 +102,22 @@ flutter:
     - assets/translations/
 
   fonts:
-    - family: Beiruti
+    - family: IBMPlexSans
       fonts:
-        - asset: assets/fonts/Beiruti-ExtraLight.ttf
+        - asset: assets/fonts/IBMPlexSansArabic-ExtraLight.ttf
           weight: 200
-        - asset: assets/fonts/Beiruti-Light.ttf
+        - asset: assets/fonts/IBMPlexSansArabic-Light.ttf
           weight: 300
-        - asset: assets/fonts/Beiruti-Regular.ttf
+        - asset: assets/fonts/IBMPlexSansArabic-Regular.ttf
           weight: 400
-        - asset: assets/fonts/Beiruti-Medium.ttf
+        - asset: assets/fonts/IBMPlexSansArabic-Medium.ttf
           weight: 500
-        - asset: assets/fonts/Beiruti-SemiBold.ttf
+        - asset: assets/fonts/IBMPlexSansArabic-SemiBold.ttf
           weight: 600
-        - asset: assets/fonts/Beiruti-Bold.ttf
+        - asset: assets/fonts/IBMPlexSansArabic-Bold.ttf
           weight: 700
-        - asset: assets/fonts/Beiruti-ExtraBold.ttf
-          weight: 800
-        - asset: assets/fonts/Beiruti-Black.ttf
-          weight: 900
+        - asset: assets/fonts/IBMPlexSansArabic-Thin.ttf
+          weight: 100
 
 flutter_gen:
   output: lib/src/config/res/
