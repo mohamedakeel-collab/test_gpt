@@ -3,38 +3,61 @@ part of '../imports/new_request_imports.dart';
 class _NewRequestBody extends StatelessWidget {
   _NewRequestBody();
 
+  final ValueNotifier<int> selectedRequestType = ValueNotifier(0);
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                const _RequestTypeSelector(),
+    return ValueListenableBuilder<int>(
+      valueListenable: selectedRequestType,
+      builder: (context, selectedType, _) {
+        return Column(
+          children: [
+            8.szH,
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
 
-                16.szH,
+                    _RequestTypeSelector(
+                      selectedType: selectedRequestType,
+                    ),
 
-                const _RequestDatePicker(),
+                    16.szH,
 
-                16.szH,
+                    _RequestDatePicker(
+                      isHourlyPermission: selectedType == 1,
+                    ),
 
-                const _RequestReasonField(),
 
-                16.szH,
+                    if (selectedType == 1) ...[
+                      16.szH,
+                      const _RequestTimePicker(),
+                    ],
 
-                _ApprovalSection(),
 
-                16.szH,
+                    16.szH,
 
-                const _BalanceInfoCard(),
-              ],
-            ).paddingSymmetric(horizontal: AppPadding.pH16),
-          ),
-        ),
+                    const _RequestReasonField(),
 
-        const _SendRequestButton(),
-      ],
+                    16.szH,
+
+                    const _ApprovalSection(),
+
+                    16.szH,
+
+                    const _BalanceInfoCard(),
+
+                  ],
+                ).paddingSymmetric(
+                  horizontal: AppPadding.pH16,
+                ),
+              ),
+            ),
+
+            const _SendRequestButton(),
+          ],
+        );
+      },
     );
   }
 }

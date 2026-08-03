@@ -201,6 +201,10 @@ class $AssetsSvgBaseSvgGen {
   SvgGenImage get deleteAll =>
       const SvgGenImage('assets/svg/base_svg/delete_all.svg');
 
+  /// File path: assets/svg/base_svg/department.svg
+  SvgGenImage get department =>
+      const SvgGenImage('assets/svg/base_svg/department.svg');
+
   /// File path: assets/svg/base_svg/drop_down_arrow_down.svg
   SvgGenImage get dropDownArrowDown =>
       const SvgGenImage('assets/svg/base_svg/drop_down_arrow_down.svg');
@@ -208,6 +212,15 @@ class $AssetsSvgBaseSvgGen {
   /// File path: assets/svg/base_svg/drop_down_close.svg
   SvgGenImage get dropDownClose =>
       const SvgGenImage('assets/svg/base_svg/drop_down_close.svg');
+
+  /// File path: assets/svg/base_svg/edite.svg
+  SvgGenImage get edite => const SvgGenImage('assets/svg/base_svg/edite.svg');
+
+  /// File path: assets/svg/base_svg/email.svg
+  SvgGenImage get email => const SvgGenImage('assets/svg/base_svg/email.svg');
+
+  /// File path: assets/svg/base_svg/filter.svg
+  SvgGenImage get filter => const SvgGenImage('assets/svg/base_svg/filter.svg');
 
   /// File path: assets/svg/base_svg/holiday.svg
   SvgGenImage get holiday =>
@@ -223,6 +236,9 @@ class $AssetsSvgBaseSvgGen {
   /// File path: assets/svg/base_svg/logo_login.png
   AssetGenImage get logoLogin =>
       const AssetGenImage('assets/svg/base_svg/logo_login.png');
+
+  /// File path: assets/svg/base_svg/logout.svg
+  SvgGenImage get logout => const SvgGenImage('assets/svg/base_svg/logout.svg');
 
   /// File path: assets/svg/base_svg/notification_delete.svg
   SvgGenImage get notificationDelete =>
@@ -277,16 +293,30 @@ class $AssetsSvgBaseSvgGen {
   SvgGenImage get personSelected =>
       const SvgGenImage('assets/svg/base_svg/person_selected.svg');
 
+  /// File path: assets/svg/base_svg/phone.svg
+  SvgGenImage get phone => const SvgGenImage('assets/svg/base_svg/phone.svg');
+
   /// File path: assets/svg/base_svg/profile.png
   AssetGenImage get profile =>
       const AssetGenImage('assets/svg/base_svg/profile.png');
 
+  /// File path: assets/svg/base_svg/reject.svg
+  SvgGenImage get reject => const SvgGenImage('assets/svg/base_svg/reject.svg');
+
   /// File path: assets/svg/base_svg/search.svg
   SvgGenImage get search => const SvgGenImage('assets/svg/base_svg/search.svg');
+
+  /// File path: assets/svg/base_svg/security.svg
+  SvgGenImage get security =>
+      const SvgGenImage('assets/svg/base_svg/security.svg');
 
   /// File path: assets/svg/base_svg/sessions_empty.png
   AssetGenImage get sessionsEmpty =>
       const AssetGenImage('assets/svg/base_svg/sessions_empty.png');
+
+  /// File path: assets/svg/base_svg/settings.svg
+  SvgGenImage get settings =>
+      const SvgGenImage('assets/svg/base_svg/settings.svg');
 
   /// File path: assets/svg/base_svg/tag_logo.png
   AssetGenImage get tagLogo =>
@@ -313,12 +343,17 @@ class $AssetsSvgBaseSvgGen {
     complainEmpty,
     correct,
     deleteAll,
+    department,
     dropDownArrowDown,
     dropDownClose,
+    edite,
+    email,
+    filter,
     holiday,
     home,
     homeSelected,
     logoLogin,
+    logout,
     notificationDelete,
     notificationDialog,
     notificationEmpty,
@@ -333,9 +368,13 @@ class $AssetsSvgBaseSvgGen {
     permission,
     person,
     personSelected,
+    phone,
     profile,
+    reject,
     search,
+    security,
     sessionsEmpty,
+    settings,
     tagLogo,
     team,
   ];

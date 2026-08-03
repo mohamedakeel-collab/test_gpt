@@ -6,25 +6,14 @@ class _RequestsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              LocaleKeys.homeLatestRequests,
-              style: const TextStyle()
-                  .setMainTextColor
-                  .s18
-                  .bold,
-            ),
-            Text(
-              LocaleKeys.homeShowAll,
-              style: const TextStyle()
-                  .setBrandSurfaceColor
-                  .s14
-                  .medium,
-            ),
-          ],
+        Text(
+          LocaleKeys.homeLatestRequests,
+          style: const TextStyle()
+              .setMainTextColor
+              .s18
+              .bold,
         ).paddingSymmetric(vertical: AppPadding.pH16,),
          _RequestCard(
           title: 'إجازة سنوية',

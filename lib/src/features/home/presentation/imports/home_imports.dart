@@ -17,6 +17,9 @@ import '../../../../core/widgets/navigation_bar/custom_navigation_bar.dart';
 import '../../../../core/widgets/navigation_bar/navigation_bar_entity.dart';
 import '../../../../core/widgets/scaffolds/arrow_widget.dart';
 import '../../../new_request/presentation/imports/new_request_imports.dart';
+import '../../../notifications/presentation/imports/notifications_imports.dart';
+import '../../../orders/imports/orders_imports.dart';
+import '../../../profile/presentation/imports/profile_imports.dart';
 
 part '../view/home_screen.dart';
 part '../view/main_tap_csreen.dart';

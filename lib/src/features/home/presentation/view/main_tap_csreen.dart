@@ -36,9 +36,9 @@ class _MainTapScreenState extends State<MainTapScreen> {
       body: IndexedStack(
         index: _selectedIndex,
         children: [
-          const HomeScreen(),
-          _HomePlaceholderTab(message: LocaleKeys.products),
-          _HomePlaceholderTab(message: LocaleKeys.homeProfile),
+           HomeScreen(),
+           OrdersScreen(),
+          ProfileScreen()
         ],
       ),
       bottomNavigationBar: AppBottomNavigationBar(

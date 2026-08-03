@@ -1,22 +1,50 @@
 part of '../imports/new_request_imports.dart';
 
 class _RequestDatePicker extends StatelessWidget {
-  const _RequestDatePicker();
+  const _RequestDatePicker({
+    required this.isHourlyPermission,
+  });
+
+  final bool isHourlyPermission;
 
   @override
   Widget build(BuildContext context) {
+
+    if (isHourlyPermission) {
+      return const _SingleDateField();
+    }
+
     return Row(
       children: [
-        Expanded(child: _DateField(title: LocaleKeys.endDate)),
+        Expanded(
+          child: _DateField(
+            title: LocaleKeys.startDate,
+          ),
+        ),
 
         12.szW,
 
-        Expanded(child: _DateField(title: LocaleKeys.startDate)),
+        Expanded(
+          child: _DateField(
+            title: LocaleKeys.endDate,
+          ),
+        ),
+
+
       ],
     );
   }
 }
+class _SingleDateField extends StatelessWidget {
+  const _SingleDateField();
 
+  @override
+  Widget build(BuildContext context) {
+    return _DateField(
+      title: LocaleKeys.permissionDate,
+    );
+  }
+}
 class _DateField extends StatelessWidget {
   const _DateField({required this.title});
 

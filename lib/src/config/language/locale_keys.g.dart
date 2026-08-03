@@ -316,8 +316,8 @@ abstract class LocaleKeys {
   static const String _requestType = 'request_type';
   static String get requestType => _requestType.tr();
 
-  static const String _sickLeave = 'sick_leave';
-  static String get sickLeave => _sickLeave.tr();
+  static const String _sick = 'sick';
+  static String get sick => _sick.tr();
 
   static const String _annualLeave = 'annual_leave';
   static String get annualLeave => _annualLeave.tr();
@@ -363,6 +363,39 @@ abstract class LocaleKeys {
 
   static const String _pending = 'pending';
   static String get pending => _pending.tr();
+
+  static const String _fromTime = 'from_time';
+  static String get fromTime => _fromTime.tr();
+
+  static const String _toTime = 'to_time';
+  static String get toTime => _toTime.tr();
+
+  static const String _permissionDate = 'permission_date';
+  static String get permissionDate => _permissionDate.tr();
+
+  static const String _all = 'all';
+  static String get all => _all.tr();
+
+  static const String _leaves = 'leaves';
+  static String get leaves => _leaves.tr();
+
+  static const String _permissions = 'permissions';
+  static String get permissions => _permissions.tr();
+
+  static const String _approved = 'approved';
+  static String get approved => _approved.tr();
+
+  static const String _rejected = 'rejected';
+  static String get rejected => _rejected.tr();
+
+  static const String _logout = 'logout';
+  static String get logout => _logout.tr();
+
+  static const String _notifications = 'notifications';
+  static String get notifications => _notifications.tr();
+
+  static const String _myOrders = 'my_orders';
+  static String get myOrders => _myOrders.tr();
 
   static const String _loginTitle = 'login_title';
   static String get loginTitle => _loginTitle.tr();

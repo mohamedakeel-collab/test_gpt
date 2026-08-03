@@ -32,6 +32,7 @@ class AppMargin {
 class AppPadding {
   // VALUES FOR HEIGHT
   static double pH2 = 2.0.h;
+  static double pH3 = 3.0.h;
   static double pH4 = 4.0.h;
   static double pH6 = 6.0.h;
   static double pH8 = 8.0.h;
@@ -94,6 +95,9 @@ class AppSize {
   static double sH90 = 90.0.h;
   static double sH100 = 100.0.h;
   static double sH150 = 150.0.h;
+  static double sH260 = 260.0.h;
+  static double sH300 = 300.0.h;
+  static double sH320 = 320.0.h;
 
   // VALUES FOR WIDTH
   static double sW0 = 0.0.w;
@@ -112,6 +116,7 @@ class AppSize {
   static double sW28 = 28.0.w;
   static double sW30 = 30.0.w;
   static double sW40 = 40.0.w;
+  static double sW45 = 45.0.w;
   static double sW50 = 50.0.w;
   static double sW55 = 55.0.w;
   static double sW60 = 60.0.w;

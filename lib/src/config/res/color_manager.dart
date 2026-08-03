@@ -24,10 +24,12 @@ class AppColors {
   // ── Surface ──────────────────────────────────────────────────────────────
   static const Color scaffoldBackground = Color(0xFFF6F7F9);
   static const Color warningBackground = Color(0xFFFFF4E5);
+  static const Color errorBackground  = Color(0xFFFF3B30);
   static const Color splashBackground = Color(0xFF0D0D0D);
   static const Color card = Color(0xFFFFFFFF);
   static const Color fill = Color(0xFFEDF0DA);
   static const Color icons = Color(0xFF5F5E5E);
+
   static const Color surfaceBrand = Color(0xFFB77F4A);
 
   // ── Border ───────────────────────────────────────────────────────────────
@@ -49,6 +51,7 @@ class AppColors {
   static const Color white = Color(0xFFFFFFFF);
 
   // ── Legacy aliases (backward compatibility) ──────────────────────────────
+
   static const Color secondary = primary;
   static const Color third = main;
   static const Color forth = brand;

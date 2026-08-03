@@ -13,11 +13,16 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: CustomAppBar(actions: [
-          IconWidget(
+          InkWell(onTap: (){
+            Go.to(NotificationsScreen());
+          },
+          child:IconWidget(
             icon: Icons.notifications_none,
             color: AppColors.primary,
             height:AppSize.sH25,
           ).paddingSymmetric(horizontal: AppPadding.pH12),
+          )
+
         ],),
       body: _HomeBody(),
       floatingActionButton: FloatingActionButton(

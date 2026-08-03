@@ -24,13 +24,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../config/language/languages.dart';
 import '../../../../config/language/locale_keys.g.dart';
 import '../../../../config/res/config_imports.dart';
-part '../view/new_request_screen.dart';
-part '../widgets/new_request_body.dart';
-part '../widgets/request_type_selector.dart';
-part '../widgets/request_date_picker.dart';
-part '../widgets/request_reason_field.dart';
-part '../widgets/approval_section.dart';
-part '../widgets/balance_info_card.dart';
-part '../widgets/send_request_button.dart';
-part '../widgets/request_time_picker.dart';
+part '../view/profile_screen.dart';
+part '../widget/profile_body.dart';
+part '../widget/profile_header.dart';
+part '../widget/profile_content.dart';
+part '../widget/profile_info_card.dart';
+part '../widget/profile_balance_card.dart';
+part '../widget/profile_menu_item.dart';
+
 

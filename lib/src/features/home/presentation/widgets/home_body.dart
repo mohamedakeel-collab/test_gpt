@@ -16,7 +16,7 @@ class _HomeBody extends StatelessWidget {
             _HomeTabs(selectedTab: ValueNotifier(0),),
             _RequestsSection()
           ],
-        ),
+        ).paddingOnly(bottom: AppPadding.pH10),
       ),
     );
   }
