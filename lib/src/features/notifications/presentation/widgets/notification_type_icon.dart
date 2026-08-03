@@ -17,7 +17,7 @@ class _NotificationIcon extends StatelessWidget {
         shape: BoxShape.circle,
         color: type == NotificationType.rejected
             ? Color(0xFFFFDAD6)
-            : AppColors.fill,
+            : Color(0xFFF3F6DF),
       ),
 
       child: Icon(

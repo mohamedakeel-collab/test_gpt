@@ -21,6 +21,10 @@ class _NotificationCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(AppCircular.r12),
+        border: Border.all(
+          color: AppColors.border,
+          width: 1,
+        ),
       ),
 
       child: Row(
@@ -71,19 +75,27 @@ class _NotificationCard extends StatelessWidget {
 }
 
 class _NotificationChip extends StatelessWidget {
-  const _NotificationChip({required this.type});
+  const _NotificationChip({
+    required this.type,
+  });
 
   final NotificationType type;
 
   @override
   Widget build(BuildContext context) {
-    final color = type == NotificationType.rejected
-        ? Color(0xFFFFDAD6)
-        : AppColors.primary.withOpacity(.15);
+    final isRejected = type == NotificationType.rejected;
 
-    final textColor = type == NotificationType.rejected
+    final color = isRejected
+        ? const Color(0xFFFFDAD6)
+        : const Color(0xFFF3F6DF);
+
+    final textColor = isRejected
         ? AppColors.error
-        : AppColors.success;
+        : AppColors.brandSurface;
+
+    final borderColor = isRejected
+        ? const Color(0xFFFFB8B0)
+        : const Color(0xFFDDF08A);
 
     return Container(
       padding: EdgeInsets.symmetric(
@@ -93,13 +105,28 @@ class _NotificationChip extends StatelessWidget {
 
       decoration: BoxDecoration(
         color: color,
-        borderRadius: BorderRadius.circular(AppCircular.r20),
+
+        borderRadius: BorderRadius.circular(
+          AppCircular.r20,
+        ),
+
+        border: Border.all(
+          color: borderColor,
+          width: 1,
+        ),
       ),
 
       child: Text(
-        type == NotificationType.rejected ? 'إجازة مرضية' : 'تمت الموافقة',
+        isRejected
+            ? 'إجازة مرضية'
+            : 'تمت الموافقة',
 
-        style: const TextStyle().s12.medium.copyWith(color: textColor),
+        style: const TextStyle()
+            .s12
+            .medium
+            .copyWith(
+          color: textColor,
+        ),
       ),
     );
   }
