@@ -7,9 +7,26 @@ plugins {
 }
 
 android {
-    namespace = "com.example.clean_arch_base"
+    namespace = "com.tag.app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
+
+    flavorDimensions("flavor-type")
+
+    productFlavors {
+        create("user") {
+            dimension = "flavor-type"
+            applicationId = "com.tag.app.user"
+            resValue(type = "string", name = "app_name", value = "User Tag")
+        }
+        create("provider") {
+            dimension = "flavor-type"
+            applicationId = "com.tag.app.provider"
+            resValue(type = "string", name = "app_name", value = "Provider Tag")
+        }
+    }
+
+    buildFeatures.resValues = true
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -22,7 +39,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.clean_arch_base"
+        applicationId = "com.tag.app"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion

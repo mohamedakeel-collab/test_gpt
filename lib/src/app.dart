@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../flavors.dart';
 import 'config/res/config_imports.dart';
 import 'config/themes/app_theme.dart';
 import 'core/navigation/named_routes.dart';
@@ -11,6 +12,7 @@ import 'core/network/cubits/connectivity_cubit.dart';
 import 'core/network/cubits/offline_queue_cubit.dart';
 import 'core/shared/cubits/user_cubit/user_cubit.dart';
 import 'features/intro/presentation/imports/intro_imports.dart';
+import 'features/login/presentation/imports/login_imports.dart';
 import 'features/splash/presentation/imports/splash_imports.dart';
 
 class App extends StatelessWidget {
@@ -32,7 +34,7 @@ class App extends StatelessWidget {
           ),
         ],
         child: MaterialApp(
-          title: ConstantManager.appName,
+          title: F.title,
           debugShowCheckedModeBanner: false,
           navigatorKey: Go.navigatorKey,
           theme: AppTheme.light,
@@ -40,11 +42,9 @@ class App extends StatelessWidget {
           themeMode: ThemeMode.system,
           locale: context.locale,
 
-
           supportedLocales: context.supportedLocales,
           localizationsDelegates: context.localizationDelegates,
-         home: SplashScreen(),
-
+          home: F.appFlavor == Flavor.user ? SplashScreen() : LoginScreen(),
         ),
       ),
     );

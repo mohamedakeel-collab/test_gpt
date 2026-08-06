@@ -5,9 +5,12 @@ platform :ios, '15.0'
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
 project 'Runner', {
-  'Debug' => :debug,
-  'Profile' => :release,
-  'Release' => :release,
+  'Debug-user' => :debug,
+  'Profile-user' => :release,
+  'Release-user' => :release,
+  'Debug-provider' => :debug,
+  'Profile-provider' => :release,
+  'Release-provider' => :release,
 }
 
 def flutter_root

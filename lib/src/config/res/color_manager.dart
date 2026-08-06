@@ -12,6 +12,7 @@ class AppColors {
   // ── Text ─────────────────────────────────────────────────────────────────
   static const Color main = Color(0xFF1C1C1C);
   static const Color primary = Color(0xFFC6FF00);
+  static const Color statusEmployee = Color(0xFFFF9800);
   static const Color second = Color(0xFFBEF500);
   static const Color hintText = Color(0xFF191D10);
   static const Color labelText = Color(0xFF434933);

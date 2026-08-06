@@ -4,6 +4,7 @@ import 'package:clean_arch_base/src/core/shared/extensions/widgets/padding_exten
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../../flavors.dart';
 import '../../../../config/language/locale_keys.g.dart';
 import '../../../../config/res/assets.gen.dart';
 import '../../../../config/res/config_imports.dart';
@@ -20,6 +21,8 @@ import '../../../new_request/presentation/imports/new_request_imports.dart';
 import '../../../notifications/presentation/imports/notifications_imports.dart';
 import '../../../orders/imports/orders_imports.dart';
 import '../../../profile/presentation/imports/profile_imports.dart';
+import '../../../provider/employees/presentation/imports/employees_imports.dart';
+import '../../../provider/requests/presentation/imports/requests_imports.dart';
 
 part '../view/home_screen.dart';
 part '../view/main_tap_csreen.dart';

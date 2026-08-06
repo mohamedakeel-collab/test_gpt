@@ -265,11 +265,20 @@ abstract class LocaleKeys {
   static const String _orders = 'orders';
   static String get orders => _orders.tr();
 
+  static const String _reject = 'reject';
+  static String get reject => _reject.tr();
+
+  static const String _requestDetails = 'request_details';
+  static String get requestDetails => _requestDetails.tr();
+
   static const String _introGetStarted = 'intro_get_started';
   static String get introGetStarted => _introGetStarted.tr();
 
   static const String _introNext = 'intro_next';
   static String get introNext => _introNext.tr();
+
+  static const String _approvalRequest = 'approval_request';
+  static String get approvalRequest => _approvalRequest.tr();
 
   static const String _introTitle1 = 'intro_title_1';
   static String get introTitle1 => _introTitle1.tr();
@@ -379,6 +388,12 @@ abstract class LocaleKeys {
   static const String _leaves = 'leaves';
   static String get leaves => _leaves.tr();
 
+  static const String _requests = 'requests';
+  static String get requests => _requests.tr();
+
+  static const String _employees = 'employees';
+  static String get employees => _employees.tr();
+
   static const String _permissions = 'permissions';
   static String get permissions => _permissions.tr();
 
@@ -394,8 +409,20 @@ abstract class LocaleKeys {
   static const String _notifications = 'notifications';
   static String get notifications => _notifications.tr();
 
+  static const String _employeeDetails = 'employee_details';
+  static String get employeeDetails => _employeeDetails.tr();
+
   static const String _myOrders = 'my_orders';
   static String get myOrders => _myOrders.tr();
+
+  static const String _sharing = 'sharing';
+  static String get sharing => _sharing.tr();
+
+  static const String _edite = 'edite';
+  static String get edite => _edite.tr();
+
+  static const String _details = 'details';
+  static String get details => _details.tr();
 
   static const String _loginTitle = 'login_title';
   static String get loginTitle => _loginTitle.tr();

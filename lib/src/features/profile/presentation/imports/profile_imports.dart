@@ -31,5 +31,6 @@ part '../widget/profile_content.dart';
 part '../widget/profile_info_card.dart';
 part '../widget/profile_balance_card.dart';
 part '../widget/profile_menu_item.dart';
+part '../widget/profile_image_card.dart';
 
 

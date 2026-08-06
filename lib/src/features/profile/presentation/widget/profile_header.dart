@@ -11,23 +11,9 @@ class _ProfileHeader extends StatelessWidget {
 
         Stack(
           children: [
-            Container(
-              width: AppSize.sW90,
-              height: AppSize.sH90,
-              padding: EdgeInsets.all(AppPadding.pH3),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: AppColors.primary, width: 3),
-              ),
-              child: ClipOval(
-                child: Image.network(
-                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZvzcHwf_E84xtTdBJclC4gsogNLWekM0qXQ&s',
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return AppAssets.svg.baseSvg.person.svg();
-                  },
-                ),
-              ),
+            ProfileImageCard(
+              image:
+              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZvzcHwf_E84xtTdBJclC4gsogNLWekM0qXQ&s',
             ),
 
             Positioned(

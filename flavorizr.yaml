@@ -1,0 +1,22 @@
+flavors:
+
+  user:
+    app:
+      name: "User Tag"
+
+    android:
+      applicationId: "com.tag.app.user"
+
+    ios:
+      bundleId: "com.tag.app.user"
+
+
+  provider:
+    app:
+      name: "Provider Tag"
+
+    android:
+      applicationId: "com.tag.app.provider"
+
+    ios:
+      bundleId: "com.tag.app.provider"

@@ -1,4 +1,4 @@
-package com.example.clean_arch_base
+package com.tag.app
 
 import io.flutter.embedding.android.FlutterActivity
 

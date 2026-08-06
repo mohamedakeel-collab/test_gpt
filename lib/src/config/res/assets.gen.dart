@@ -205,6 +205,9 @@ class $AssetsSvgBaseSvgGen {
   SvgGenImage get department =>
       const SvgGenImage('assets/svg/base_svg/department.svg');
 
+  /// File path: assets/svg/base_svg/done.svg
+  SvgGenImage get done => const SvgGenImage('assets/svg/base_svg/done.svg');
+
   /// File path: assets/svg/base_svg/drop_down_arrow_down.svg
   SvgGenImage get dropDownArrowDown =>
       const SvgGenImage('assets/svg/base_svg/drop_down_arrow_down.svg');
@@ -218,6 +221,10 @@ class $AssetsSvgBaseSvgGen {
 
   /// File path: assets/svg/base_svg/email.svg
   SvgGenImage get email => const SvgGenImage('assets/svg/base_svg/email.svg');
+
+  /// File path: assets/svg/base_svg/employees.svg
+  SvgGenImage get employees =>
+      const SvgGenImage('assets/svg/base_svg/employees.svg');
 
   /// File path: assets/svg/base_svg/filter.svg
   SvgGenImage get filter => const SvgGenImage('assets/svg/base_svg/filter.svg');
@@ -344,10 +351,12 @@ class $AssetsSvgBaseSvgGen {
     correct,
     deleteAll,
     department,
+    done,
     dropDownArrowDown,
     dropDownClose,
     edite,
     email,
+    employees,
     filter,
     holiday,
     home,

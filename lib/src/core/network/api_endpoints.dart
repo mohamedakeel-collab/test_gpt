@@ -1,19 +1,13 @@
+import '../../../flavors.dart';
+
 class ApiEndpoints {
   ApiEndpoints._();
 
-  /// Base URL, switchable per environment via `--dart-define`:
-  ///
-  /// ```bash
-  /// flutter run   --dart-define=API_BASE_URL=https://dev.api.com/api/v1/
-  /// flutter build --dart-define=API_BASE_URL=https://api.production.com/api/v1/
-  /// ```
+  /// Base URL for the current flavor (see [F.baseUrl]).
   ///
   /// MUST end with a trailing `/` so relative endpoints resolve correctly.
   /// `DioClient` prepends this base to every (relative) endpoint below.
-  static const String baseUrl = String.fromEnvironment(
-    'API_BASE_URL',
-    defaultValue: 'https://api.example.com/api/v1/',
-  );
+  static String get baseUrl => F.baseUrl;
 
   // Endpoints are RELATIVE — DioClient already prepends [baseUrl].
   // No leading slash, no base prefix.

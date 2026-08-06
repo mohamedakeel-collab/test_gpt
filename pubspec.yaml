@@ -89,6 +89,7 @@ dev_dependencies:
   hive_ce_generator: ^1.10.0
   flutter_lints: ^6.0.0
   http_mock_adapter: ^0.6.1
+  flutter_flavorizr: ^2.4.1
 
 flutter:
   uses-material-design: true
