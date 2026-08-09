@@ -33,10 +33,6 @@ class _RequestDetailsBody extends StatelessWidget {
           const _RequestInfoCard(),
 
 
-          12.szH,
-
-
-          const _RequestReasonCard(),
 
 
           12.szH,

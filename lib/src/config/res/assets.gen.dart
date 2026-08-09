@@ -247,6 +247,9 @@ class $AssetsSvgBaseSvgGen {
   /// File path: assets/svg/base_svg/logout.svg
   SvgGenImage get logout => const SvgGenImage('assets/svg/base_svg/logout.svg');
 
+  /// File path: assets/svg/base_svg/note.svg
+  SvgGenImage get note => const SvgGenImage('assets/svg/base_svg/note.svg');
+
   /// File path: assets/svg/base_svg/notification_delete.svg
   SvgGenImage get notificationDelete =>
       const SvgGenImage('assets/svg/base_svg/notification_delete.svg');
@@ -332,6 +335,10 @@ class $AssetsSvgBaseSvgGen {
   /// File path: assets/svg/base_svg/team.svg
   SvgGenImage get team => const SvgGenImage('assets/svg/base_svg/team.svg');
 
+  /// File path: assets/svg/base_svg/vacation_balance.svg
+  SvgGenImage get vacationBalance =>
+      const SvgGenImage('assets/svg/base_svg/vacation_balance.svg');
+
   /// List of all assets
   List<dynamic> get values => [
     carousel1,
@@ -363,6 +370,7 @@ class $AssetsSvgBaseSvgGen {
     homeSelected,
     logoLogin,
     logout,
+    note,
     notificationDelete,
     notificationDialog,
     notificationEmpty,
@@ -386,6 +394,7 @@ class $AssetsSvgBaseSvgGen {
     settings,
     tagLogo,
     team,
+    vacationBalance,
   ];
 }
 

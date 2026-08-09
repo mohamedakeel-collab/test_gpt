@@ -36,6 +36,7 @@ class AppColors {
   // ── Border ───────────────────────────────────────────────────────────────
   static const Color border = Color(0xFFC3CAAC);
   static const Color borderStrong = Color(0xFFCCCCCC);
+  static const Color lightGray = Color(0xFFF7F8FA);
 
   // ── Status ───────────────────────────────────────────────────────────────
   static const Color success = Color(0xFF0C9D61);
