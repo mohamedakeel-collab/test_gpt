@@ -33,6 +33,9 @@ part '../widget/request_info_card.dart';
 part '../widget/request_reason_card.dart';
 part '../widget/request_notes_card.dart';
 part '../widget/request_action_buttons.dart';
+part '../widget/request_notes_bottom_sheet.dart';
+part '../widget/request_attachment_card.dart';
+
 
 
 

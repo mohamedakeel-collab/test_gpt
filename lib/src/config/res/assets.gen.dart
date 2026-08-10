@@ -173,6 +173,10 @@ class $AssetsSvgBaseSvgGen {
   SvgGenImage get arrowDown =>
       const SvgGenImage('assets/svg/base_svg/arrow_down.svg');
 
+  /// File path: assets/svg/base_svg/attachment.svg
+  SvgGenImage get attachment =>
+      const SvgGenImage('assets/svg/base_svg/attachment.svg');
+
   /// File path: assets/svg/base_svg/change_email.svg
   SvgGenImage get changeEmail =>
       const SvgGenImage('assets/svg/base_svg/change_email.svg');
@@ -350,6 +354,7 @@ class $AssetsSvgBaseSvgGen {
     arrowBack,
     arrowBackApp,
     arrowDown,
+    attachment,
     changeEmail,
     changePass,
     chatsEmpty,

@@ -68,6 +68,7 @@ class AppSize {
   static double sH1 = 1.0.h;
   static double sH2 = 2.0.h;
   static double sH4 = 4.0.h;
+  static double sH5 = 5.0.h;
   static double sH6 = 6.0.h;
   static double sH8 = 8.0.h;
   static double sH10 = 10.0.h;
@@ -94,6 +95,7 @@ class AppSize {
   static double sH85 = 85.0.h;
   static double sH90 = 90.0.h;
   static double sH100 = 100.0.h;
+  static double sH120 = 120.0.h;
   static double sH150 = 150.0.h;
   static double sH260 = 260.0.h;
   static double sH300 = 300.0.h;
@@ -162,6 +164,7 @@ class AppCircular {
   static double r12 = 12.0.r;
   static double r15 = 15.0.r;
   static double r20 = 20.0.r;
+  static double r25 = 25.0.r;
   static double r30 = 30.0.r;
   static double r40 = 40.0.r;
   static double infinity = 200.0.r;

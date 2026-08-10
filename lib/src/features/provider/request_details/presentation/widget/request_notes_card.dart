@@ -5,99 +5,77 @@ class _RequestNotesCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GestureDetector(
+      onTap: () {
+        showModalBottomSheet(
+          context: context,
 
-      padding: EdgeInsets.symmetric(
-        horizontal: AppPadding.pH16,
-        vertical: AppPadding.pH12,
-      ),
+          isScrollControlled: true,
 
+          backgroundColor: Colors.transparent,
 
-      decoration: BoxDecoration(
-
-        color: AppColors.white,
-
-        borderRadius: BorderRadius.circular(
-          AppCircular.r20,
+          builder: (_) {
+            return const _RequestNotesBottomSheet();
+          },
+        );
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: AppPadding.pH16,
+          vertical: AppPadding.pH12,
         ),
 
+        decoration: BoxDecoration(
+          color: AppColors.white,
 
-        border: Border.all(
-          color: AppColors.border,
-          width: 1,
+          borderRadius: BorderRadius.circular(AppCircular.r20),
+
+          border: Border.all(color: AppColors.border, width: 1),
         ),
 
-      ),
-
-
-      child: Row(
-
-        children: [
-
-          IconWidget(
-            icon: AppAssets.svg.baseSvg.note.path,
-            height: AppSize.sH24,
-          ),
-
-
-          12.szW,
-
-
-          Text(
-            'ملاحظات المدير',
-
-            style: const TextStyle()
-                .setMainTextColor
-                .s15
-                .medium,
-          ),
-
-
-          6.szW,
-
-
-          Container(
-
-            padding: EdgeInsets.symmetric(
-              horizontal: AppPadding.pW8,
-              vertical: AppPadding.pH2,
+        child: Row(
+          children: [
+            IconWidget(
+              icon: AppAssets.svg.baseSvg.note.path,
+              height: AppSize.sH24,
             ),
 
-            decoration: BoxDecoration(
+            12.szW,
 
-              color: AppColors.primary,
+            Text(
+              'الملاحظات',
 
-              borderRadius:
-              BorderRadius.circular(
-                AppCircular.r20,
+              style: const TextStyle().setMainTextColor.s15.medium,
+            ),
+
+            6.szW,
+
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: AppPadding.pW8,
+                vertical: AppPadding.pH2,
               ),
 
+              decoration: BoxDecoration(
+                color: AppColors.primary,
+
+                borderRadius: BorderRadius.circular(AppCircular.r20),
+              ),
+
+              child: Text('2', style: const TextStyle().setBlackColor.s12.bold),
             ),
 
+            const Spacer(),
 
-            child: Text(
-              '2',
+            Icon(
+              Icons.keyboard_arrow_up_rounded,
 
-              style: const TextStyle()
-                  .setBlackColor
-                  .s12
-                  .bold,
+              color: AppColors.border,
+
+              size: AppSize.sH28,
             ),
-          ),
-
-
-          const Spacer(),
-
-
-          Icon(
-            Icons.keyboard_arrow_up_rounded,
-
-            color: AppColors.border,
-
-            size: AppSize.sH28,
-          ),
-
-        ],
+          ],
+        ),
       ),
     );
   }

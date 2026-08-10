@@ -33,4 +33,5 @@ part '../widgets/approval_section.dart';
 part '../widgets/balance_info_card.dart';
 part '../widgets/send_request_button.dart';
 part '../widgets/request_time_picker.dart';
+part '../widgets/request_attachment_field.dart';
 

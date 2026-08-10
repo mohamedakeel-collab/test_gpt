@@ -33,7 +33,10 @@ class _NewRequestBody extends StatelessWidget {
                       16.szH,
                       const _RequestTimePicker(),
                     ],
-
+                    if (selectedType == 0) ...[
+                      16.szH,
+                      const _RequestAttachmentField(),
+                    ],
 
                     16.szH,
 
