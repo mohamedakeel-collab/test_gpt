@@ -25,15 +25,15 @@ import '../../../../../config/language/languages.dart';
 import '../../../../../config/language/locale_keys.g.dart';
 import '../../../../../config/res/config_imports.dart';
 import '../../../../notifications/presentation/imports/notifications_imports.dart';
-import '../../../add_employee/presentation/imports/add_employee_imports.dart';
 import '../../../employee_details/presentation/imports/employee_details_imports.dart';
-part '../view/employees_screen.dart';
-part '../widget/employees_body.dart';
-part '../widget/employees_header.dart';
-part '../widget/employees_summary_card.dart';
-part '../widget/employees_filter.dart';
-part '../widget/employee_card.dart';
-part '../widget/employees_search.dart';
+part '../view/add_employee_screen.dart';
+part '../widget/add_employee_body.dart';
+part '../widget/employee_image_picker.dart';
+part '../widget/employee_form_section.dart';
+part '../widget/login_data_section.dart';
+part '../widget/add_employee_button.dart';
+
+
 
 
 

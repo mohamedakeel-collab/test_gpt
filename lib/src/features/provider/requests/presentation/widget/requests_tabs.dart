@@ -4,6 +4,7 @@ enum RequestTab {
   all,
   leaves,
   permissions,
+  remote,
 }
 
 
@@ -63,6 +64,19 @@ class _RequestsTabs extends StatelessWidget {
 
                 onTap: () {
                   selectedTab.value = 2;
+                },
+              ),
+            ),
+            8.szW,
+
+
+            Expanded(
+              child: _RequestTab(
+                title: LocaleKeys.remote,
+                active: selected == 3,
+
+                onTap: () {
+                  selectedTab.value = 3;
                 },
               ),
             ),

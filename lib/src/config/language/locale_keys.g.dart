@@ -271,11 +271,77 @@ abstract class LocaleKeys {
   static const String _requestDetails = 'request_details';
   static String get requestDetails => _requestDetails.tr();
 
+  static const String _addEmployee = 'add_employee';
+  static String get addEmployee => _addEmployee.tr();
+
+  static const String _uploadPersonalImage = 'upload_personal_image';
+  static String get uploadPersonalImage => _uploadPersonalImage.tr();
+
+  static const String _fullName = 'full_name';
+  static String get fullName => _fullName.tr();
+
+  static const String _enterEmployeeFullName = 'enter_employee_full_name';
+  static String get enterEmployeeFullName => _enterEmployeeFullName.tr();
+
+  static const String _jobTitle = 'job_title';
+  static String get jobTitle => _jobTitle.tr();
+
+  static const String _jobTitleHint = 'job_title_hint';
+  static String get jobTitleHint => _jobTitleHint.tr();
+
+  static const String _mobileNumber = 'mobile_number';
+  static String get mobileNumber => _mobileNumber.tr();
+
+  static const String _mobileNumberHint = 'mobile_number_hint';
+  static String get mobileNumberHint => _mobileNumberHint.tr();
+
+  static const String _selectTeam = 'select_team';
+  static String get selectTeam => _selectTeam.tr();
+
+  static const String _selectSuitableTeam = 'select_suitable_team';
+  static String get selectSuitableTeam => _selectSuitableTeam.tr();
+
+  static const String _directManager = 'direct_manager';
+  static String get directManager => _directManager.tr();
+
+  static const String _selectDirectManager = 'select_direct_manager';
+  static String get selectDirectManager => _selectDirectManager.tr();
+
+  static const String _loginInformation = 'login_information';
+  static String get loginInformation => _loginInformation.tr();
+
+  static const String _emailHint = 'email_hint';
+  static String get emailHint => _emailHint.tr();
+
+  static const String _temporaryPassword = 'temporary_password';
+  static String get temporaryPassword => _temporaryPassword.tr();
+
+  static const String _passwordHint = 'password_hint';
+  static String get passwordHint => _passwordHint.tr();
+
+  static const String _initialLeaveBalance = 'initial_leave_balance';
+  static String get initialLeaveBalance => _initialLeaveBalance.tr();
+
+  static const String _days = 'days';
+  static String get days => _days.tr();
+
+  static const String _leaveBalanceHint = 'leave_balance_hint';
+  static String get leaveBalanceHint => _leaveBalanceHint.tr();
+
+  static const String _saveAndSendLoginData = 'save_and_send_login_data';
+  static String get saveAndSendLoginData => _saveAndSendLoginData.tr();
+
   static const String _introGetStarted = 'intro_get_started';
   static String get introGetStarted => _introGetStarted.tr();
 
   static const String _introNext = 'intro_next';
   static String get introNext => _introNext.tr();
+
+  static const String _enterEmployeeNameEnter = 'enter_employee_name_enter';
+  static String get enterEmployeeNameEnter => _enterEmployeeNameEnter.tr();
+
+  static const String _jobTitleExample = 'job_title_example';
+  static String get jobTitleExample => _jobTitleExample.tr();
 
   static const String _approvalRequest = 'approval_request';
   static String get approvalRequest => _approvalRequest.tr();
@@ -418,8 +484,14 @@ abstract class LocaleKeys {
   static const String _sharing = 'sharing';
   static String get sharing => _sharing.tr();
 
+  static const String _titleInitialLeaveBalance = 'title_initial_leave_balance';
+  static String get titleInitialLeaveBalance => _titleInitialLeaveBalance.tr();
+
   static const String _edite = 'edite';
   static String get edite => _edite.tr();
+
+  static const String _remote = 'remote';
+  static String get remote => _remote.tr();
 
   static const String _details = 'details';
   static String get details => _details.tr();

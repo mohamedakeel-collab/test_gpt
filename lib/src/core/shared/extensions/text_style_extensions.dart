@@ -56,6 +56,7 @@ extension TextStyleEx on TextStyle {
   TextStyle get setBlackColor => copyWith(color: AppColors.black);
   TextStyle get setWhiteColor => copyWith(color: AppColors.white);
   TextStyle get setErrorColor => copyWith(color: AppColors.error);
+  TextStyle get setlightGrayColor => copyWith(color: AppColors.lightGray);
   TextStyle get setButtonColor => copyWith(color: AppColors.buttonColor);
 
   TextStyle setColor(Color color) => copyWith(color: color);

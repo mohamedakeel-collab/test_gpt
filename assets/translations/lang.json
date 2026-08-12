@@ -96,9 +96,46 @@
   "orders #$ Orders": "الطلبات",
   "reject #$ Reject": "رفض",
   "requestDetails #$ Request Details": "مراجعة الطلب",
+  "addEmployee #$ Add Employee": "إضافة موظف",
 
+  "uploadPersonalImage #$ Upload Personal Image": "تحميل الصورة الشخصية",
+
+  "fullName #$ Full Name": "الاسم الكامل",
+  "enterEmployeeFullName #$ Enter Employee Full Name": "أدخل اسم الموظف الثلاثي",
+
+  "jobTitle #$ Job Title": "المسمى الوظيفي",
+  "jobTitleHint #$ Job Title Hint": "مثال: مصمم واجهات مستخدم",
+
+  "mobileNumber #$ Mobile Number": "رقم الجوال",
+  "mobileNumberHint #$ Mobile Number Hint": "+966 5X XXX XXXX",
+
+  "selectTeam #$ Select Team": "اختيار الفريق",
+  "selectSuitableTeam #$ Select Suitable Team": "اختر الفريق المناسب",
+
+  "directManager #$ Direct Manager": "المدير المباشر",
+  "selectDirectManager #$ Select Direct Manager": "اختر المدير المباشر للموظف",
+
+
+  "loginInformation #$ Login Information": "بيانات تسجيل الدخول",
+
+  "emailHint #$ Email Hint": "employee@company.com",
+
+  "temporaryPassword #$ Temporary Password": "كلمة المرور المؤقتة",
+  "passwordHint #$ Password Hint": "********",
+
+
+  "initialLeaveBalance #$ Initial Leave Balance": "رصيد الإجازات الأولي",
+  "days #$ Days": "يوم",
+
+  "leaveBalanceHint #$ Leave Balance Hint": "سيتم تعيين هذا الرصيد كبداية للموظف الجديد",
+
+
+  "saveAndSendLoginData #$ Save And Send Login Data": "حفظ وإرسال بيانات الدخول",
   "intro_get_started #$ Get Started": "ابدأ الآن",
   "intro_next #$ Next": "التالي",
+  "enterEmployeeNameEnter  #$ the employee's full name": "أدخل اسم الموظف الثلاثي",
+
+  "jobTitleExample #$ Example: User Interface Designer": "مثال: مصمم واجهات مستخدم",
   "approval_request #$ Approval Request": "الموافقة على الطلب",
   "intro_title_1 #$ Explore the World with Us": "رصيدك واضح أمامك دائمًا",
   "intro_desc_1 #$ Know your remaining vacation balance and used days accurately and at any time": "اعرف رصيد إجازاتك المتبقي والأيام المستخدمة بدقة وفي أي وقت",
@@ -146,7 +183,9 @@
   "employee_details #$ Employee Details": "تفاصيل الموظف",
   "my_orders #$ My Orders": "طلباتى",
   "sharing #$ Sharing": "مشاركة",
+  "title_initial_leave_balance #$ This balance will be assigned as a starting balance for the new employee": "سيتم تعيين هذا الرصيد كبداية للموظف الجديد",
   "edite #$ Edite": "تعديل",
+  "remote #$ Remote": "ريموت",
   "details #$ Details": "التفاصيل",
   "login_title #$ Log in to manage your time and requests": "سجل دخولك لإدارة وقتك وطلباتكً"
 }

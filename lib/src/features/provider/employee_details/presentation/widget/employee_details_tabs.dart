@@ -1,6 +1,6 @@
 part of '../imports/employee_details_imports.dart';
 
-enum EmployeeDetailsTab { requests, attendance, information }
+enum EmployeeDetailsTab { requests, attendance, information, remote }
 
 class _EmployeeDetailsTabs extends StatelessWidget {
   const _EmployeeDetailsTabs({required this.selectedTab});
@@ -48,6 +48,19 @@ class _EmployeeDetailsTabs extends StatelessWidget {
 
                 onTap: () {
                   selectedTab.value = 2;
+                },
+              ),
+            ),
+
+            8.szW,
+
+            Expanded(
+              child: _EmployeeDetailsTab(
+                title: LocaleKeys.remote,
+                active: selected == 3,
+
+                onTap: () {
+                  selectedTab.value = 3;
                 },
               ),
             ),
