@@ -31,9 +31,9 @@ class _RequestTypeSelector extends StatelessWidget {
 
                 _TypeButton(
                   title: LocaleKeys.sick,
-                  active: selected == 0,
+                  active: selected == 1,
                   onTap: () {
-                    selectedType.value = 0;
+                    selectedType.value = 1;
                   },
                 ),
 
@@ -41,9 +41,19 @@ class _RequestTypeSelector extends StatelessWidget {
 
                 _TypeButton(
                   title: LocaleKeys.permission,
-                  active: selected == 1,
+                  active: selected == 2,
                   onTap: () {
-                    selectedType.value = 1;
+                    selectedType.value = 2;
+                  },
+                ),
+
+                8.szW,
+
+                _TypeButton(
+                  title: LocaleKeys.remote,
+                  active: selected == 3,
+                  onTap: () {
+                    selectedType.value = 3;
                   },
                 ),
 

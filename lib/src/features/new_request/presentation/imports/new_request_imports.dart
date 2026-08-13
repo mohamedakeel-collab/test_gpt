@@ -24,6 +24,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../config/language/languages.dart';
 import '../../../../config/language/locale_keys.g.dart';
 import '../../../../config/res/config_imports.dart';
+import '../../../provider/requests/presentation/imports/requests_imports.dart';
 part '../view/new_request_screen.dart';
 part '../widgets/new_request_body.dart';
 part '../widgets/request_type_selector.dart';

@@ -8,6 +8,8 @@ class _OrderCard extends StatelessWidget {
     required this.reason,
     required this.approver,
     required this.icon,
+    this.onDelete,
+    this.onEdit,
     this.rejectionReason,
   });
 
@@ -19,9 +21,12 @@ class _OrderCard extends StatelessWidget {
   final String icon;
   final String? rejectionReason;
 
+  final VoidCallback? onDelete;
+  final VoidCallback? onEdit;
   @override
   Widget build(BuildContext context) {
     final isRejected = status == LocaleKeys.rejected;
+    final isPending = status == LocaleKeys.pending;
 
     return Container(
       padding: EdgeInsets.all(AppPadding.pH16),
@@ -60,7 +65,51 @@ class _OrderCard extends StatelessWidget {
               ),
 
               Spacer(),
-              _StatusChip(status: status),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+
+                children: [
+                  _StatusChip(status: status),
+
+                  if (isPending) ...[
+                    8.szH,
+
+                    Row(
+                      children: [
+
+                        GestureDetector(
+                          onTap: onDelete,
+
+                          child: Icon(
+                            Icons.delete_outline,
+
+                            color: AppColors.error,
+
+                            size: AppSize.sH22,
+                          ),
+                        ),
+
+
+                        16.szW,
+
+
+                        GestureDetector(
+                          onTap: onEdit,
+
+                          child: Icon(
+                            Icons.edit_outlined,
+
+                            color: AppColors.labelText,
+
+                            size: AppSize.sH22,
+                          ),
+                        ),
+
+                      ],
+                    ),
+                  ],
+                ],
+              ),
             ],
           ),
 

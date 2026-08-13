@@ -1,8 +1,15 @@
 part of '../imports/new_request_imports.dart';
 
 class _NewRequestBody extends StatelessWidget {
-  _NewRequestBody();
 
+   _NewRequestBody({
+    this.request,
+    this.mode,
+  });
+
+
+  final RequestData? request;
+   final RequestMode? mode;
   final ValueNotifier<int> selectedRequestType = ValueNotifier(0);
 
   @override
@@ -18,7 +25,7 @@ class _NewRequestBody extends StatelessWidget {
                 child: Column(
                   children: [
 
-                    _RequestTypeSelector(
+                   if(mode==RequestMode.add) _RequestTypeSelector(
                       selectedType: selectedRequestType,
                     ),
 

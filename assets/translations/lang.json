@@ -199,7 +199,11 @@
 
   "day #$ Day": "يوم",
   "hour #$ Hour": "ساعة",
-
+  "editRequest #$ Edit Request": "تعديل الطلب",
+  "deleteRequestTitle #$ Delete Request Title": "هل تريد الحذف؟",
+  "deleteRequestMessage #$ Delete Request Message": "هل أنت متأكد من حذف هذا الطلب؟ لا يمكن التراجع عن هذا الإجراء بعد الحذف.",
+  "yesDelete #$ Yes Delete": "نعم، حذف",
+  "noCancel #$ No Cancel": "لا، إلغاء",
   "accountSettings #$ Account Settings": "إعدادات الحساب",
   "securityPrivacy #$ Security Privacy": "الأمان والخصوصية",
 

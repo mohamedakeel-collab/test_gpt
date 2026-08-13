@@ -58,8 +58,7 @@ class _ProfileContent extends StatelessWidget {
                   title: LocaleKeys.permissions,
                   value: '08',
                   sub: 'ساعة',
-                  isPermission: true
-                  ,
+                  isPermission: true,
                 ),
               ),
             ],
@@ -71,15 +70,14 @@ class _ProfileContent extends StatelessWidget {
             title: LocaleKeys.accountSettings,
             icon: AppAssets.svg.baseSvg.settings.path,
           ),
-          _ProfileMenuItem(
-            onTap: (){
-              Go.to(
-                const RemoteWorkScreen(),
-              );
-            },
-            title: LocaleKeys.remoteWork,
-            icon: AppAssets.svg.baseSvg.remote.path,
-          ),
+          if (F.appFlavor == Flavor.user)
+            _ProfileMenuItem(
+              onTap: () {
+                Go.to(const RemoteWorkScreen());
+              },
+              title: LocaleKeys.remoteWork,
+              icon: AppAssets.svg.baseSvg.remote.path,
+            ),
 
           _LogoutButton(),
         ],
@@ -104,10 +102,7 @@ class _LogoutButton extends StatelessWidget {
           15.szW,
           Text(
             LocaleKeys.logout,
-            style: const TextStyle()
-                .setErrorColor
-                .s14
-                .medium,
+            style: const TextStyle().setErrorColor.s14.medium,
           ),
         ],
       ),

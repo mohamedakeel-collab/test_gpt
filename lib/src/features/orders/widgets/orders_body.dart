@@ -23,6 +23,15 @@ class _OrdersBody extends StatelessWidget {
           _OrderCard(
             type: LocaleKeys.annualLeave,
             date: '14 أكتوبر - 18 أكتوبر',
+
+            onDelete: () {
+
+              showDialog(
+                context: context,
+                builder: (_) => const _DeleteRequestDialog(),
+              );
+
+            },
             status: LocaleKeys.pending,
             reason: 'إجازة عائلية خاصة',
             approver: 'أحمد السعدي',

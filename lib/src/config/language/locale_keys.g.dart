@@ -526,6 +526,21 @@ abstract class LocaleKeys {
   static const String _hour = 'hour';
   static String get hour => _hour.tr();
 
+  static const String _editRequest = 'edit_request';
+  static String get editRequest => _editRequest.tr();
+
+  static const String _deleteRequestTitle = 'delete_request_title';
+  static String get deleteRequestTitle => _deleteRequestTitle.tr();
+
+  static const String _deleteRequestMessage = 'delete_request_message';
+  static String get deleteRequestMessage => _deleteRequestMessage.tr();
+
+  static const String _yesDelete = 'yes_delete';
+  static String get yesDelete => _yesDelete.tr();
+
+  static const String _noCancel = 'no_cancel';
+  static String get noCancel => _noCancel.tr();
+
   static const String _accountSettings = 'account_settings';
   static String get accountSettings => _accountSettings.tr();
 
