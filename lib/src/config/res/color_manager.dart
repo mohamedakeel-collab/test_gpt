@@ -15,6 +15,8 @@ class AppColors {
   static const Color statusEmployee = Color(0xFFFF9800);
   static const Color second = Color(0xFFBEF500);
   static const Color hintText = Color(0xFF191D10);
+  static const Color backGroundStatus = Color(0xFFE6F4EA);
+  static const Color textStatus = Color(0xFF1E4620);
   static const Color labelText = Color(0xFF434933);
   static const Color subHintText = Color(0xFF5F5E5E);
   static const Color subLabelText = Color(0xFFC8C6C5);

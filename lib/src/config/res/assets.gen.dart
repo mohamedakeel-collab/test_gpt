@@ -317,6 +317,9 @@ class $AssetsSvgBaseSvgGen {
   /// File path: assets/svg/base_svg/reject.svg
   SvgGenImage get reject => const SvgGenImage('assets/svg/base_svg/reject.svg');
 
+  /// File path: assets/svg/base_svg/remote.svg
+  SvgGenImage get remote => const SvgGenImage('assets/svg/base_svg/remote.svg');
+
   /// File path: assets/svg/base_svg/search.svg
   SvgGenImage get search => const SvgGenImage('assets/svg/base_svg/search.svg');
 
@@ -393,6 +396,7 @@ class $AssetsSvgBaseSvgGen {
     phone,
     profile,
     reject,
+    remote,
     search,
     security,
     sessionsEmpty,

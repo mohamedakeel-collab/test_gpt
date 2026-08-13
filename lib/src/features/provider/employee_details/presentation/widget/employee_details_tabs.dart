@@ -15,18 +15,7 @@ class _EmployeeDetailsTabs extends StatelessWidget {
       builder: (context, selected, _) {
         return Row(
           children: [
-            Expanded(
-              child: _EmployeeDetailsTab(
-                title: LocaleKeys.all,
-                active: selected == 0,
 
-                onTap: () {
-                  selectedTab.value = 0;
-                },
-              ),
-            ),
-
-            8.szW,
 
             Expanded(
               child: _EmployeeDetailsTab(

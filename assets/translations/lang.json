@@ -187,5 +187,24 @@
   "edite #$ Edite": "تعديل",
   "remote #$ Remote": "ريموت",
   "details #$ Details": "التفاصيل",
+  "remoteWork #$ Remote Work": "العمل عن بُعد",
+  "workingRemotelyNow #$ working Remotely Now": "أنت تعمل الآن عن بُعد",
+  "endWork #$ End Work": "إنهاء العمل",
+  "remoteWorkHistory #$ Remote Work History": "سجل العمل عن بُعد",
+  "completed #$ Completed": "مكتمل",
+  "phoneNumber #$ Phone Number": "رقم الهاتف",
+  "department #$ Department": "القسم",
+
+  "vacationBalance #$ vacation Balance": "رصيد الإجازات",
+
+  "day #$ Day": "يوم",
+  "hour #$ Hour": "ساعة",
+
+  "accountSettings #$ Account Settings": "إعدادات الحساب",
+  "securityPrivacy #$ Security Privacy": "الأمان والخصوصية",
+
+  "remote_work #$ Remote Work": "العمل عن بُعد",
+
+
   "login_title #$ Log in to manage your time and requests": "سجل دخولك لإدارة وقتك وطلباتكً"
 }

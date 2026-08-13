@@ -164,5 +164,18 @@
   "edite": "Edite",
   "remote": "Remote",
   "details": "Details",
+  "remote_work": "Remote Work",
+  "working_remotely_now": "working Remotely Now",
+  "end_work": "End Work",
+  "remote_work_history": "Remote Work History",
+  "completed": "Completed",
+  "phone_number": "Phone Number",
+  "department": "Department",
+  "vacation_balance": "vacation Balance",
+  "day": "Day",
+  "hour": "Hour",
+  "account_settings": "Account Settings",
+  "security_privacy": "Security Privacy",
+  "remote_work": "Remote Work",
   "login_title": "Log in to manage your time and requests"
 }

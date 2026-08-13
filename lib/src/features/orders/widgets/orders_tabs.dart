@@ -12,17 +12,7 @@ class _OrdersTabs extends StatelessWidget {
       builder: (context, selected, _) {
         return Row(
           children: [
-            Expanded(
-              child: _OrderTab(
-                title: LocaleKeys.all,
-                active: selected == 0,
-                onTap: () {
-                  selectedTab.value = 0;
-                },
-              ),
-            ),
 
-            8.szW,
 
             Expanded(
               child: _OrderTab(
@@ -42,6 +32,18 @@ class _OrdersTabs extends StatelessWidget {
                 active: selected == 2,
                 onTap: () {
                   selectedTab.value = 2;
+                },
+              ),
+            ),
+
+            8.szW,
+
+            Expanded(
+              child: _OrderTab(
+                title: LocaleKeys.remote,
+                active: selected == 3,
+                onTap: () {
+                  selectedTab.value = 3;
                 },
               ),
             ),

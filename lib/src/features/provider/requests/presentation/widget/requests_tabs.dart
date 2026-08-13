@@ -27,19 +27,6 @@ class _RequestsTabs extends StatelessWidget {
         return Row(
           children: [
 
-            Expanded(
-              child: _RequestTab(
-                title: LocaleKeys.all,
-                active: selected == 0,
-
-                onTap: () {
-                  selectedTab.value = 0;
-                },
-              ),
-            ),
-
-
-            8.szW,
 
 
             Expanded(

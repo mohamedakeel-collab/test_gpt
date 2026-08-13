@@ -164,5 +164,18 @@
   "edite": "تعديل",
   "remote": "ريموت",
   "details": "التفاصيل",
+  "remote_work": "العمل عن بُعد",
+  "working_remotely_now": "أنت تعمل الآن عن بُعد",
+  "end_work": "إنهاء العمل",
+  "remote_work_history": "سجل العمل عن بُعد",
+  "completed": "مكتمل",
+  "phone_number": "رقم الهاتف",
+  "department": "القسم",
+  "vacation_balance": "رصيد الإجازات",
+  "day": "يوم",
+  "hour": "ساعة",
+  "account_settings": "إعدادات الحساب",
+  "security_privacy": "الأمان والخصوصية",
+  "remote_work": "العمل عن بُعد",
   "login_title": "سجل دخولك لإدارة وقتك وطلباتكً"
 }

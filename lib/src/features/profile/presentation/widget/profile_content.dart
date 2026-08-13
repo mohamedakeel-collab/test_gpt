@@ -17,7 +17,7 @@ class _ProfileContent extends StatelessWidget {
       child: Column(
         children: [
           _ProfileInfoItem(
-            title: 'رقم الهاتف',
+            title: LocaleKeys.phoneNumber,
             value: '+966 50 123 4567',
             icon: AppAssets.svg.baseSvg.phone.path,
           ),
@@ -25,7 +25,7 @@ class _ProfileContent extends StatelessWidget {
           12.szH,
 
           _ProfileInfoItem(
-            title: 'البريد الإلكتروني',
+            title: LocaleKeys.email,
             value: 'ahmed.a@tagwinner.com',
             icon: AppAssets.svg.baseSvg.email.path,
           ),
@@ -33,7 +33,7 @@ class _ProfileContent extends StatelessWidget {
           12.szH,
 
           _ProfileInfoItem(
-            title: 'القسم',
+            title: LocaleKeys.department,
             value: 'الإدارة والعمليات',
             icon: AppAssets.svg.baseSvg.department.path,
           ),
@@ -44,7 +44,7 @@ class _ProfileContent extends StatelessWidget {
             children: [
               Expanded(
                 child: _ProfileBalanceCard(
-                  title: 'رصيد الإجازات',
+                  title: LocaleKeys.vacationBalance,
                   value: '14',
                   sub: 'يوم',
                   isPermission: false,
@@ -55,7 +55,7 @@ class _ProfileContent extends StatelessWidget {
 
               Expanded(
                 child: _ProfileBalanceCard(
-                  title: 'الأذونات',
+                  title: LocaleKeys.permissions,
                   value: '08',
                   sub: 'ساعة',
                   isPermission: true
@@ -68,13 +68,17 @@ class _ProfileContent extends StatelessWidget {
           20.szH,
 
           _ProfileMenuItem(
-            title: 'إعدادات الحساب',
+            title: LocaleKeys.accountSettings,
             icon: AppAssets.svg.baseSvg.settings.path,
           ),
-
           _ProfileMenuItem(
-            title: 'الأمان والخصوصية',
-            icon: AppAssets.svg.baseSvg.security.path,
+            onTap: (){
+              Go.to(
+                const RemoteWorkScreen(),
+              );
+            },
+            title: LocaleKeys.remoteWork,
+            icon: AppAssets.svg.baseSvg.remote.path,
           ),
 
           _LogoutButton(),

@@ -97,6 +97,7 @@ class AppSize {
   static double sH100 = 100.0.h;
   static double sH120 = 120.0.h;
   static double sH150 = 150.0.h;
+  static double sH180 = 180.0.h;
   static double sH260 = 260.0.h;
   static double sH300 = 300.0.h;
   static double sH320 = 320.0.h;
@@ -127,6 +128,8 @@ class AppSize {
   static double sW80 = 80.0.w;
   static double sW90 = 90.0.w;
   static double sW150 = 150.0.w;
+  static double sW180 = 180.0.w;
+  static double sW260 = 260.0.w;
 }
 
 class FontSizeManager {

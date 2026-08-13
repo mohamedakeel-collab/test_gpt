@@ -44,6 +44,7 @@ extension TextStyleEx on TextStyle {
 
   TextStyle get setMainTextColor => copyWith(color: AppColors.main);
   TextStyle get setPrimaryColor => copyWith(color: AppColors.primary);
+  TextStyle get setTextStatusColor => copyWith(color: AppColors.textStatus);
   TextStyle get setSecondryColor => copyWith(color: AppColors.secondary);
   TextStyle get setThirdColor => copyWith(color: AppColors.third);
   TextStyle get setForthColor => copyWith(color: AppColors.forth);

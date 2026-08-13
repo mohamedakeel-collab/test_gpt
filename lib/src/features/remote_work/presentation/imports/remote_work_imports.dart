@@ -20,18 +20,16 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-
 import '../../../../config/language/languages.dart';
 import '../../../../config/language/locale_keys.g.dart';
 import '../../../../config/res/config_imports.dart';
-import '../../../remote_work/presentation/imports/remote_work_imports.dart';
-part '../view/profile_screen.dart';
-part '../widget/profile_body.dart';
-part '../widget/profile_header.dart';
-part '../widget/profile_content.dart';
-part '../widget/profile_info_card.dart';
-part '../widget/profile_balance_card.dart';
-part '../widget/profile_menu_item.dart';
-part '../widget/profile_image_card.dart';
 
+part '../view/remote_work_screen.dart';
 
+part '../widgets/remote_work_body.dart';
+
+part '../widgets/remote_work_status_card.dart';
+
+part '../widgets/remote_history_card.dart';
+
+part '../widgets/remote_timer_card.dart';

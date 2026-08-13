@@ -496,6 +496,42 @@ abstract class LocaleKeys {
   static const String _details = 'details';
   static String get details => _details.tr();
 
+  static const String _remoteWork = 'remote_work';
+  static String get remoteWork => _remoteWork.tr();
+
+  static const String _workingRemotelyNow = 'working_remotely_now';
+  static String get workingRemotelyNow => _workingRemotelyNow.tr();
+
+  static const String _endWork = 'end_work';
+  static String get endWork => _endWork.tr();
+
+  static const String _remoteWorkHistory = 'remote_work_history';
+  static String get remoteWorkHistory => _remoteWorkHistory.tr();
+
+  static const String _completed = 'completed';
+  static String get completed => _completed.tr();
+
+  static const String _phoneNumber = 'phone_number';
+  static String get phoneNumber => _phoneNumber.tr();
+
+  static const String _department = 'department';
+  static String get department => _department.tr();
+
+  static const String _vacationBalance = 'vacation_balance';
+  static String get vacationBalance => _vacationBalance.tr();
+
+  static const String _day = 'day';
+  static String get day => _day.tr();
+
+  static const String _hour = 'hour';
+  static String get hour => _hour.tr();
+
+  static const String _accountSettings = 'account_settings';
+  static String get accountSettings => _accountSettings.tr();
+
+  static const String _securityPrivacy = 'security_privacy';
+  static String get securityPrivacy => _securityPrivacy.tr();
+
   static const String _loginTitle = 'login_title';
   static String get loginTitle => _loginTitle.tr();
 
