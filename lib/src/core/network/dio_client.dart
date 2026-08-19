@@ -82,7 +82,7 @@ class DioClient {
     sendTimeout: const Duration(seconds: 15),
     responseType: ResponseType.json,
     headers: const {
-      'Content-Type': 'application/json',
+      //'Content-Type': 'application/json',
       'Accept': 'application/json',
     },
     // We treat 4xx ourselves through StatusCodeHandler / ResponseParser.

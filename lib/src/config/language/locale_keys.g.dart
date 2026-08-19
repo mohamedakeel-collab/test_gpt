@@ -139,6 +139,15 @@ abstract class LocaleKeys {
   static const String _productsDeleteTitle = 'products_delete_title';
   static String get productsDeleteTitle => _productsDeleteTitle.tr();
 
+  static const String _timePickerCancel = 'time_picker_cancel';
+  static String get timePickerCancel => _timePickerCancel.tr();
+
+  static const String _timePickerConfirm = 'time_picker_confirm';
+  static String get timePickerConfirm => _timePickerConfirm.tr();
+
+  static const String _timePickerHelpText = 'time_picker_help_text';
+  static String get timePickerHelpText => _timePickerHelpText.tr();
+
   static const String _productsDeleteConfirm = 'products_delete_confirm';
   static String get productsDeleteConfirm => _productsDeleteConfirm.tr();
 
@@ -549,5 +558,29 @@ abstract class LocaleKeys {
 
   static const String _loginTitle = 'login_title';
   static String get loginTitle => _loginTitle.tr();
+
+  static const String _requestSubmittedSuccessfully = 'request_submitted_successfully';
+  static String get requestSubmittedSuccessfully => _requestSubmittedSuccessfully.tr();
+
+  static const String _submitRequest = 'submit_request';
+  static String get submitRequest => _submitRequest.tr();
+
+  static const String _uploadAttachment = 'upload_attachment';
+  static String get uploadAttachment => _uploadAttachment.tr();
+
+  static const String _fileTooLarge = 'file_too_large';
+  static String get fileTooLarge => _fileTooLarge.tr();
+
+  static const String _invalidFileType = 'invalid_file_type';
+  static String get invalidFileType => _invalidFileType.tr();
+
+  static const String _fillRequiredFields = 'fill_required_fields';
+  static String get fillRequiredFields => _fillRequiredFields.tr();
+
+  static const String _tapToAddDocument = 'tap_to_add_document';
+  static String get tapToAddDocument => _tapToAddDocument.tr();
+
+  static const String _documentHint = 'document_hint';
+  static String get documentHint => _documentHint.tr();
 
 }

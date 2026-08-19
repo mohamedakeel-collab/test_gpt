@@ -29,4 +29,10 @@ class ApiEndpoints {
   // Generic resource paths — replace with real ones per project
   static const String products = 'products';
   static String productById(int id) => 'products/$id';
+
+  // Home dashboard
+  static const String home = 'home';
+
+  // Leave requests
+  static const String storeLeaveRequest = 'leave-requests/store';
 }

@@ -1,17 +1,21 @@
 part of '../imports/new_request_imports.dart';
 
 class _RequestAttachmentField extends StatelessWidget {
-  const _RequestAttachmentField();
+  const _RequestAttachmentField({
+    this.file,
+    this.onPick,
+  });
+
+  final File? file;
+  final VoidCallback? onPick;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-
       children: [
         Text(
-          'إرفاق مستند داعم',
-
+          LocaleKeys.uploadAttachment,
           style: const TextStyle().setMainTextColor.s14.semiBold,
         ),
 
@@ -19,55 +23,70 @@ class _RequestAttachmentField extends StatelessWidget {
 
         Container(
           width: double.infinity,
-
           height: AppSize.sH120,
-
           decoration: BoxDecoration(
             color: AppColors.white,
-
             borderRadius: BorderRadius.circular(AppCircular.r12),
-
             border: Border.all(
               color: AppColors.border,
               width: 1.5,
               style: BorderStyle.solid,
             ),
           ),
-
           child: InkWell(
-            onTap: () {
-              // TODO: open image picker
-            },
+            onTap: onPick,
+            child: file == null
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.cloud_upload_outlined,
+                        size: AppSize.sH35,
+                        color: AppColors.icons,
+                      ),
 
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+                      8.szH,
 
-              children: [
-                Icon(
-                  Icons.cloud_upload_outlined,
+                      Text(
+                        LocaleKeys.tapToAddDocument,
+                        style: const TextStyle().setMainTextColor.s13.regular,
+                      ),
 
-                  size: AppSize.sH35,
+                      4.szH,
 
-                  color: AppColors.icons,
-                ),
+                      Text(
+                        LocaleKeys.documentHint,
+                        style: const TextStyle().setHintColor.s12.regular,
+                      ),
+                    ],
+                  )
+                : Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppPadding.pW12,
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.insert_drive_file_outlined,
+                          color: AppColors.primary,
+                        ),
 
-                8.szH,
+                        8.szW,
 
-                Text(
-                  'اضغط لإضافة صورة التقرير أو المستند',
-
-                  style: const TextStyle().setMainTextColor.s13.regular,
-                ),
-
-                4.szH,
-
-                Text(
-                  'صورة التقرير أو المستند',
-
-                  style: const TextStyle().setHintColor.s12.regular,
-                ),
-              ],
-            ),
+                        Expanded(
+                          child: Text(
+                            file!.uri.pathSegments.last,
+                            style: const TextStyle()
+                                .setMainTextColor
+                                .s13
+                                .medium,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
           ),
         ),
       ],

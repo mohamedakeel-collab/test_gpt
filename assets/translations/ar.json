@@ -45,6 +45,9 @@
   "products_description": "الوصف",
   "products_no_description": "لا يوجد وصف",
   "products_delete_title": "حذف المنتج",
+  "time_picker_cancel": "إلغاء",
+  "time_picker_confirm": "تأكيد",
+  "time_picker_help_text": "اختر الوقت",
   "products_delete_confirm": "هل تريد حذف هذا المنتج من القائمة؟",
   "products_delete": "حذف",
   "products_currency": "ر.س",
@@ -182,5 +185,13 @@
   "account_settings": "إعدادات الحساب",
   "security_privacy": "الأمان والخصوصية",
   "remote_work": "العمل عن بُعد",
-  "login_title": "سجل دخولك لإدارة وقتك وطلباتكً"
+  "login_title": "سجل دخولك لإدارة وقتك وطلباتكً",
+  "request_submitted_successfully": "تم تقديم طلب الإجازة بنجاح.",
+  "submit_request": "إرسال الطلب",
+  "upload_attachment": "إرفاق مستند داعم",
+  "file_too_large": "حجم الملف يجب ألا يتجاوز 5 ميجابايت",
+  "invalid_file_type": "يُسمح فقط بملفات PDF أو JPG أو JPEG أو PNG",
+  "fill_required_fields": "يرجى تعبئة جميع الحقول المطلوبة",
+  "tap_to_add_document": "اضغط لإضافة صورة التقرير أو المستند",
+  "document_hint": "صورة التقرير أو المستند"
 }

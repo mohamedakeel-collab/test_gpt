@@ -1,7 +1,11 @@
 part of '../imports/new_request_imports.dart';
 
 class _RequestReasonField extends StatelessWidget {
-  const _RequestReasonField();
+  const _RequestReasonField({
+    this.controller,
+  });
+
+  final TextEditingController? controller;
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +20,7 @@ class _RequestReasonField extends StatelessWidget {
         8.szH,
 
         DefaultTextField(
+          controller: controller,
           title: LocaleKeys.writeReason,
           inputType: TextInputType.multiline,
           maxLines: 5,

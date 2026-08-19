@@ -8,9 +8,11 @@ import 'config/themes/app_theme.dart';
 import 'core/navigation/named_routes.dart';
 import 'core/navigation/navigator.dart';
 import 'core/navigation/route_generator.dart';
+import 'core/network/auth/token_storage.dart';
 import 'core/network/cubits/connectivity_cubit.dart';
 import 'core/network/cubits/offline_queue_cubit.dart';
 import 'core/shared/cubits/user_cubit/user_cubit.dart';
+import 'features/home/presentation/imports/home_imports.dart';
 import 'features/intro/presentation/imports/intro_imports.dart';
 import 'features/login/presentation/imports/login_imports.dart';
 import 'features/splash/presentation/imports/splash_imports.dart';
@@ -34,6 +36,7 @@ class App extends StatelessWidget {
           ),
         ],
         child: MaterialApp(
+
           title: F.title,
           debugShowCheckedModeBanner: false,
           navigatorKey: Go.navigatorKey,
@@ -44,7 +47,10 @@ class App extends StatelessWidget {
 
           supportedLocales: context.supportedLocales,
           localizationsDelegates: context.localizationDelegates,
-          home: F.appFlavor == Flavor.user ? SplashScreen() : LoginScreen(),
+          home:  TokenStorage.instance.hasAccessToken
+              ? MainTapScreen()
+              : SplashScreen(),
+
         ),
       ),
     );

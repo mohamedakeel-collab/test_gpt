@@ -45,6 +45,9 @@
   "products_description": "Description",
   "products_no_description": "No description",
   "products_delete_title": "Delete product",
+  "time_picker_cancel": "Cancel",
+  "time_picker_confirm": "Confirm",
+  "time_picker_help_text": "Select time",
   "products_delete_confirm": "Do you want to delete this product from the list?",
   "products_delete": "Delete",
   "products_currency": "SAR",
@@ -182,5 +185,13 @@
   "account_settings": "Account Settings",
   "security_privacy": "Security Privacy",
   "remote_work": "Remote Work",
-  "login_title": "Log in to manage your time and requests"
+  "login_title": "Log in to manage your time and requests",
+  "request_submitted_successfully": "Request submitted successfully",
+  "submit_request": "Submit Request",
+  "upload_attachment": "Upload Attachment",
+  "file_too_large": "File too large",
+  "invalid_file_type": "Invalid file type",
+  "fill_required_fields": "Fill required fields",
+  "tap_to_add_document": "Tap to add report image or document",
+  "document_hint": "Report image or document"
 }

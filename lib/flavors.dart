@@ -28,12 +28,12 @@ class F {
       case Flavor.user:
         return String.fromEnvironment(
           'API_BASE_URL',
-          defaultValue: 'https://api-user.example.com/api/v1/',
+          defaultValue: 'https://attendance.syt-inf.com/api',
         );
       case Flavor.provider:
         return String.fromEnvironment(
           'API_BASE_URL',
-          defaultValue: 'https://api-provider.example.com/api/v1/',
+          defaultValue: 'https://attendance.syt-inf.com/api',
         );
     }
   }

@@ -48,13 +48,13 @@ import 'package:http_mock_adapter/http_mock_adapter.dart';
 /// the same `validateStatus`/timeout/responseType behaviour as production.
 Dio _prodDio() => Dio(
       BaseOptions(
-        baseUrl: 'https://api.test/',
+        baseUrl: 'https://attendance.syt-inf.com/api',
         connectTimeout: const Duration(seconds: 15),
         receiveTimeout: const Duration(seconds: 15),
         sendTimeout: const Duration(seconds: 15),
         responseType: ResponseType.json,
         headers: const {
-          'Content-Type': 'application/json',
+        //  'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
         validateStatus: (status) => status != null && status < 500,
