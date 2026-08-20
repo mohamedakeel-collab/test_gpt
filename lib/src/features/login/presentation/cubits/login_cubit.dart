@@ -12,24 +12,23 @@ part of '../imports/login_imports.dart';
 ///     hasn't been persisted yet.
 @injectable
 class LoginCubit extends AsyncCubit<LoginEntity> {
-  LoginCubit(this._login, this._tokenStorage);
+  LoginCubit(this._login, this._tokenStorage, this._userCubit);
 
+  final UserCubit _userCubit;
   final LoginUseCase _login;
   final TokenStorage _tokenStorage;
 
-  Future<void> login({
-    required String login,
-    required String password,
-  }) {
+  Future<void> login({required String login, required String password}) {
     return execute(() async {
       final result = await _login(login: login, password: password);
 
       // Persist the token only on success. `fold` awaits both branches so a
       // failed keychain write still surfaces before navigation.
-      await result.fold(
-        (_) async {},
-        (data) async => _tokenStorage.save(access: data.token),
-      );
+      await result.fold((_) async {}, (data) async {
+        _tokenStorage.save(access: data.token);
+        final user = data.toUserModel();
+        await _userCubit.setUserLoggedIn(user: user, token: data.token);
+      });
 
       return result;
     });

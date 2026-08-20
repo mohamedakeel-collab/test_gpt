@@ -23,6 +23,7 @@ import '../../../../core/widgets/custom_messages.dart';
 import '../../../../core/widgets/fields/text_fields/default_text_field.dart';
 import '../../../../core/widgets/icon_widget.dart';
 
+import '../../../../core/widgets/pickers/custom_date_picker.dart';
 import '../../../../core/widgets/pickers/custom_time_picker.dart';
 import '../../domain/entities/new_request_result_entity.dart';
 import '../../domain/params/create_new_request_params.dart';
@@ -31,8 +32,9 @@ import '../../domain/usecases/create_new_request_use_case.dart';
 import '../../../home/presentation/imports/home_imports.dart';
 import '../../../provider/requests/presentation/imports/requests_imports.dart';
 
+part '../controllers/new_request_view_controller.dart';
 part '../cubits/new_request_cubit.dart';
-part '../cubits/new_request_state.dart';
+
 part '../view/new_request_screen.dart';
 part '../widgets/new_request_body.dart';
 part '../widgets/request_type_selector.dart';

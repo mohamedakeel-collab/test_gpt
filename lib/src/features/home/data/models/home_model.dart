@@ -58,7 +58,6 @@ class HomeModel {
   }
 }
 
-/// DTO mirroring one item of `data.recent_requests`.
 class RecentRequestModel {
   final int id;
   final int employeeId;
@@ -66,6 +65,7 @@ class RecentRequestModel {
   final String leaveType;
   final String? startDate;
   final String? endDate;
+  final String? duration;
   final String reason;
   final bool reviewedByManager;
   final bool reviewedByHr;
@@ -87,6 +87,7 @@ class RecentRequestModel {
     this.reviewerId,
     this.startDate,
     this.endDate,
+    this.duration,
     this.file,
     this.statusText = '',
     this.submittedAt,
@@ -102,6 +103,7 @@ class RecentRequestModel {
         leaveType: json.getString('leave_type'),
         startDate: json.getStringOrNull('start_date'),
         endDate: json.getStringOrNull('end_date'),
+        duration: json.getStringOrNull('duration'),
         reason: json.getString('reason'),
         reviewedByManager: json.getBool('reviewed_by_manager'),
         reviewedByHr: json.getBool('reviewed_by_hr'),
@@ -110,6 +112,9 @@ class RecentRequestModel {
         statusText: json.getString('status_text'),
         submittedAt: json.getStringOrNull('submitted_at'),
         reviewedAt: json.getStringOrNull('reviewed_at'),
-        reviewer: json.getObject('reviewer', HomeReviewerModel.fromJson),
+        reviewer: json.getObject(
+          'reviewer',
+          HomeReviewerModel.fromJson,
+        ),
       );
 }

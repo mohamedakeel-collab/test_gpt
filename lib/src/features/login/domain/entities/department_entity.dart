@@ -34,4 +34,5 @@ class DepartmentEntity extends Equatable {
 
   @override
   List<Object?> get props => [id, name, managerId];
+
 }

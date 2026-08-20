@@ -1,3 +1,4 @@
+import '../../../../core/shared/models/user_model.dart';
 import '../../domain/entities/department_entity.dart';
 import '../../domain/entities/employee_entity.dart';
 import '../../domain/entities/login_entity.dart';
@@ -55,4 +56,71 @@ extension TeamModelMapper on TeamModel {
         teamName: teamName,
         leadId: leadId,
       );
+}
+
+
+extension LoginEntityMapper on LoginEntity {
+
+  UserModel toUserModel() {
+
+    return UserModel(
+      id: id.toString(),
+      image: image,
+
+      fullName: employee?.fullName ?? '',
+
+      phoneNumber: employee?.phone ?? '',
+
+      email: email,
+
+      role: role,
+
+      userType: _mapRole(role),
+
+      position: employee?.position ?? '',
+
+      department: employee?.department != null
+          ? DepartmentModel(
+        id: employee!.department!.id,
+        name: employee!.department!.name,
+        managerId: employee!.department!.managerId,
+      )
+          : null,
+
+      team: employee?.team != null
+          ? TeamModel(
+        id: employee!.team!.id,
+        teamName: employee!.team!.teamName,
+        leadId: employee!.team!.leadId,
+      )
+          : null,
+
+      remainingLeaveBalance:
+      employee?.remainingLeaveBalance ?? 0,
+
+      permissionHours:
+      employee?.permissionHours ?? 0,
+
+      allowNotify: false,
+
+      token: token,
+    );
+  }
+
+
+  int _mapRole(String role) {
+    switch(role.toLowerCase()) {
+      case 'manager':
+        return 2;
+
+      case 'hr':
+        return 3;
+
+      case 'employee':
+        return 1;
+
+      default:
+        return 0;
+    }
+  }
 }

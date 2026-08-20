@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'reviewer_entity.dart';
 
 /// Pure domain object — a leave / permission request shown on the home feed.
+
 class RecentRequestEntity extends Equatable {
   final int id;
   final int employeeId;
@@ -10,6 +11,7 @@ class RecentRequestEntity extends Equatable {
   final String leaveType;
   final String? startDate;
   final String? endDate;
+  final String? duration;
   final String reason;
   final bool reviewedByManager;
   final bool reviewedByHr;
@@ -31,6 +33,7 @@ class RecentRequestEntity extends Equatable {
     this.reviewerId,
     this.startDate,
     this.endDate,
+    this.duration,
     this.file,
     this.statusText = '',
     this.submittedAt,
@@ -40,20 +43,21 @@ class RecentRequestEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        employeeId,
-        reviewerId,
-        leaveType,
-        startDate,
-        endDate,
-        reason,
-        reviewedByManager,
-        reviewedByHr,
-        file,
-        status,
-        statusText,
-        submittedAt,
-        reviewedAt,
-        reviewer,
-      ];
+    id,
+    employeeId,
+    reviewerId,
+    leaveType,
+    startDate,
+    endDate,
+    duration,
+    reason,
+    reviewedByManager,
+    reviewedByHr,
+    file,
+    status,
+    statusText,
+    submittedAt,
+    reviewedAt,
+    reviewer,
+  ];
 }

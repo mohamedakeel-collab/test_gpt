@@ -6,11 +6,7 @@ class DepartmentModel {
   final String name;
   final int? managerId;
 
-  const DepartmentModel({
-    required this.id,
-    required this.name,
-    this.managerId,
-  });
+  const DepartmentModel({required this.id, required this.name, this.managerId});
 
   factory DepartmentModel.fromJson(Map<String, dynamic> json) =>
       DepartmentModel(
@@ -18,4 +14,10 @@ class DepartmentModel {
         name: json.getString('name'),
         managerId: json.getIntOrNull('manager_id'),
       );
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'name': name,
+    'manager_id': managerId,
+  };
 }

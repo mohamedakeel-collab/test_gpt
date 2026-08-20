@@ -145,6 +145,7 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i1051.LoginCubit(
         gh<_i1051.LoginUseCase>(),
         gh<_i235.TokenStorage>(),
+        gh<_i996.UserCubit>(),
       ),
     );
     return this;

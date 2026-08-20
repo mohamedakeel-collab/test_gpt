@@ -95,7 +95,7 @@ Future<TimeOfDay?> _showMaterialTimePicker({
               alpha: 0.25,
             ),
 
-            dialHandColor: AppColors.primary,
+            dialHandColor: AppColors.brandSurface,
 
             dialTextColor: WidgetStateColor.resolveWith(
                   (states) {
@@ -131,7 +131,7 @@ Future<TimeOfDay?> _showMaterialTimePicker({
             hourMinuteTextColor: WidgetStateColor.resolveWith(
                   (states) {
                 if (states.contains(WidgetState.selected)) {
-                  return AppColors.primary;
+                  return AppColors.brandSurface;
                 }
 
                 return AppColors.black;
@@ -148,7 +148,7 @@ Future<TimeOfDay?> _showMaterialTimePicker({
             dayPeriodColor: WidgetStateColor.resolveWith(
                   (states) {
                 if (states.contains(WidgetState.selected)) {
-                  return AppColors.primary;
+                  return AppColors.brandSurface;
                 }
 
                 return AppColors.border.withValues(
@@ -192,7 +192,7 @@ Future<TimeOfDay?> _showMaterialTimePicker({
             // Confirm
             confirmButtonStyle: TextButton.styleFrom(
               foregroundColor: AppColors.white,
-              backgroundColor: AppColors.primary,
+              backgroundColor: AppColors.brandSurface,
 
               padding: EdgeInsets.symmetric(
                 horizontal: AppPadding.pW20,

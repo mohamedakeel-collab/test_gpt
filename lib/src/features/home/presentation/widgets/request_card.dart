@@ -51,14 +51,25 @@ class _RequestCard extends StatelessWidget {
     );
   }
 
-  /// Prefers the request date range; falls back to the reason text when the
-  /// backend sends no dates. Trims ISO timestamps (`2026-08-19T…Z`) down to
-  /// the date part so the card stays readable.
+
   String _requestDate(RecentRequestEntity request) {
     final start = _displayDate(request.startDate);
-    if (start.isEmpty) return request.reason;
+
+    if (start.isEmpty) {
+      return request.reason;
+    }
+
     final end = _displayDate(request.endDate);
-    return end.isEmpty ? start : '$start - $end';
+
+    final dateRange = end.isEmpty
+        ? start
+        : '$start - $end';
+
+    if (request.duration?.isNotEmpty ?? false) {
+      return '$dateRange (${request.duration})';
+    }
+
+    return dateRange;
   }
 }
 

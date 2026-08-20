@@ -54,11 +54,7 @@ class _RequestDatePicker extends StatelessWidget {
 }
 
 class _DateField extends StatelessWidget {
-  const _DateField({
-    required this.title,
-    this.value,
-    this.onChanged,
-  });
+  const _DateField({required this.title, this.value, this.onChanged});
 
   final String title;
   final DateTime? value;
@@ -74,7 +70,7 @@ class _DateField extends StatelessWidget {
         6.szH,
 
         GestureDetector(
-          onTap: () => _pickDate(context),
+          onTap: () => _pickDate(),
           child: Container(
             height: AppSize.sH42,
             alignment: Alignment.centerRight,
@@ -96,15 +92,18 @@ class _DateField extends StatelessWidget {
     );
   }
 
-  Future<void> _pickDate(BuildContext context) async {
-    final now = DateTime.now();
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: value ?? now,
+  Future<void> _pickDate() async {
+    final DateTime now = DateTime.now();
+
+    final picked = await showCustomDatePicker(
+      initialDate: value,
       firstDate: DateTime(now.year - 1, now.month, now.day),
       lastDate: DateTime(now.year + 2, now.month, now.day),
     );
-    if (picked != null) onChanged?.call(picked);
+
+    if (picked != null) {
+      onChanged?.call(picked);
+    }
   }
 }
 

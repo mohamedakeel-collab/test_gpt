@@ -3,7 +3,7 @@ part of '../imports/orders_imports.dart';
 class _OrdersBody extends StatelessWidget {
   _OrdersBody();
 
-  final ValueNotifier<int> selectedTab = ValueNotifier(0);
+  final ValueNotifier<int> selectedTab = ValueNotifier(1);
 
   @override
   Widget build(BuildContext context) {

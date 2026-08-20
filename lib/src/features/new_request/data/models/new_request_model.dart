@@ -8,6 +8,7 @@ class NewRequestModel {
     required this.leaveType,
     required this.startDate,
     required this.endDate,
+    this.duration,
     required this.reason,
     this.file,
     required this.status,
@@ -22,6 +23,7 @@ class NewRequestModel {
         reviewerId: json['reviewer_id'] != null
             ? int.tryParse(json['reviewer_id'].toString())
             : null,
+        duration: json['duration']?.toString(),
         leaveType: json['leave_type']?.toString() ?? '',
         startDate: json['start_date']?.toString() ?? '',
         endDate: json['end_date']?.toString() ?? '',
@@ -40,6 +42,7 @@ class NewRequestModel {
   final String endDate;
   final String reason;
   final String? file;
+  final String? duration;
   final String status;
   final String statusText;
   final String? submittedAt;

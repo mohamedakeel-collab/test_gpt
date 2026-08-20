@@ -21,15 +21,18 @@ class NewRequestScreen extends StatefulWidget {
 
 class _NewRequestScreenState extends State<NewRequestScreen> {
   late final NewRequestCubit _cubit;
+  late final NewRequestViewController _vc;
 
   @override
   void initState() {
     super.initState();
     _cubit = injector<NewRequestCubit>();
+    _vc = NewRequestViewController();
   }
 
   @override
   void dispose() {
+    _vc.dispose();
     _cubit.close();
     super.dispose();
   }
@@ -58,6 +61,7 @@ class _NewRequestScreenState extends State<NewRequestScreen> {
           ),
           backgroundColor: AppColors.scaffoldBackground,
           body: _NewRequestBody(
+            controller: _vc,
             request: widget.request,
             mode: widget.mode,
           ),

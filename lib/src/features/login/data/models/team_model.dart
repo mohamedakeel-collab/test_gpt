@@ -6,15 +6,17 @@ class TeamModel {
   final String teamName;
   final int? leadId;
 
-  const TeamModel({
-    required this.id,
-    required this.teamName,
-    this.leadId,
-  });
+  const TeamModel({required this.id, required this.teamName, this.leadId});
 
   factory TeamModel.fromJson(Map<String, dynamic> json) => TeamModel(
-        id: json.getInt('id'),
-        teamName: json.getString('team_name'),
-        leadId: json.getIntOrNull('lead_id'),
-      );
+    id: json.getInt('id'),
+    teamName: json.getString('team_name'),
+    leadId: json.getIntOrNull('lead_id'),
+  );
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'team_name': teamName,
+    'lead_id': leadId,
+  };
 }

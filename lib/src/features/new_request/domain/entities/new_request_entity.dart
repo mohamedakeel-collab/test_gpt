@@ -15,6 +15,7 @@ class NewRequestEntity {
     this.file,
     required this.status,
     required this.statusText,
+    this.duration,
     this.submittedAt,
   });
 
@@ -24,6 +25,7 @@ class NewRequestEntity {
   final String leaveType;
   final String startDate;
   final String endDate;
+  final String? duration;
   final String reason;
   final String? file;
   final String status;

@@ -31,7 +31,7 @@ class _SendRequestButton extends StatelessWidget {
             break;
         }
       },
-      child: BlocBuilder<NewRequestCubit, NewRequestState>(
+      child: BlocBuilder<NewRequestCubit, AsyncState<NewRequestResultEntity>>(
         builder: (context, state) {
           return LoadingButton(
             title: LocaleKeys.sendRequest,
