@@ -12,7 +12,8 @@ class NewRequestScreen extends StatefulWidget {
     this.mode = RequestMode.add,
   });
 
-  final RequestData? request;
+
+  final LeaveRequestEntity? request;
   final RequestMode mode;
 
   @override

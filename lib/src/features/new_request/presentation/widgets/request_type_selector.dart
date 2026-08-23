@@ -3,32 +3,56 @@ part of '../imports/new_request_imports.dart';
 class _RequestTypeSelector extends StatelessWidget {
   const _RequestTypeSelector({
     required this.selectedType,
+    this.isEdit = false,
+    this.leaveType,
   });
 
   final ValueNotifier<int> selectedType;
+  final bool isEdit;
+  final String? leaveType;
 
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<int>(
       valueListenable: selectedType,
+
       builder: (context, selected, _) {
+        if (isEdit) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+
+            children: [
+              Text(
+                LocaleKeys.requestType,
+
+                style: const TextStyle().setMainTextColor.s14.semiBold,
+              ),
+
+              8.szH,
+
+              _TypeButton(
+                title: _typeTitle(leaveType),
+                active: true,
+                onTap: () {},
+              ),
+            ],
+          );
+        }
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
 
+          children: [
             Text(
               LocaleKeys.requestType,
-              style: const TextStyle()
-                  .setMainTextColor
-                  .s14
-                  .semiBold,
+
+              style: const TextStyle().setMainTextColor.s14.semiBold,
             ),
 
             8.szH,
 
             Row(
               children: [
-
                 _TypeButton(
                   title: LocaleKeys.sick,
                   active: selected == 1,
@@ -56,13 +80,24 @@ class _RequestTypeSelector extends StatelessWidget {
                     selectedType.value = 3;
                   },
                 ),
-
               ],
             ),
           ],
         );
       },
     );
+  }
+
+  String _typeTitle(String? type) {
+    return switch (type) {
+      'leave' => LocaleKeys.sick,
+
+      'permission' => LocaleKeys.permission,
+
+      'remote' => LocaleKeys.remote,
+
+      _ => LocaleKeys.sick,
+    };
   }
 }
 
@@ -88,27 +123,15 @@ class _TypeButton extends StatelessWidget {
           vertical: AppPadding.pH8,
         ),
         decoration: BoxDecoration(
-          color: active
-              ? AppColors.primary
-              : AppColors.white,
-          borderRadius: BorderRadius.circular(
-            AppCircular.r10,
-          ),
-          border: Border.all(
-            color: AppColors.border,
-          ),
+          color: active ? AppColors.primary : AppColors.white,
+          borderRadius: BorderRadius.circular(AppCircular.r10),
+          border: Border.all(color: AppColors.border),
         ),
         child: Text(
           title,
           style: active
-              ? const TextStyle()
-              .setBlackColor
-              .s14
-              .medium
-              : const TextStyle()
-              .setMainTextColor
-              .s14
-              .medium,
+              ? const TextStyle().setBlackColor.s14.medium
+              : const TextStyle().setMainTextColor.s14.medium,
         ),
       ),
     );

@@ -48,12 +48,34 @@ class NewRequestRemoteDataSourceImpl extends BaseRemoteSource
     );
   }
 
+  /// PUT /leave-requests/{id} (multipart/form-data)
+  @override
+  Future<Either<Failure, NewRequestResultEntity>> updateRequest(
+    int id,
+    CreateNewRequestParams params,
+  ) async {
+    return request<NewRequestResultEntity>(
+      method: HttpMethod.put,
+      endpoint: ApiEndpoints.updateLeaveRequest(id),
+      asFormData: true,
+      body: {
+        'leave_type': params.leaveType,
+        'start_date': _formatDateTime(params.startDate),
+        'end_date': _formatDateTime(params.endDate),
+        'reason': params.reason,
+        if (params.file != null)
+          'file': await MultipartFile.fromFile(params.file!.path),
+      },
+      fromJson: _parseResponse,
+    );
+  }
+
   static NewRequestResultEntity _parseResponse(dynamic json) {
     final map = json is Map<String, dynamic>
         ? json
         : json is Map
-            ? Map<String, dynamic>.from(json)
-            : <String, dynamic>{};
+        ? Map<String, dynamic>.from(json)
+        : <String, dynamic>{};
     return NewRequestResponseModel.fromJson(map).toEntity();
   }
 

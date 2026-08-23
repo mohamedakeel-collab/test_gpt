@@ -12,22 +12,22 @@ class _RequestDetailsBody extends StatelessWidget {
         children: [
           16.szH,
 
-          const _RequestEmployeeCard(),
+          const RequestEmployeeCard(),
 
           16.szH,
 
-          const _RequestBalanceCard(),
+          const RequestBalanceCard(),
 
           16.szH,
 
-          const _RequestInfoCard(),
+          const RequestInfoCard(),
 
           12.szH,
-          const _RequestAttachmentCard(),
+          const RequestAttachmentCard(),
 
           12.szH,
 
-          const _RequestNotesCard(),
+          const RequestNotesCard(),
 
           100.szH,
         ],

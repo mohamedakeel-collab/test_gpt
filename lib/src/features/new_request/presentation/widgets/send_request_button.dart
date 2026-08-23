@@ -1,8 +1,9 @@
 part of '../imports/new_request_imports.dart';
 
 class _SendRequestButton extends StatelessWidget {
-  const _SendRequestButton({this.onSubmit});
+  const _SendRequestButton({required this.mode, this.onSubmit});
 
+  final RequestMode mode;
   final Future<void> Function()? onSubmit;
 
   @override
@@ -16,7 +17,9 @@ class _SendRequestButton extends StatelessWidget {
             MessageUtils.showSnackBar(
               context: context,
               baseStatus: BaseStatus.success,
-              message: LocaleKeys.requestSubmittedSuccessfully,
+              message: mode == RequestMode.edit
+                  ? LocaleKeys.requestUpdatedSuccessfully
+                  : LocaleKeys.requestSubmittedSuccessfully,
             );
             Go.back();
           case AsyncFailure<NewRequestResultEntity>(:final failure):

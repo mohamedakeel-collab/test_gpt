@@ -5,6 +5,9 @@ class _RequestNotesBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final canAddNote =
+        context.read<UserCubit>().user.role == 'manager' ||
+            context.read<UserCubit>().user.role == 'hr';
     return Container(
       height: MediaQuery.of(context).size.height * .85,
 
@@ -58,7 +61,7 @@ class _RequestNotesBottomSheet extends StatelessWidget {
 
               children: [
                 _NoteItem(
-                  name: 'أحمد منصور (الموظف)',
+                  name: 'أحمد منصور (hr)',
 
                   date: '10 أكتوبر، 09:00 ص',
 
@@ -80,9 +83,9 @@ class _RequestNotesBottomSheet extends StatelessWidget {
             ),
           ),
 
-          Divider(color: AppColors.border),
+        if(canAddNote)  Divider(color: AppColors.border),
 
-          Padding(
+          if(canAddNote)  Padding(
             padding: EdgeInsets.all(AppPadding.pH12),
 
             child: Row(

@@ -1,14 +1,10 @@
 part of '../imports/new_request_imports.dart';
 
 class _NewRequestBody extends StatefulWidget {
-  const _NewRequestBody({
-    required this.controller,
-    this.request,
-    this.mode,
-  });
+  const _NewRequestBody({required this.controller, this.request, this.mode});
 
   final NewRequestViewController controller;
-  final RequestData? request;
+  final LeaveRequestEntity? request;
   final RequestMode? mode;
 
   @override
@@ -17,6 +13,15 @@ class _NewRequestBody extends StatefulWidget {
 
 class _NewRequestBodyState extends State<_NewRequestBody> {
   NewRequestViewController get _vc => widget.controller;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.mode == RequestMode.edit && widget.request != null) {
+      _vc.prefillFromRequest(widget.request!);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +34,13 @@ class _NewRequestBodyState extends State<_NewRequestBody> {
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (widget.mode == RequestMode.add)
-                      _RequestTypeSelector(selectedType: _vc.selectedRequestType),
+                    _RequestTypeSelector(
+                      selectedType: _vc.selectedRequestType,
+                      isEdit: widget.mode == RequestMode.edit,
+                      leaveType: widget.request?.leaveType,
+                    ),
 
                     16.szH,
 
@@ -63,6 +72,7 @@ class _NewRequestBodyState extends State<_NewRequestBody> {
                       16.szH,
                       _RequestAttachmentField(
                         file: _vc.file,
+                        existingFileName: _vc.existingFileName,
                         onPick: _pickAttachment,
                       ),
                     ],
@@ -77,14 +87,15 @@ class _NewRequestBodyState extends State<_NewRequestBody> {
 
                     16.szH,
 
-                    const _BalanceInfoCard(),
+                    _BalanceInfoCard(selectedType: _vc.selectedRequestType),
                   ],
                 ).paddingSymmetric(horizontal: AppPadding.pH16),
               ),
             ),
 
             _SendRequestButton(
-              onSubmit: widget.mode == RequestMode.add ? _submit : null,
+              mode: widget.mode ?? RequestMode.add,
+              onSubmit: _submit,
             ),
           ],
         );
@@ -94,7 +105,12 @@ class _NewRequestBodyState extends State<_NewRequestBody> {
 
   Future<void> _submit() async {
     final cubit = context.read<NewRequestCubit>();
-    await _vc.submit(context, cubit);
+    await _vc.submit(
+      context,
+      cubit,
+      mode: widget.mode ?? RequestMode.add,
+      requestId: widget.request?.id,
+    );
   }
 
   Future<void> _pickAttachment() async {

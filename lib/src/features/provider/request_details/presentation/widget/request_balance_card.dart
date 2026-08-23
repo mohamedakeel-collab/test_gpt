@@ -1,7 +1,7 @@
 part of '../imports/request_details_imports.dart';
 
-class _RequestBalanceCard extends StatelessWidget {
-  const _RequestBalanceCard();
+class RequestBalanceCard extends StatelessWidget {
+  const RequestBalanceCard();
 
   @override
   Widget build(BuildContext context) {

@@ -13,10 +13,12 @@ import '../../../../config/res/assets.gen.dart';
 import '../../../../config/res/config_imports.dart';
 import '../../../../core/navigation/navigator.dart';
 import '../../../../core/network/error/failures.dart';
+import '../../../../core/shared/cubits/user_cubit/user_cubit.dart';
 import '../../../../core/shared/extensions/base_state.dart';
 import '../../../../core/shared/extensions/text_style_extensions.dart';
 import '../../../../core/shared/extensions/widgets/padding_extension.dart';
 import '../../../../core/shared/extensions/widgets/widget_extentions.dart';
+import '../../../../core/shared/helpers/helpers.dart';
 import '../../../../core/state/async/async.dart';
 import '../../../../core/widgets/buttons/loading_button.dart';
 import '../../../../core/widgets/custom_messages.dart';
@@ -25,12 +27,13 @@ import '../../../../core/widgets/icon_widget.dart';
 
 import '../../../../core/widgets/pickers/custom_date_picker.dart';
 import '../../../../core/widgets/pickers/custom_time_picker.dart';
+import '../../../orders/domain/entities/leave_request_entity.dart';
 import '../../domain/entities/new_request_result_entity.dart';
 import '../../domain/params/create_new_request_params.dart';
 import '../../domain/usecases/create_new_request_use_case.dart';
+import '../../domain/usecases/update_request_use_case.dart';
 
 import '../../../home/presentation/imports/home_imports.dart';
-import '../../../provider/requests/presentation/imports/requests_imports.dart';
 
 part '../controllers/new_request_view_controller.dart';
 part '../cubits/new_request_cubit.dart';

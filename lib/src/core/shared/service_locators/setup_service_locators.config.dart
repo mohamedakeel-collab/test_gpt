@@ -43,8 +43,24 @@ import '../../../features/new_request/domain/repositories/new_request_repository
     as _i875;
 import '../../../features/new_request/domain/usecases/create_new_request_use_case.dart'
     as _i143;
+import '../../../features/new_request/domain/usecases/update_request_use_case.dart'
+    as _i932;
 import '../../../features/new_request/presentation/imports/new_request_imports.dart'
     as _i91;
+import '../../../features/orders/data/datasources/orders_remote_data_source.dart'
+    as _i688;
+import '../../../features/orders/data/repositories/orders_repository_impl.dart'
+    as _i493;
+import '../../../features/orders/domain/datasources/orders_remote_data_source.dart'
+    as _i161;
+import '../../../features/orders/domain/repositories/orders_repository.dart'
+    as _i287;
+import '../../../features/orders/domain/usecases/delete_request_use_case.dart'
+    as _i404;
+import '../../../features/orders/domain/usecases/get_orders_usecase.dart'
+    as _i574;
+import '../../../features/orders/presentation/imports/orders_imports.dart'
+    as _i17;
 import '../../../features/products/data/datasources/products_remote_data_source_impl.dart'
     as _i126;
 import '../../../features/products/data/repositories/products_repository_impl.dart'
@@ -87,6 +103,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i947.ProductsRemoteDataSource>(
       () => _i126.ProductsRemoteDataSourceImpl(),
     );
+    gh.lazySingleton<_i161.OrdersRemoteDataSource>(
+      () => _i688.OrdersRemoteDataSourceImpl(),
+    );
     gh.lazySingleton<_i1009.LoginRemoteDataSource>(
       () => _i670.LoginRemoteDataSourceImpl(),
     );
@@ -107,11 +126,23 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i143.CreateNewRequestUseCase>(
       () => _i143.CreateNewRequestUseCase(gh<_i875.NewRequestRepository>()),
     );
+    gh.factory<_i932.UpdateRequestUseCase>(
+      () => _i932.UpdateRequestUseCase(gh<_i875.NewRequestRepository>()),
+    );
+    gh.lazySingleton<_i287.OrdersRepository>(
+      () => _i493.OrdersRepositoryImpl(gh<_i161.OrdersRemoteDataSource>()),
+    );
     gh.factory<_i485.HomeCubit>(
       () => _i485.HomeCubit(gh<_i885.GetHomeUseCase>()),
     );
     gh.lazySingleton<_i1053.LoginRepository>(
       () => _i928.LoginRepositoryImpl(gh<_i1009.LoginRemoteDataSource>()),
+    );
+    gh.factory<_i574.GetOrdersUseCase>(
+      () => _i574.GetOrdersUseCase(gh<_i287.OrdersRepository>()),
+    );
+    gh.factory<_i404.DeleteRequestUseCase>(
+      () => _i404.DeleteRequestUseCase(gh<_i287.OrdersRepository>()),
     );
     gh.factory<_i1024.CreateProductUseCase>(
       () => _i1024.CreateProductUseCase(gh<_i239.ProductsRepository>()),
@@ -136,10 +167,19 @@ extension GetItInjectableX on _i174.GetIt {
       ),
     );
     gh.factory<_i91.NewRequestCubit>(
-      () => _i91.NewRequestCubit(gh<_i143.CreateNewRequestUseCase>()),
+      () => _i91.NewRequestCubit(
+        gh<_i143.CreateNewRequestUseCase>(),
+        gh<_i932.UpdateRequestUseCase>(),
+      ),
     );
     gh.factory<_i1051.LoginUseCase>(
       () => _i1051.LoginUseCase(gh<_i1053.LoginRepository>()),
+    );
+    gh.factory<_i17.OrdersCubit>(
+      () => _i17.OrdersCubit(
+        gh<_i574.GetOrdersUseCase>(),
+        gh<_i404.DeleteRequestUseCase>(),
+      ),
     );
     gh.factory<_i1051.LoginCubit>(
       () => _i1051.LoginCubit(

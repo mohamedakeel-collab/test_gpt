@@ -7,11 +7,20 @@ part of '../imports/new_request_imports.dart';
 ///     by folding the `Either<Failure, NewRequestResultEntity>`.
 @injectable
 class NewRequestCubit extends AsyncCubit<NewRequestResultEntity> {
-  NewRequestCubit(this._createRequest);
+  NewRequestCubit(this._createRequest, this._updateRequest);
 
   final CreateNewRequestUseCase _createRequest;
+  final UpdateRequestUseCase _updateRequest;
 
-  Future<void> submit(CreateNewRequestParams params) {
-    return execute(() => _createRequest(params));
+  Future<void> submit({
+    required RequestMode mode,
+    int? requestId,
+    required CreateNewRequestParams params,
+  }) {
+    return execute(
+      () => mode == RequestMode.edit
+          ? _updateRequest(requestId!, params)
+          : _createRequest(params),
+    );
   }
 }

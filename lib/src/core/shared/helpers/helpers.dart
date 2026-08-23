@@ -60,4 +60,67 @@ class Helpers {
       return en;
     }
   }
+
+  static DateTime? parseArabicDate(String? value) {
+
+    if (value == null || value.isEmpty) {
+      return null;
+    }
+
+
+    try {
+
+      final months = {
+        'يناير': 1,
+        'فبراير': 2,
+        'مارس': 3,
+        'أبريل': 4,
+        'مايو': 5,
+        'يونيو': 6,
+        'يوليو': 7,
+        'أغسطس': 8,
+        'سبتمبر': 9,
+        'أكتوبر': 10,
+        'نوفمبر': 11,
+        'ديسمبر': 12,
+      };
+
+
+      final parts = value.split(' ');
+
+
+      // الخميس, 13 أغسطس 2026
+      final day = int.parse(
+        parts[1],
+      );
+
+
+      final month = months[
+      parts[2]
+      ];
+
+
+      final year = int.parse(
+        parts[3],
+      );
+
+
+      if(month == null) {
+        return null;
+      }
+
+
+      return DateTime(
+        year,
+        month,
+        day,
+      );
+
+
+    } catch (_) {
+
+      return null;
+
+    }
+  }
 }

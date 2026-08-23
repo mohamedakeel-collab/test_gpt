@@ -53,23 +53,11 @@ class _RequestCard extends StatelessWidget {
 
 
   String _requestDate(RecentRequestEntity request) {
-    final start = _displayDate(request.startDate);
-
-    if (start.isEmpty) {
-      return request.reason;
-    }
-
-    final end = _displayDate(request.endDate);
-
-    final dateRange = end.isEmpty
-        ? start
-        : '$start - $end';
-
-    if (request.duration?.isNotEmpty ?? false) {
-      return '$dateRange (${request.duration})';
-    }
-
-    return dateRange;
+   final start = _displayDate(request.startDate);
+   if (start.isEmpty) return request.reason;
+   final end = _displayDate(request.endDate);
+   final duration = _displayDate(request.duration);
+   return end.isEmpty ? start : '$start - $duration';
   }
 }
 

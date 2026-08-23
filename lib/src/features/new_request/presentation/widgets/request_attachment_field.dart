@@ -3,10 +3,12 @@ part of '../imports/new_request_imports.dart';
 class _RequestAttachmentField extends StatelessWidget {
   const _RequestAttachmentField({
     this.file,
+    this.existingFileName,
     this.onPick,
   });
 
   final File? file;
+  final String? existingFileName;
   final VoidCallback? onPick;
 
   @override
@@ -35,7 +37,7 @@ class _RequestAttachmentField extends StatelessWidget {
           ),
           child: InkWell(
             onTap: onPick,
-            child: file == null
+            child: file == null && existingFileName == null
                 ? Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -61,9 +63,7 @@ class _RequestAttachmentField extends StatelessWidget {
                     ],
                   )
                 : Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: AppPadding.pW12,
-                    ),
+                    padding: EdgeInsets.symmetric(horizontal: AppPadding.pW12),
                     child: Row(
                       children: [
                         const Icon(
@@ -75,11 +75,9 @@ class _RequestAttachmentField extends StatelessWidget {
 
                         Expanded(
                           child: Text(
-                            file!.uri.pathSegments.last,
-                            style: const TextStyle()
-                                .setMainTextColor
-                                .s13
-                                .medium,
+                            file?.uri.pathSegments.last ?? existingFileName!,
+                            style:
+                                const TextStyle().setMainTextColor.s13.medium,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),

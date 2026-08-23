@@ -1,7 +1,7 @@
 part of '../imports/request_details_imports.dart';
 
-class _RequestAttachmentCard extends StatelessWidget {
-  const _RequestAttachmentCard({this.onTap});
+class RequestAttachmentCard extends StatelessWidget {
+  const RequestAttachmentCard({this.onTap});
 
   final VoidCallback? onTap;
 

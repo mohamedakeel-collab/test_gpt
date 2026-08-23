@@ -20,6 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
       final result = await UserCubit.instance.init();
 
       if (result) {
+        Go.to(IntroScreen());
       } else {
         Go.to(IntroScreen());
       }

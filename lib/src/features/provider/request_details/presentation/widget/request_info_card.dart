@@ -1,7 +1,7 @@
 part of '../imports/request_details_imports.dart';
 
-class _RequestInfoCard extends StatelessWidget {
-  const _RequestInfoCard();
+class RequestInfoCard extends StatelessWidget {
+  const RequestInfoCard();
 
   @override
   Widget build(BuildContext context) {

@@ -26,6 +26,10 @@ abstract class AsyncCubit<T> extends Cubit<AsyncState<T>> {
   T? _last;
   T? get lastData => _last;
 
+  void clearData() {
+    _last = null;
+    emit(AsyncLoading<T>(previous: null));
+  }
   /// Run the call, emit Loading → Success/Failure based on the [Either].
   ///
   /// `CancelledFailure` is silent — it means a newer call superseded this

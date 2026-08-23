@@ -23,7 +23,7 @@ class _CountingAdapter implements HttpClientAdapter {
       '{}',
       statusCode,
       headers: {
-        Headers.contentTypeHeader: ['application/json'],
+     //   Headers.contentTypeHeader: ['application/json'],
       },
     );
   }

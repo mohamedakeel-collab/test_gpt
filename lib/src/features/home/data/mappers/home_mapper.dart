@@ -55,6 +55,7 @@ extension RecentRequestModelMapper on RecentRequestModel {
         reviewedByManager: reviewedByManager,
         reviewedByHr: reviewedByHr,
         file: file,
+        duration: duration,
         status: status,
         statusText: statusText,
         submittedAt: submittedAt,

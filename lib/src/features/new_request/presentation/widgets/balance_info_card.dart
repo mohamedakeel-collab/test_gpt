@@ -1,10 +1,15 @@
 part of '../imports/new_request_imports.dart';
 
 class _BalanceInfoCard extends StatelessWidget {
-  const _BalanceInfoCard();
+  const _BalanceInfoCard({required this.selectedType});
+
+  final ValueNotifier<int> selectedType;
 
   @override
   Widget build(BuildContext context) {
+    final remainingLeaveBalance = selectedType.value == 1
+        ? context.read<UserCubit>().user.remainingLeaveBalance
+        : context.read<UserCubit>().user.permissionHours;
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: AppPadding.pH16,
@@ -40,7 +45,10 @@ class _BalanceInfoCard extends StatelessWidget {
             ],
           ),
           const Spacer(),
-          Text("14 يوم", style: const TextStyle().setPrimaryColor.s18.bold),
+          Text(
+            '$remainingLeaveBalance',
+            style: const TextStyle().setPrimaryColor.s18.bold,
+          ),
         ],
       ),
     );

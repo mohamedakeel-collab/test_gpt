@@ -97,6 +97,8 @@
   "home_latest_requests #$ Latest Requests": "الطلبات الأخيرة",
   "home_show_all #$ Show All": "عرض الكل",
   "orders #$ Orders": "الطلبات",
+  "orders_empty #$ No orders": "لا توجد طلبات",
+  "orders_duration #$ Duration": "المدة",
   "reject #$ Reject": "رفض",
   "requestDetails #$ Request Details": "مراجعة الطلب",
   "addEmployee #$ Add Employee": "إضافة موظف",
@@ -223,5 +225,8 @@
   "invalid_file_type #$ Invalid file type": "يُسمح فقط بملفات PDF أو JPG أو JPEG أو PNG",
   "fill_required_fields #$ Fill required fields": "يرجى تعبئة جميع الحقول المطلوبة",
   "tap_to_add_document #$ Tap to add report image or document": "اضغط لإضافة صورة التقرير أو المستند",
-  "document_hint #$ Report image or document": "صورة التقرير أو المستند"
+  "document_hint #$ Report image or document": "صورة التقرير أو المستند",
+  "request_deleted_successfully #$ Request deleted successfully": "تم حذف طلب الإجازة بنجاح.",
+  "delete_request_failed #$ Failed to delete request": "فشل حذف الطلب",
+  "request_updated_successfully #$ Request updated successfully": "تم تحديث الطلب بنجاح"
 }

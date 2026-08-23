@@ -90,6 +90,8 @@
   "home_latest_requests": "الطلبات الأخيرة",
   "home_show_all": "عرض الكل",
   "orders": "الطلبات",
+  "orders_empty": "لا توجد طلبات",
+  "orders_duration": "المدة",
   "reject": "رفض",
   "request_details": "مراجعة الطلب",
   "add_employee": "إضافة موظف",
@@ -193,5 +195,8 @@
   "invalid_file_type": "يُسمح فقط بملفات PDF أو JPG أو JPEG أو PNG",
   "fill_required_fields": "يرجى تعبئة جميع الحقول المطلوبة",
   "tap_to_add_document": "اضغط لإضافة صورة التقرير أو المستند",
-  "document_hint": "صورة التقرير أو المستند"
+  "document_hint": "صورة التقرير أو المستند",
+  "request_deleted_successfully": "تم حذف طلب الإجازة بنجاح.",
+  "delete_request_failed": "فشل حذف الطلب",
+  "request_updated_successfully": "تم تحديث الطلب بنجاح"
 }

@@ -90,6 +90,8 @@
   "home_latest_requests": "Latest Requests",
   "home_show_all": "Show All",
   "orders": "Orders",
+  "orders_empty": "No orders",
+  "orders_duration": "Duration",
   "reject": "Reject",
   "request_details": "Request Details",
   "add_employee": "Add Employee",
@@ -193,5 +195,8 @@
   "invalid_file_type": "Invalid file type",
   "fill_required_fields": "Fill required fields",
   "tap_to_add_document": "Tap to add report image or document",
-  "document_hint": "Report image or document"
+  "document_hint": "Report image or document",
+  "request_deleted_successfully": "Request deleted successfully",
+  "delete_request_failed": "Failed to delete request",
+  "request_updated_successfully": "Request updated successfully"
 }

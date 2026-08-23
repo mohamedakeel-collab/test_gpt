@@ -1,50 +1,41 @@
 part of '../imports/orders_imports.dart';
 
+/// Filter tabs. Each tab maps to a `leave_type` query value through the
+/// [OrdersViewController] — switching a tab re-fetches the list from the
+/// cubit with that filter.
 class _OrdersTabs extends StatelessWidget {
-  const _OrdersTabs({required this.selectedTab});
+  const _OrdersTabs({required this.controller});
 
-  final ValueNotifier<int> selectedTab;
+  final OrdersViewController controller;
 
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<int>(
-      valueListenable: selectedTab,
+      valueListenable: controller.selectedTab,
       builder: (context, selected, _) {
         return Row(
           children: [
-
-
             Expanded(
               child: _OrderTab(
                 title: LocaleKeys.leaves,
-                active: selected == 1,
-                onTap: () {
-                  selectedTab.value = 1;
-                },
+                active: selected == 0,
+                onTap: () => controller.selectTab(0),
               ),
             ),
-
             8.szW,
-
             Expanded(
               child: _OrderTab(
                 title: LocaleKeys.permissions,
-                active: selected == 2,
-                onTap: () {
-                  selectedTab.value = 2;
-                },
+                active: selected == 1,
+                onTap: () => controller.selectTab(1),
               ),
             ),
-
             8.szW,
-
             Expanded(
               child: _OrderTab(
                 title: LocaleKeys.remote,
-                active: selected == 3,
-                onTap: () {
-                  selectedTab.value = 3;
-                },
+                active: selected == 2,
+                onTap: () => controller.selectTab(2),
               ),
             ),
           ],
@@ -69,24 +60,17 @@ class _OrderTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-
         padding: EdgeInsets.symmetric(vertical: AppPadding.pH8),
-
         decoration: BoxDecoration(
           color: active ? AppColors.primary : AppColors.white,
-
           borderRadius: BorderRadius.circular(AppCircular.r10),
-
           border: Border.all(color: AppColors.border),
         ),
-
         child: Text(
           title,
           textAlign: TextAlign.center,
-
           style: active
               ? const TextStyle().setBlackColor.s13.medium
               : const TextStyle().setMainTextColor.s13.medium,

@@ -9,4 +9,9 @@ abstract interface class NewRequestRepository {
   Future<Either<Failure, NewRequestResultEntity>> createRequest(
     CreateNewRequestParams params,
   );
+
+  Future<Either<Failure, NewRequestResultEntity>> updateRequest(
+    int id,
+    CreateNewRequestParams params,
+  );
 }

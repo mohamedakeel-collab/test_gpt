@@ -20,6 +20,7 @@ class NewRequestViewController {
   TimeOfDay? fromTime;
   TimeOfDay? toTime;
   File? file;
+  String? existingFileName;
 
   String get reason => reasonController.text.trim();
 
@@ -57,8 +58,44 @@ class NewRequestViewController {
     file = File(picked.path!);
   }
 
-  Future<void> submit(BuildContext context, NewRequestCubit cubit) async {
-    final isHourly = selectedRequestType.value == 1;
+  void prefillFromRequest(LeaveRequestEntity request) {
+    reasonController.text = request.reason;
+    selectedRequestType.value = requestTypeFromLeaveType(request.leaveType);
+    existingFileName = _fileNameFromUrl(request.file);
+
+    final parsedStart = _parseRequestDate(request.startDate);
+    final parsedEnd = _parseRequestDate(request.endDate);
+
+    if (selectedRequestType.value == 2) {
+      permissionDate = parsedStart;
+      if (parsedStart != null) {
+        fromTime = TimeOfDay(
+          hour: parsedStart.hour,
+          minute: parsedStart.minute,
+        );
+      }
+      if (parsedEnd != null) {
+        toTime = TimeOfDay(hour: parsedEnd.hour, minute: parsedEnd.minute);
+      }
+      return;
+    }
+
+    startDate = parsedStart;
+    endDate = parsedEnd;
+  }
+
+  Future<void> submit(
+    BuildContext context,
+    NewRequestCubit cubit, {
+    required RequestMode mode,
+    int? requestId,
+  }) async {
+    if (mode == RequestMode.edit && (requestId == null || requestId <= 0)) {
+      _showRequiredFieldsError(context);
+      return;
+    }
+
+    final isHourly = selectedRequestType.value == 2;
 
     DateTime start;
     DateTime end;
@@ -93,7 +130,7 @@ class NewRequestViewController {
       file: file,
     );
 
-    await cubit.submit(params);
+    await cubit.submit(mode: mode, requestId: requestId, params: params);
   }
 
   void _showRequiredFieldsError(BuildContext context) {
@@ -106,11 +143,11 @@ class NewRequestViewController {
   }
 
   String _leaveTypeFor(int index) => switch (index) {
-        1 => 'sick',
-        2 => 'permission',
-        3 => 'remote',
-        _ => 'leave',
-      };
+    1 => 'leave',
+    2 => 'permission',
+    3 => 'remote',
+    _ => 'leave',
+  };
 
   DateTime _withTime(
     DateTime date,
@@ -129,5 +166,25 @@ class NewRequestViewController {
   void dispose() {
     reasonController.dispose();
     selectedRequestType.dispose();
+  }
+
+  int requestTypeFromLeaveType(String leaveType) {
+    return switch (leaveType) {
+      'leave' => 1,
+      'permission' => 2,
+      'remote' => 3,
+      'sick' => 1,
+      _ => 1,
+    };
+  }
+
+  DateTime? _parseRequestDate(String? value) {
+    if (value == null || value.isEmpty) return null;
+    return DateTime.tryParse(value) ?? Helpers.parseArabicDate(value);
+  }
+
+  String? _fileNameFromUrl(String? value) {
+    if (value == null || value.isEmpty) return null;
+    return Uri.tryParse(value)?.pathSegments.lastOrNull ?? value;
   }
 }
