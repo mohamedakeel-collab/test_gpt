@@ -30,14 +30,14 @@ class LoginEntity extends Equatable {
   });
 
   factory LoginEntity.initial() => const LoginEntity(
-        message: '',
-        tokenType: '',
-        token: '',
-        id: 0,
-        email: '',
-        role: '',
-        image: '',
-      );
+    message: '',
+    tokenType: '',
+    token: '',
+    id: 0,
+    email: '',
+    role: '',
+    image: '',
+  );
 
   LoginEntity copyWith({
     String? message,
@@ -63,13 +63,13 @@ class LoginEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        message,
-        tokenType,
-        token,
-        id,
-        email,
-        role,
-        image,
-        employee,
-      ];
+    message,
+    tokenType,
+    token,
+    id,
+    email,
+    role,
+    image,
+    employee,
+  ];
 }

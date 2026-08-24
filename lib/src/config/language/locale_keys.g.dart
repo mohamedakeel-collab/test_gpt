@@ -49,30 +49,23 @@ abstract class LocaleKeys {
   static const String _blocked = 'blocked';
   static String get blocked => _blocked.tr();
 
-  static const String _dataUpdatingNowComeLater =
-      'data_updating_now_come_later';
+  static const String _dataUpdatingNowComeLater = 'data_updating_now_come_later';
   static String get dataUpdatingNowComeLater => _dataUpdatingNowComeLater.tr();
 
-  static const String _errorExceptionNoconnection =
-      'error_exception_noconnection';
-  static String get errorExceptionNoconnection =>
-      _errorExceptionNoconnection.tr();
+  static const String _errorExceptionNoconnection = 'error_exception_noconnection';
+  static String get errorExceptionNoconnection => _errorExceptionNoconnection.tr();
 
   static const String _errorExceptionNotContain = 'error_exception_not_contain';
   static String get errorExceptionNotContain => _errorExceptionNotContain.tr();
 
-  static const String _errorexceptionNotcontaindesc =
-      'errorexception_notcontaindesc';
-  static String get errorexceptionNotcontaindesc =>
-      _errorexceptionNotcontaindesc.tr();
+  static const String _errorexceptionNotcontaindesc = 'errorexception_notcontaindesc';
+  static String get errorexceptionNotcontaindesc => _errorexceptionNotcontaindesc.tr();
 
   static const String _exceptionError = 'exception_error';
   static String get exceptionError => _exceptionError.tr();
 
-  static const String _internetConnectionRestored =
-      'internet_connection_restored';
-  static String get internetConnectionRestored =>
-      _internetConnectionRestored.tr();
+  static const String _internetConnectionRestored = 'internet_connection_restored';
+  static String get internetConnectionRestored => _internetConnectionRestored.tr();
 
   static const String _confirmValidation = 'confirm_validation';
   static String get confirmValidation => _confirmValidation.tr();
@@ -255,8 +248,7 @@ abstract class LocaleKeys {
   static String get balanceDays => _balanceDays.tr();
 
   static const String _balanceTitle = 'balance_title';
-  static String balanceTitle({required String count}) =>
-      _balanceTitle.tr(namedArgs: {'count': count});
+  static String balanceTitle({required String count}) => _balanceTitle.tr(namedArgs: {'count': count});
 
   static const String _homeWelcome = 'home_welcome';
   static String get homeWelcome => _homeWelcome.tr();
@@ -406,8 +398,7 @@ abstract class LocaleKeys {
   static String get chooseLanguage => _chooseLanguage.tr();
 
   static const String _homePendingRequests = 'home_pending_requests';
-  static String homePendingRequests({required String count}) =>
-      _homePendingRequests.tr(namedArgs: {'count': count});
+  static String homePendingRequests({required String count}) => _homePendingRequests.tr(namedArgs: {'count': count});
 
   static const String _english = 'english';
   static String get english => _english.tr();
@@ -574,10 +565,8 @@ abstract class LocaleKeys {
   static const String _loginTitle = 'login_title';
   static String get loginTitle => _loginTitle.tr();
 
-  static const String _requestSubmittedSuccessfully =
-      'request_submitted_successfully';
-  static String get requestSubmittedSuccessfully =>
-      _requestSubmittedSuccessfully.tr();
+  static const String _requestSubmittedSuccessfully = 'request_submitted_successfully';
+  static String get requestSubmittedSuccessfully => _requestSubmittedSuccessfully.tr();
 
   static const String _submitRequest = 'submit_request';
   static String get submitRequest => _submitRequest.tr();
@@ -600,16 +589,82 @@ abstract class LocaleKeys {
   static const String _documentHint = 'document_hint';
   static String get documentHint => _documentHint.tr();
 
-  static const String _requestDeletedSuccessfully =
-      'request_deleted_successfully';
-  static String get requestDeletedSuccessfully =>
-      _requestDeletedSuccessfully.tr();
+  static const String _requestDeletedSuccessfully = 'request_deleted_successfully';
+  static String get requestDeletedSuccessfully => _requestDeletedSuccessfully.tr();
 
   static const String _deleteRequestFailed = 'delete_request_failed';
   static String get deleteRequestFailed => _deleteRequestFailed.tr();
 
-  static const String _requestUpdatedSuccessfully =
-      'request_updated_successfully';
-  static String get requestUpdatedSuccessfully =>
-      _requestUpdatedSuccessfully.tr();
+  static const String _requestUpdatedSuccessfully = 'request_updated_successfully';
+  static String get requestUpdatedSuccessfully => _requestUpdatedSuccessfully.tr();
+
+  static const String _noAttachment = 'no_attachment';
+  static String get noAttachment => _noAttachment.tr();
+
+  static const String _attachments = 'attachments';
+  static String get attachments => _attachments.tr();
+
+  static const String _noComments = 'no_comments';
+  static String get noComments => _noComments.tr();
+
+  static const String _approveRequest = 'approve_request';
+  static String get approveRequest => _approveRequest.tr();
+
+  static const String _rejectRequest = 'reject_request';
+  static String get rejectRequest => _rejectRequest.tr();
+
+  static const String _status = 'status';
+  static String get status => _status.tr();
+
+  static const String _submittedAt = 'submitted_at';
+  static String get submittedAt => _submittedAt.tr();
+
+  static const String _notes = 'notes';
+  static String get notes => _notes.tr();
+
+  static const String _profile = 'profile';
+  static String get profile => _profile.tr();
+
+  static const String _team = 'team';
+  static String get team => _team.tr();
+
+  static const String _leaveBalance = 'leave_balance';
+  static String get leaveBalance => _leaveBalance.tr();
+
+  static const String _permissionHours = 'permission_hours';
+  static String get permissionHours => _permissionHours.tr();
+
+  static const String _role = 'role';
+  static String get role => _role.tr();
+
+  static const String _attendanceHistory = 'attendance_history';
+  static String get attendanceHistory => _attendanceHistory.tr();
+
+  static const String _checkIn = 'check_in';
+  static String get checkIn => _checkIn.tr();
+
+  static const String _checkOut = 'check_out';
+  static String get checkOut => _checkOut.tr();
+
+  static const String _duration = 'duration';
+  static String get duration => _duration.tr();
+
+  static const String _present = 'present';
+  static String get present => _present.tr();
+
+  static const String _late = 'late';
+  static String get late => _late.tr();
+
+  static const String _absent = 'absent';
+  static String get absent => _absent.tr();
+
+  static const String _leave = 'leave';
+  static String get leave => _leave.tr();
+
+  static const String _startWork = 'start_work';
+  static String get startWork => _startWork.tr();
+
+  static const String _noAttendanceRecords = 'no_attendance_records';
+  static String get noAttendanceRecords => _noAttendanceRecords.tr();
+
 }

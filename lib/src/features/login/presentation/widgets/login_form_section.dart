@@ -99,26 +99,23 @@ class _LoginFormSecState extends State<_LoginFormSec> with FormMixin {
               ),
             ),
             8.szH,
-            Center(child: LoadingButton(
-              color: AppColors.primary,
-              textColor: AppColors.splashBackground,
-              title: LocaleKeys.login,
-              onTap: () => _submit(context),
-            ),)
-            ,
+            Center(
+              child: LoadingButton(
+                color: AppColors.primary,
+                textColor: AppColors.splashBackground,
+                title: LocaleKeys.login,
+                onTap: () => _submit(context),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-
   Future<void> _submit(BuildContext context) async {
     if (!validateAndScroll()) return;
     final cubit = context.read<LoginCubit>();
-    await cubit.login(
-      login: widget.vc.login,
-      password: widget.vc.password,
-    );
+    await cubit.login(login: widget.vc.login, password: widget.vc.password);
   }
 }

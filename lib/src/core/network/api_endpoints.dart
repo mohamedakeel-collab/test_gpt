@@ -17,6 +17,7 @@ class ApiEndpoints {
   static const String register = 'auth/register';
   static const String refreshToken = 'auth/refresh-token';
   static const String logout = 'auth/logout';
+  static const String profile = 'auth/me';
   static const String forgotPassword = 'auth/forgot-password';
   static const String resetPassword = 'auth/reset-password';
 
@@ -33,9 +34,13 @@ class ApiEndpoints {
   // Home dashboard
   static const String home = 'home';
 
+  // Attendance
+  static const String myAttendance = 'me/attendance';
+
   // Leave requests
   static const String storeLeaveRequest = 'leave-requests/store';
   static const String myLeaveRequests = 'me/leave-requests';
+  static String leaveRequestDetails(int id) => 'leave-requests/$id';
   static String updateLeaveRequest(int id) => 'leave-requests/$id';
   static String deleteLeaveRequest(int id) => 'leave-requests/$id';
 }

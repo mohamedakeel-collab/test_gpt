@@ -1,13 +1,10 @@
-
-
 part of '../imports/login_imports.dart';
 
 class LanguageSelectionSheet extends StatefulWidget {
   const LanguageSelectionSheet({super.key});
 
   @override
-  State<LanguageSelectionSheet> createState() =>
-      _LanguageSelectionSheetState();
+  State<LanguageSelectionSheet> createState() => _LanguageSelectionSheetState();
 }
 
 class _LanguageSelectionSheetState extends State<LanguageSelectionSheet> {
@@ -24,7 +21,6 @@ class _LanguageSelectionSheetState extends State<LanguageSelectionSheet> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -109,18 +105,17 @@ class _LanguageSelectionSheetState extends State<LanguageSelectionSheet> {
                         ),
                         child: isSelected
                             ? Center(
-                          child: Container(
-                            width: 11.w,
-                            height: 11.h,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: AppColors.brandSurface,
-                            ),
-                          ),
-                        )
+                                child: Container(
+                                  width: 11.w,
+                                  height: 11.h,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColors.brandSurface,
+                                  ),
+                                ),
+                              )
                             : null,
                       ),
-
                     ],
                   ),
                 ),
@@ -133,9 +128,10 @@ class _LanguageSelectionSheetState extends State<LanguageSelectionSheet> {
             textColor: AppColors.splashBackground,
             fontSize: FontSizeManager.s16,
             title: LocaleKeys.confirm,
-            onTap: () async {Go.to(HomeScreen());},
+            onTap: () async {
+              Go.to(HomeScreen());
+            },
           ),
-
         ],
       ),
     );

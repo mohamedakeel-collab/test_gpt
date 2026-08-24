@@ -16,6 +16,7 @@ class EmployeeEntity extends Equatable {
   final int? teamId;
   final int? managerId;
   final int remainingLeaveBalance;
+  final int leaveBalance;
   final DateTime? balanceExpiration;
   final int permissionHours;
   final DepartmentEntity? department;
@@ -31,6 +32,7 @@ class EmployeeEntity extends Equatable {
     this.teamId,
     this.managerId,
     this.remainingLeaveBalance = 0,
+    this.leaveBalance = 0,
     this.balanceExpiration,
     this.permissionHours = 0,
     this.department,
@@ -38,12 +40,8 @@ class EmployeeEntity extends Equatable {
     this.manager,
   });
 
-  factory EmployeeEntity.initial() => const EmployeeEntity(
-        id: 0,
-        fullName: '',
-        phone: '',
-        position: '',
-      );
+  factory EmployeeEntity.initial() =>
+      const EmployeeEntity(id: 0, fullName: '', phone: '', position: '');
 
   EmployeeEntity copyWith({
     int? id,
@@ -54,6 +52,7 @@ class EmployeeEntity extends Equatable {
     int? teamId,
     int? managerId,
     int? remainingLeaveBalance,
+    int? leaveBalance,
     DateTime? balanceExpiration,
     int? permissionHours,
     DepartmentEntity? department,
@@ -68,7 +67,9 @@ class EmployeeEntity extends Equatable {
       departmentId: departmentId ?? this.departmentId,
       teamId: teamId ?? this.teamId,
       managerId: managerId ?? this.managerId,
-      remainingLeaveBalance: remainingLeaveBalance ?? this.remainingLeaveBalance,
+      remainingLeaveBalance:
+          remainingLeaveBalance ?? this.remainingLeaveBalance,
+      leaveBalance: leaveBalance ?? this.leaveBalance,
       balanceExpiration: balanceExpiration ?? this.balanceExpiration,
       permissionHours: permissionHours ?? this.permissionHours,
       department: department ?? this.department,
@@ -79,18 +80,19 @@ class EmployeeEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        fullName,
-        phone,
-        position,
-        departmentId,
-        teamId,
-        managerId,
-        remainingLeaveBalance,
-        balanceExpiration,
-        permissionHours,
-        department,
-        team,
-        manager,
-      ];
+    id,
+    fullName,
+    phone,
+    position,
+    departmentId,
+    teamId,
+    managerId,
+    remainingLeaveBalance,
+    leaveBalance,
+    balanceExpiration,
+    permissionHours,
+    department,
+    team,
+    manager,
+  ];
 }

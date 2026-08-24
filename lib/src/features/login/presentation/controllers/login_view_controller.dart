@@ -22,5 +22,3 @@ class LoginViewController {
     passwordController.dispose();
   }
 }
-
-

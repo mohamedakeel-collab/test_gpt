@@ -13,56 +13,48 @@ import '../models/team_model.dart';
 /// imports it; the data source uses `.toEntity()` before returning.
 extension LoginModelMapper on LoginModel {
   LoginEntity toEntity() => LoginEntity(
-        message: message,
-        tokenType: tokenType,
-        token: token,
-        id: id,
-        email: email,
-        role: role,
-        image: image,
-        employee: employee?.toEntity(),
-      );
+    message: message,
+    tokenType: tokenType,
+    token: token,
+    id: id,
+    email: email,
+    role: role,
+    image: image,
+    employee: employee?.toEntity(),
+  );
 }
 
 extension EmployeeModelMapper on EmployeeModel {
   EmployeeEntity toEntity() => EmployeeEntity(
-        id: id,
-        fullName: fullName,
-        phone: phone,
-        position: position,
-        departmentId: departmentId,
-        teamId: teamId,
-        managerId: managerId,
-        remainingLeaveBalance: remainingLeaveBalance,
-        balanceExpiration: balanceExpiration,
-        permissionHours: permissionHours,
-        department: department?.toEntity(),
-        team: team?.toEntity(),
-        manager: manager?.toEntity(),
-      );
+    id: id,
+    fullName: fullName,
+    phone: phone,
+    position: position,
+    departmentId: departmentId,
+    teamId: teamId,
+    managerId: managerId,
+    remainingLeaveBalance: remainingLeaveBalance,
+    leaveBalance: leaveBalance,
+    balanceExpiration: balanceExpiration,
+    permissionHours: permissionHours,
+    department: department?.toEntity(),
+    team: team?.toEntity(),
+    manager: manager?.toEntity(),
+  );
 }
 
 extension DepartmentModelMapper on DepartmentModel {
-  DepartmentEntity toEntity() => DepartmentEntity(
-        id: id,
-        name: name,
-        managerId: managerId,
-      );
+  DepartmentEntity toEntity() =>
+      DepartmentEntity(id: id, name: name, managerId: managerId);
 }
 
 extension TeamModelMapper on TeamModel {
-  TeamEntity toEntity() => TeamEntity(
-        id: id,
-        teamName: teamName,
-        leadId: leadId,
-      );
+  TeamEntity toEntity() =>
+      TeamEntity(id: id, teamName: teamName, leadId: leadId);
 }
 
-
 extension LoginEntityMapper on LoginEntity {
-
   UserModel toUserModel() {
-
     return UserModel(
       id: id.toString(),
       image: image,
@@ -81,25 +73,23 @@ extension LoginEntityMapper on LoginEntity {
 
       department: employee?.department != null
           ? DepartmentModel(
-        id: employee!.department!.id,
-        name: employee!.department!.name,
-        managerId: employee!.department!.managerId,
-      )
+              id: employee!.department!.id,
+              name: employee!.department!.name,
+              managerId: employee!.department!.managerId,
+            )
           : null,
 
       team: employee?.team != null
           ? TeamModel(
-        id: employee!.team!.id,
-        teamName: employee!.team!.teamName,
-        leadId: employee!.team!.leadId,
-      )
+              id: employee!.team!.id,
+              teamName: employee!.team!.teamName,
+              leadId: employee!.team!.leadId,
+            )
           : null,
 
-      remainingLeaveBalance:
-      employee?.remainingLeaveBalance ?? 0,
+      remainingLeaveBalance: employee?.remainingLeaveBalance ?? 0,
 
-      permissionHours:
-      employee?.permissionHours ?? 0,
+      permissionHours: employee?.permissionHours ?? 0,
 
       allowNotify: false,
 
@@ -107,9 +97,8 @@ extension LoginEntityMapper on LoginEntity {
     );
   }
 
-
   int _mapRole(String role) {
-    switch(role.toLowerCase()) {
+    switch (role.toLowerCase()) {
       case 'manager':
         return 2;
 

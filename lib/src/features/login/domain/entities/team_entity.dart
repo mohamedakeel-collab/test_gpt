@@ -9,22 +9,11 @@ class TeamEntity extends Equatable {
   final String teamName;
   final int? leadId;
 
-  const TeamEntity({
-    required this.id,
-    required this.teamName,
-    this.leadId,
-  });
+  const TeamEntity({required this.id, required this.teamName, this.leadId});
 
-  factory TeamEntity.initial() => const TeamEntity(
-        id: 0,
-        teamName: '',
-      );
+  factory TeamEntity.initial() => const TeamEntity(id: 0, teamName: '');
 
-  TeamEntity copyWith({
-    int? id,
-    String? teamName,
-    int? leadId,
-  }) {
+  TeamEntity copyWith({int? id, String? teamName, int? leadId}) {
     return TeamEntity(
       id: id ?? this.id,
       teamName: teamName ?? this.teamName,

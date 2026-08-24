@@ -12,6 +12,7 @@ class EmployeeModel {
   final int? teamId;
   final int? managerId;
   final int remainingLeaveBalance;
+  final int leaveBalance;
   final DateTime? balanceExpiration;
   final int permissionHours;
   final DepartmentModel? department;
@@ -27,6 +28,7 @@ class EmployeeModel {
     this.teamId,
     this.managerId,
     this.remainingLeaveBalance = 0,
+    this.leaveBalance = 0,
     this.balanceExpiration,
     this.permissionHours = 0,
     this.department,
@@ -35,18 +37,19 @@ class EmployeeModel {
   });
 
   factory EmployeeModel.fromJson(Map<String, dynamic> json) => EmployeeModel(
-        id: json.getInt('id'),
-        fullName: json.getString('full_name'),
-        phone: json.getString('phone'),
-        position: json.getString('position'),
-        departmentId: json.getIntOrNull('department_id'),
-        teamId: json.getIntOrNull('team_id'),
-        managerId: json.getIntOrNull('manager_id'),
-        remainingLeaveBalance: json.getInt('remaining_leave_balance'),
-        balanceExpiration: json.getDateTime('balance_expiration'),
-        permissionHours: json.getInt('permission_hours'),
-        department: json.getObject('department', DepartmentModel.fromJson),
-        team: json.getObject('team', TeamModel.fromJson),
-        manager: json.getObject('manager', EmployeeModel.fromJson),
-      );
+    id: json.getInt('id'),
+    fullName: json.getString('full_name'),
+    phone: json.getString('phone'),
+    position: json.getString('position'),
+    departmentId: json.getIntOrNull('department_id'),
+    teamId: json.getIntOrNull('team_id'),
+    managerId: json.getIntOrNull('manager_id'),
+    remainingLeaveBalance: json.getInt('remaining_leave_balance'),
+    leaveBalance: json.getInt('leave_balance'),
+    balanceExpiration: json.getDateTime('balance_expiration'),
+    permissionHours: json.getInt('permission_hours'),
+    department: json.getObject('department', DepartmentModel.fromJson,),
+    team: json.getObject('team', TeamModel.fromJson),
+    manager: json.getObject('manager', EmployeeModel.fromJson),
+  );
 }

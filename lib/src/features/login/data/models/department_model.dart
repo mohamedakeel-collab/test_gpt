@@ -8,10 +8,17 @@ class DepartmentModel {
 
   const DepartmentModel({required this.id, required this.name, this.managerId});
 
-  factory DepartmentModel.fromJson(Map<String, dynamic> json) =>
+  factory DepartmentModel.fromJson(
+      Map<String, dynamic> json, [
+        String? lang,
+      ]) =>
       DepartmentModel(
         id: json.getInt('id'),
-        name: json.getString('name'),
+
+        name: lang == 'ar'
+            ? json.getString('name_ar')
+            : json.getString('name_en'),
+
         managerId: json.getIntOrNull('manager_id'),
       );
 

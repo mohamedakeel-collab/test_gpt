@@ -25,24 +25,18 @@ class _ProfileBalanceCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title, style: const TextStyle().setWhiteColor.s12.regular),
-
           10.szH,
-
           Row(
             children: [
               Text(value, style: const TextStyle().setPrimaryColor.s28.bold),
-
               8.szW,
-
               Text(
                 sub,
                 textAlign: TextAlign.start,
                 style: const TextStyle().setWhiteColor.s12.regular,
               ),
-
               if (isPermission) ...[
                 const Spacer(),
-
                 Icon(
                   Icons.access_time_outlined,
                   color: AppColors.primary,

@@ -1,68 +1,159 @@
 part of '../imports/remote_work_imports.dart';
 
-class _RemoteTimerCard extends StatelessWidget {
-  const _RemoteTimerCard();
+class _RemoteTimerCard extends StatefulWidget {
+  const _RemoteTimerCard({required this.record});
+
+  final AttendanceEntity? record;
+
+  @override
+  State<_RemoteTimerCard> createState() => _RemoteTimerCardState();
+}
+
+class _RemoteTimerCardState extends State<_RemoteTimerCard> {
+  Timer? _timer;
+  static DateTime? _startedAt;
+
+  static bool _isWorking = false;
+
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (_isWorking) {
+      _startTimer();
+    }
+  }
+
+
+  void _startTimer() {
+    _timer?.cancel();
+
+    _timer = Timer.periodic(
+      const Duration(seconds: 1),
+          (_) {
+        if (!mounted) return;
+
+        setState(() {});
+      },
+    );
+  }
+
+
+  void _startWork() {
+    setState(() {
+      _isWorking = true;
+      _startedAt = DateTime.now();
+    });
+
+    _startTimer();
+  }
+
+
+  void _endWork() {
+    _timer?.cancel();
+
+    setState(() {
+      _isWorking = false;
+      _startedAt = null;
+    });
+  }
+
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+
+  String get elapsedText {
+
+    if (!_isWorking || _startedAt == null) {
+      return '00:00:00';
+    }
+
+
+    final elapsed =
+    DateTime.now().difference(
+      _startedAt!,
+    );
+
+
+    final hours =
+    elapsed.inHours
+        .toString()
+        .padLeft(2, '0');
+
+
+    final minutes =
+    (elapsed.inMinutes % 60)
+        .toString()
+        .padLeft(2, '0');
+
+
+    final seconds =
+    (elapsed.inSeconds % 60)
+        .toString()
+        .padLeft(2, '0');
+
+
+    return '$hours:$minutes:$seconds';
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: AppSize.sW260,
-      height: AppSize.sH260,
+    final record = widget.record;
 
-      padding: EdgeInsets.all(AppPadding.pH8),
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(AppPadding.pH16),
 
       decoration: BoxDecoration(
-        shape: BoxShape.circle,
-
-        border: Border.all(color: AppColors.border, width: 6),
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(AppCircular.r12),
+        border: Border.all(color: AppColors.border),
       ),
 
-      child: Container(
-        padding: EdgeInsets.all(AppPadding.pH6),
+      child: Column(
+        children: [
+          Text(
+            record == null
+                ? LocaleKeys.remoteWork
+                : LocaleKeys.workingRemotelyNow,
 
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-
-          border: Border.all(color: AppColors.primary, width: 3),
-        ),
-
-        child: Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-
-            color: AppColors.splashBackground,
+            style: const TextStyle().setLabelColor.s12.medium,
           ),
 
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          20.szH,
 
-            children: [
-              Icon(
-                Icons.laptop_mac,
+          Text(
+            _isWorking ? elapsedText : '00:00:00',
 
-                color: AppColors.primary,
-
-                size: AppSize.sH45,
-              ),
-
-              12.szH,
-
-              Text(
-                '02:35:19',
-
-                style: const TextStyle().setPrimaryColor.s40.bold,
-              ),
-
-              8.szH,
-
-              Text(
-                'وقت البدء: 09:00 ص',
-
-                style: const TextStyle().setWhiteColor.s16.regular,
-              ),
-            ],
+            style: const TextStyle().setBrandSurfaceColor.s40.bold,
           ),
-        ),
+          20.szH,
+          Center(
+            child: LoadingButton(
+              color: AppColors.primary,
+              textColor: AppColors.splashBackground,
+
+              title: _isWorking
+                  ? LocaleKeys.endWork
+                  : LocaleKeys.startWork,
+
+              onTap: () async {
+
+                if (_isWorking) {
+                  _endWork();
+                } else {
+                  _startWork();
+                }
+
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

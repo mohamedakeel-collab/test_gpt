@@ -15,16 +15,9 @@ class DepartmentEntity extends Equatable {
     this.managerId,
   });
 
-  factory DepartmentEntity.initial() => const DepartmentEntity(
-        id: 0,
-        name: '',
-      );
+  factory DepartmentEntity.initial() => const DepartmentEntity(id: 0, name: '');
 
-  DepartmentEntity copyWith({
-    int? id,
-    String? name,
-    int? managerId,
-  }) {
+  DepartmentEntity copyWith({int? id, String? name, int? managerId}) {
     return DepartmentEntity(
       id: id ?? this.id,
       name: name ?? this.name,
@@ -34,5 +27,4 @@ class DepartmentEntity extends Equatable {
 
   @override
   List<Object?> get props => [id, name, managerId];
-
 }

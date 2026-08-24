@@ -21,6 +21,5 @@ class LoginRepositoryImpl implements LoginRepository {
   Future<Either<Failure, LoginEntity>> login({
     required String login,
     required String password,
-  }) =>
-      _remote.login(login: login, password: password);
+  }) => _remote.login(login: login, password: password);
 }

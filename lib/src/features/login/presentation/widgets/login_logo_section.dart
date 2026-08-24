@@ -5,14 +5,14 @@ class _LoginLogoSec extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Container(
+    return Container(
       height: 330.h,
       width: 1.sw,
       color: AppColors.splashBackground,
       child: Center(
         child: AppAssets.svg.baseSvg.logoLogin.image(
-            height: 150.h,
-            width: 150.w
+          height: 150.h,
+          width: 150.w,
         ),
       ),
     );

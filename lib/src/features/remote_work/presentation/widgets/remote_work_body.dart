@@ -1,44 +1,34 @@
 part of '../imports/remote_work_imports.dart';
 
 class _RemoteWorkBody extends StatelessWidget {
-  const _RemoteWorkBody();
+  const _RemoteWorkBody({required this.controller});
+
+  final RemoteWorkViewController controller;
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-
-        children: [
-          16.szH,
-
-          const _RemoteWorkStatusCard(),
-
-          20.szH,
-
-          Text(
-            LocaleKeys.remoteWorkHistory,
-
-            style: const TextStyle().setMainTextColor.s16.bold,
+    return AsyncBlocBuilder<AttendanceCubit, List<AttendanceEntity>>(
+      onRetry: () => context.read<AttendanceCubit>().getAttendance(),
+      builder: (context, records) {
+        return RefreshIndicator(
+          onRefresh: () => context.read<AttendanceCubit>().getAttendance(),
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                16.szH,
+                _RemoteTimerCard(record: controller.activeRecord(records)),
+                20.szH,
+                _AttendanceHistorySection(
+                  records: records,
+                  controller: controller,
+                ),
+              ],
+            ).paddingSymmetric(horizontal: AppPadding.pH16),
           ),
-
-          12.szH,
-
-          const _RemoteHistoryCard(
-            date: 'الأمس، 14 أكتوبر',
-            time: '09:00 ص - 05:00 م',
-            duration: '8س',
-          ),
-
-          12.szH,
-
-          const _RemoteHistoryCard(
-            date: 'الأحد، 12 أكتوبر',
-            time: '09:15 ص - 05:30 م',
-            duration: '8س 15د',
-          ),
-        ],
-      ).paddingSymmetric(horizontal: AppPadding.pH16),
+        );
+      },
     );
   }
 }

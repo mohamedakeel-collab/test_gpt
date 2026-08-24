@@ -92,6 +92,7 @@ class UserModel {
           ? DepartmentModel.fromJson(
         employee!['department']
         as Map<String, dynamic>,
+          json['lang']
       )
           : null,
 

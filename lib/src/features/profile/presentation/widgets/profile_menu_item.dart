@@ -11,19 +11,13 @@ class _ProfileMenuItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: onTap,
-
       contentPadding: EdgeInsets.zero,
-
       leading: IconWidget(icon: icon, height: AppSize.sH22),
-
       title: Text(
         title,
-
-        textAlign: TextAlign.right,
-
+        textAlign: TextAlign.start,
         style: const TextStyle().setMainTextColor.s14.medium,
       ),
-
       trailing: Icon(Icons.arrow_forward_ios_rounded, size: AppSize.sH14),
     );
   }
