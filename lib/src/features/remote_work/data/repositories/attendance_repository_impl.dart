@@ -20,4 +20,16 @@ class AttendanceRepositoryImpl implements AttendanceRepository {
       (records) => records.map((record) => record.toEntity()).toList(),
     );
   }
+
+  @override
+  Future<Either<Failure, AttendanceEntity>> checkIn() async {
+    final result = await _remote.checkIn();
+    return result.map((record) => record.toEntity());
+  }
+
+  @override
+  Future<Either<Failure, AttendanceEntity>> checkOut() async {
+    final result = await _remote.checkOut();
+    return result.map((record) => record.toEntity());
+  }
 }

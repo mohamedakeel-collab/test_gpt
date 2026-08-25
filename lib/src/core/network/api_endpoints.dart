@@ -34,8 +34,13 @@ class ApiEndpoints {
   // Home dashboard
   static const String home = 'home';
 
+  // Notifications
+  static const String notifications = 'notifications';
+
   // Attendance
   static const String myAttendance = 'me/attendance';
+  static const String checkIn = 'attendance/check-in';
+  static const String checkOut = 'attendance/check-out';
 
   // Leave requests
   static const String storeLeaveRequest = 'leave-requests/store';

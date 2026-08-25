@@ -9,6 +9,10 @@ import '../models/attendance_model.dart';
 
 abstract interface class AttendanceRemoteDataSource {
   Future<Either<Failure, List<AttendanceModel>>> getAttendance();
+
+  Future<Either<Failure, AttendanceModel>> checkIn();
+
+  Future<Either<Failure, AttendanceModel>> checkOut();
 }
 
 @LazySingleton(as: AttendanceRemoteDataSource)
@@ -25,6 +29,24 @@ class AttendanceRemoteDataSourceImpl extends BaseRemoteSource
     );
   }
 
+  @override
+  Future<Either<Failure, AttendanceModel>> checkIn() {
+    return request<AttendanceModel>(
+      method: HttpMethod.post,
+      endpoint: ApiEndpoints.checkIn,
+      fromJson: _parseAttendanceRecord,
+    );
+  }
+
+  @override
+  Future<Either<Failure, AttendanceModel>> checkOut() {
+    return request<AttendanceModel>(
+      method: HttpMethod.post,
+      endpoint: ApiEndpoints.checkOut,
+      fromJson: _parseAttendanceRecord,
+    );
+  }
+
   static List<AttendanceModel> _parseAttendance(dynamic json) {
     final list = json is Map
         ? json['data'] as List?
@@ -35,5 +57,12 @@ class AttendanceRemoteDataSourceImpl extends BaseRemoteSource
         .whereType<Map<String, dynamic>>()
         .map(AttendanceModel.fromJson)
         .toList();
+  }
+
+  static AttendanceModel _parseAttendanceRecord(dynamic json) {
+    final data = json is Map<String, dynamic>
+        ? (json['data'] ?? json) as Map<String, dynamic>
+        : <String, dynamic>{};
+    return AttendanceModel.fromJson(data);
   }
 }

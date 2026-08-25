@@ -15,7 +15,7 @@ class _RemoteWorkScreenState extends State<RemoteWorkScreen> {
   void initState() {
     super.initState();
     _cubit = injector<AttendanceCubit>()..getAttendance();
-    _controller = const RemoteWorkViewController();
+    _controller =  RemoteWorkViewController();
   }
 
   @override

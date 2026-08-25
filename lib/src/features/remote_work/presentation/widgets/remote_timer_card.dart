@@ -1,9 +1,11 @@
 part of '../imports/remote_work_imports.dart';
 
 class _RemoteTimerCard extends StatefulWidget {
-  const _RemoteTimerCard({required this.record});
+  const _RemoteTimerCard({required this.record, required this.controller});
 
   final AttendanceEntity? record;
+
+  final RemoteWorkViewController controller;
 
   @override
   State<_RemoteTimerCard> createState() => _RemoteTimerCardState();
@@ -11,116 +13,89 @@ class _RemoteTimerCard extends StatefulWidget {
 
 class _RemoteTimerCardState extends State<_RemoteTimerCard> {
   Timer? _timer;
-  static DateTime? _startedAt;
 
-  static bool _isWorking = false;
-
+  bool get isWorking => widget.controller.startedAt != null;
 
   @override
   void initState() {
     super.initState();
 
-    if (_isWorking) {
-      _startTimer();
-    }
+    _loadStartTime();
   }
 
+  Future<void> _loadStartTime() async {
+    await widget.controller.init();
+
+    if (widget.controller.startedAt != null) {
+      _startTimer();
+
+      setState(() {});
+    }
+  }
 
   void _startTimer() {
     _timer?.cancel();
 
-    _timer = Timer.periodic(
-      const Duration(seconds: 1),
-          (_) {
-        if (!mounted) return;
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (!mounted) return;
 
-        setState(() {});
-      },
-    );
-  }
-
-
-  void _startWork() {
-    setState(() {
-      _isWorking = true;
-      _startedAt = DateTime.now();
-    });
-
-    _startTimer();
-  }
-
-
-  void _endWork() {
-    _timer?.cancel();
-
-    setState(() {
-      _isWorking = false;
-      _startedAt = null;
+      setState(() {});
     });
   }
 
+  Future<void> _startWork() async {
+    final cubit = context.read<AttendanceCubit>();
 
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
+    final result = await cubit.checkIn();
+
+    result.fold((failure) {}, (_) async {
+      final now = DateTime.now();
+
+      await RemoteWorkStorage.saveStartTime(now);
+
+      widget.controller.setStartTime(now);
+
+      _startTimer();
+
+      setState(() {});
+    });
   }
 
+  Future<void> _endWork() async {
+    final cubit = context.read<AttendanceCubit>();
 
-  String get elapsedText {
+    final result = await cubit.checkOut();
 
-    if (!_isWorking || _startedAt == null) {
-      return '00:00:00';
-    }
+    result.fold((failure) {}, (_) async {
+      await RemoteWorkStorage.clearStartTime();
 
+      widget.controller.clearStartTime();
 
-    final elapsed =
-    DateTime.now().difference(
-      _startedAt!,
-    );
+      _timer?.cancel();
 
-
-    final hours =
-    elapsed.inHours
-        .toString()
-        .padLeft(2, '0');
-
-
-    final minutes =
-    (elapsed.inMinutes % 60)
-        .toString()
-        .padLeft(2, '0');
-
-
-    final seconds =
-    (elapsed.inSeconds % 60)
-        .toString()
-        .padLeft(2, '0');
-
-
-    return '$hours:$minutes:$seconds';
+      setState(() {});
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final record = widget.record;
-
     return Container(
       width: double.infinity,
+
       padding: EdgeInsets.all(AppPadding.pH16),
 
       decoration: BoxDecoration(
         color: AppColors.white,
+
         borderRadius: BorderRadius.circular(AppCircular.r12),
+
         border: Border.all(color: AppColors.border),
       ),
 
       child: Column(
         children: [
           Text(
-            record == null
-                ? LocaleKeys.remoteWork
-                : LocaleKeys.workingRemotelyNow,
+            isWorking ? LocaleKeys.workingRemotelyNow : LocaleKeys.remoteWork,
 
             style: const TextStyle().setLabelColor.s12.medium,
           ),
@@ -128,33 +103,37 @@ class _RemoteTimerCardState extends State<_RemoteTimerCard> {
           20.szH,
 
           Text(
-            _isWorking ? elapsedText : '00:00:00',
+            widget.controller.elapsedLabel(),
 
             style: const TextStyle().setBrandSurfaceColor.s40.bold,
           ),
+
           20.szH,
-          Center(
-            child: LoadingButton(
-              color: AppColors.primary,
-              textColor: AppColors.splashBackground,
 
-              title: _isWorking
-                  ? LocaleKeys.endWork
-                  : LocaleKeys.startWork,
+          LoadingButton(
+            color: AppColors.primary,
 
-              onTap: () async {
+            textColor: AppColors.splashBackground,
 
-                if (_isWorking) {
-                  _endWork();
-                } else {
-                  _startWork();
-                }
+            title: isWorking ? LocaleKeys.endWork : LocaleKeys.startWork,
 
-              },
-            ),
+            onTap: () async {
+              if (isWorking) {
+                await _endWork();
+              } else {
+                await _startWork();
+              }
+            },
           ),
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+
+    super.dispose();
   }
 }

@@ -25,6 +25,7 @@
 
   "confirm_validation #$ Passwords do not match": "كلمات المرور غير متطابقة",
   "filed_validation #$ Please enter": "الرجاء إدخال",
+  "lang #$ lang": "اللغة",
   "fill_field #$ This field is required": "هذا الحقل مطلوب",
   "mail_validation #$ Invalid email (e.g., example@email.com)": "بريد إلكتروني غير صالح (مثال: example@email.com)",
   "pass_symbols #$ Password must contain letters, numbers and symbols": "يجب أن تحتوي كلمة المرور على حروف وأرقام ورموز",
@@ -184,6 +185,7 @@
   "approved #$ Approved": "تمت الموافقة",
   "rejected #$ Rejected": "مرفوض",
   "logout #$ Logout": "تسجيل الخروج",
+  "logout_success #$ Logout success": "تم تسجيل الخروج بنجاح.",
   "notifications #$ Notifications": "الإشعارات",
   "employee_details #$ Employee Details": "تفاصيل الموظف",
   "my_orders #$ My Orders": "طلباتى",
@@ -250,7 +252,19 @@
   "late #$ Late": "متأخر",
   "absent #$ Absent": "غائب",
   "leave #$ Leave": "إجازة",
-  "start_work #$ Start Work": "بداء العمل",
+  "start_work #$ Start Work": "بدء العمل",
   "end_work #$ End Work": "إنهاء العمل",
-  "no_attendance_records #$ No attendance records": "لا توجد سجلات حضور"
+  "working_remotely_now #$ Working remotely now": "أنت تعمل الآن عن بُعد",
+  "attendance_checked_in #$ Attendance checked in": "تم تسجيل الحضور بنجاح",
+  "attendance_checked_out #$ Attendance checked out": "تم تسجيل الانصراف بنجاح",
+  "no_attendance_records #$ No attendance records": "لا توجد سجلات حضور",
+  "notification_approved #$ Approved": "تمت الموافقة",
+  "notification_rejected #$ Rejected": "مرفوض",
+  "notification_pending #$ Pending": "قيد الانتظار",
+  "notification_system #$ System": "النظام",
+  "notification_read #$ Read": "مقروء",
+  "notification_unread #$ Unread": "غير مقروء",
+  "no_notifications #$ No notifications": "لا توجد إشعارات",
+  "am_period #$ AM": "ص",
+  "pm_period #$ PM": "م"
 }

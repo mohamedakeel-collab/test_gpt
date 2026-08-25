@@ -1,4 +1,4 @@
-part of '../imports/login_imports.dart';
+part of '../../../login/presentation/imports/login_imports.dart';
 
 class LanguageSelectionSheet extends StatefulWidget {
   const LanguageSelectionSheet({super.key});

@@ -11,43 +11,34 @@ class _OrderDetailsBody extends StatelessWidget {
       onRetry: () =>
           context.read<OrderDetailsCubit>().getDetails(controller.requestId),
       builder: (context, details) {
-        return Stack(
-          children: [
-            RefreshIndicator(
-              onRefresh: () => context.read<OrderDetailsCubit>().getDetails(
-                controller.requestId,
-              ),
-              child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                padding: EdgeInsetsDirectional.only(
-                  start: AppPadding.pH16,
-                  end: AppPadding.pH16,
-                  bottom: details.isPending ? AppSize.sH100 : AppPadding.pH16,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    16.szH,
-                    RequestEmployeeCard(employee: details.employee),
-                    12.szH,
-                    RequestBalanceCard(employee: details.employee),
-                    12.szH,
-                    RequestInfoCard(details: details),
-                    12.szH,
-                    RequestAttachmentCard(file: details.file),
-                    12.szH,
-                    RequestNotesCard(comments: details.comments),
-                    24.szH,
-                  ],
-                ),
-              ),
+        return  RefreshIndicator(
+          onRefresh: () => context.read<OrderDetailsCubit>().getDetails(
+            controller.requestId,
+          ),
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsetsDirectional.only(
+              start: AppPadding.pH16,
+              end: AppPadding.pH16,
+              bottom: details.isPending ? AppSize.sH100 : AppPadding.pH16,
             ),
-            if (details.isPending)
-              const Align(
-                alignment: Alignment.bottomCenter,
-                child: _RequestActionButtons(),
-              ),
-          ],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                16.szH,
+                RequestEmployeeCard(employee: details.employee),
+                12.szH,
+                RequestBalanceCard(employee: details.employee),
+                12.szH,
+                RequestInfoCard(details: details),
+                12.szH,
+                RequestAttachmentCard(file: details.file),
+                12.szH,
+                RequestNotesCard(comments: details.comments),
+                24.szH,
+              ],
+            ),
+          ),
         );
       },
     );

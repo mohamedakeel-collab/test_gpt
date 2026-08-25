@@ -33,6 +33,15 @@ import '../../../features/login/domain/repositories/login_repository.dart'
 import '../../../features/login/domain/usecases/login_usecase.dart' as _i1051;
 import '../../../features/login/presentation/imports/login_imports.dart'
     as _i1051;
+import '../../../features/logout/data/datasources/logout_remote_data_source.dart'
+    as _i355;
+import '../../../features/logout/data/repositories/logout_repository_impl.dart'
+    as _i583;
+import '../../../features/logout/domain/repositories/logout_repository.dart'
+    as _i245;
+import '../../../features/logout/domain/usecases/logout_use_case.dart' as _i528;
+import '../../../features/logout/presentation/imports/logout_imports.dart'
+    as _i259;
 import '../../../features/new_request/data/datasources/new_request_remote_data_source.dart'
     as _i272;
 import '../../../features/new_request/data/repositories/new_request_repository_impl.dart'
@@ -47,6 +56,16 @@ import '../../../features/new_request/domain/usecases/update_request_use_case.da
     as _i213;
 import '../../../features/new_request/presentation/imports/new_request_imports.dart'
     as _i91;
+import '../../../features/notifications/data/datasources/notifications_remote_data_source.dart'
+    as _i1066;
+import '../../../features/notifications/data/repositories/notifications_repository_impl.dart'
+    as _i466;
+import '../../../features/notifications/domain/repositories/notifications_repository.dart'
+    as _i1007;
+import '../../../features/notifications/domain/usecases/get_notifications_use_case.dart'
+    as _i176;
+import '../../../features/notifications/presentation/imports/notifications_imports.dart'
+    as _i281;
 import '../../../features/order_details/data/datasources/order_details_remote_data_source.dart'
     as _i521;
 import '../../../features/order_details/data/repositories/order_details_repository_impl.dart'
@@ -105,6 +124,10 @@ import '../../../features/remote_work/data/repositories/attendance_repository_im
     as _i111;
 import '../../../features/remote_work/domain/repositories/attendance_repository.dart'
     as _i499;
+import '../../../features/remote_work/domain/usecases/check_in_use_case.dart'
+    as _i962;
+import '../../../features/remote_work/domain/usecases/check_out_use_case.dart'
+    as _i600;
 import '../../../features/remote_work/domain/usecases/get_attendance_use_case.dart'
     as _i361;
 import '../../../features/remote_work/presentation/imports/remote_work_imports.dart'
@@ -138,8 +161,14 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i834.HomeRepository>(
       () => _i955.HomeRepositoryImpl(gh<_i523.HomeRemoteDataSource>()),
     );
+    gh.lazySingleton<_i1066.NotificationsRemoteDataSource>(
+      () => _i1066.NotificationsRemoteDataSourceImpl(),
+    );
     gh.lazySingleton<_i947.ProductsRemoteDataSource>(
       () => _i126.ProductsRemoteDataSourceImpl(),
+    );
+    gh.lazySingleton<_i355.LogOutRemoteDataSource>(
+      () => _i355.LogOutRemoteDataSourceImpl(),
     );
     gh.lazySingleton<_i161.OrdersRemoteDataSource>(
       () => _i688.OrdersRemoteDataSourceImpl(),
@@ -164,11 +193,19 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i885.GetHomeUseCase>(
       () => _i885.GetHomeUseCase(gh<_i834.HomeRepository>()),
     );
+    gh.lazySingleton<_i245.LogOutRepository>(
+      () => _i583.LogOutRepositoryImpl(gh<_i355.LogOutRemoteDataSource>()),
+    );
     gh.lazySingleton<_i239.ProductsRepository>(
       () => _i50.ProductsRepositoryImpl(gh<_i947.ProductsRemoteDataSource>()),
     );
     gh.factory<_i213.UpdateRequestUseCase>(
       () => _i213.UpdateRequestUseCase(gh<_i875.NewRequestRepository>()),
+    );
+    gh.lazySingleton<_i1007.NotificationsRepository>(
+      () => _i466.NotificationsRepositoryImpl(
+        gh<_i1066.NotificationsRemoteDataSource>(),
+      ),
     );
     gh.factory<_i143.CreateNewRequestUseCase>(
       () => _i143.CreateNewRequestUseCase(gh<_i875.NewRequestRepository>()),
@@ -182,6 +219,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i287.OrdersRepository>(
       () => _i493.OrdersRepositoryImpl(gh<_i161.OrdersRemoteDataSource>()),
     );
+    gh.factory<_i962.CheckInUseCase>(
+      () => _i962.CheckInUseCase(gh<_i499.AttendanceRepository>()),
+    );
+    gh.factory<_i600.CheckOutUseCase>(
+      () => _i600.CheckOutUseCase(gh<_i499.AttendanceRepository>()),
+    );
     gh.factory<_i361.GetAttendanceUseCase>(
       () => _i361.GetAttendanceUseCase(gh<_i499.AttendanceRepository>()),
     );
@@ -191,15 +234,19 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i1053.LoginRepository>(
       () => _i928.LoginRepositoryImpl(gh<_i1009.LoginRemoteDataSource>()),
     );
-    gh.factory<_i948.AttendanceCubit>(
-      () => _i948.AttendanceCubit(gh<_i361.GetAttendanceUseCase>()),
-    );
     gh.factory<_i574.GetOrdersUseCase>(
       () => _i574.GetOrdersUseCase(gh<_i287.OrdersRepository>()),
     );
     gh.lazySingleton<_i904.OrderDetailsRepository>(
       () => _i154.OrderDetailsRepositoryImpl(
         gh<_i521.OrderDetailsRemoteDataSource>(),
+      ),
+    );
+    gh.factory<_i948.AttendanceCubit>(
+      () => _i948.AttendanceCubit(
+        gh<_i361.GetAttendanceUseCase>(),
+        gh<_i962.CheckInUseCase>(),
+        gh<_i600.CheckOutUseCase>(),
       ),
     );
     gh.factory<_i1024.CreateProductUseCase>(
@@ -233,8 +280,20 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i975.DeleteProductUseCase>(),
       ),
     );
+    gh.factory<_i528.LogoutUseCase>(
+      () => _i528.LogoutUseCase(gh<_i245.LogOutRepository>()),
+    );
+    gh.factory<_i259.LogoutCubit>(
+      () => _i259.LogoutCubit(gh<_i528.LogoutUseCase>()),
+    );
+    gh.factory<_i176.GetNotificationsUseCase>(
+      () => _i176.GetNotificationsUseCase(gh<_i1007.NotificationsRepository>()),
+    );
     gh.factory<_i1051.LoginUseCase>(
       () => _i1051.LoginUseCase(gh<_i1053.LoginRepository>()),
+    );
+    gh.factory<_i281.NotificationsCubit>(
+      () => _i281.NotificationsCubit(gh<_i176.GetNotificationsUseCase>()),
     );
     gh.factory<_i493.GetProfileUseCase>(
       () => _i493.GetProfileUseCase(gh<_i919.ProfileRepository>()),

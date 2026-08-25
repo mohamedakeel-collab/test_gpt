@@ -93,16 +93,35 @@ class _DateField extends StatelessWidget {
   }
 
   Future<void> _pickDate() async {
+
     final DateTime now = DateTime.now();
 
+
     final picked = await showCustomDatePicker(
-      initialDate: value,
-      firstDate: DateTime(now.year - 1, now.month, now.day),
-      lastDate: DateTime(now.year + 2, now.month, now.day),
+
+      initialDate: value ?? now,
+
+
+      firstDate: DateTime(
+        now.year,
+        now.month,
+        now.day,
+      ),
+
+
+      lastDate: DateTime(
+        now.year + 2,
+        now.month,
+        now.day,
+      ),
+
     );
 
+
     if (picked != null) {
+
       onChanged?.call(picked);
+
     }
   }
 }

@@ -2,23 +2,30 @@ library;
 
 import 'dart:async';
 
+import 'package:dartz/dartz.dart' show Either, Left, Right;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../config/language/locale_keys.g.dart';
 import '../../../../config/res/config_imports.dart';
+import '../../../../core/network/error/failures.dart';
 import '../../../../core/navigation/navigator.dart';
+import '../../../../core/shared/extensions/base_state.dart';
 import '../../../../core/shared/extensions/text_style_extensions.dart';
 import '../../../../core/shared/extensions/widgets/padding_extension.dart';
 import '../../../../core/shared/extensions/widgets/widget_extentions.dart';
 import '../../../../core/state/async/async.dart';
 import '../../../../core/widgets/buttons/loading_button.dart';
+import '../../../../core/widgets/custom_messages.dart';
 import '../../../../core/widgets/handling_views/empty_widget.dart';
 import '../../../../core/widgets/icon_widget.dart';
 import '../../../home/presentation/imports/home_imports.dart';
 import '../../domain/entities/attendance_entity.dart';
+import '../../domain/usecases/check_in_use_case.dart';
+import '../../domain/usecases/check_out_use_case.dart';
 import '../../domain/usecases/get_attendance_use_case.dart';
+import '../remote_work_storage/remote_work_storage.dart';
 
 part '../controllers/remote_work_view_controller.dart';
 part '../cubits/attendance_cubit.dart';

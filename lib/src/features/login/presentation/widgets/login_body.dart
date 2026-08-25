@@ -59,7 +59,7 @@ class _LoginBody extends StatelessWidget {
             children: [
               const _LoginLogoSec(),
               Expanded(child: _LoginFormSec(vc: vc)),
-              const _LoginFooter(),
+             // const _LoginFooter(),
             ],
           ),
         ),

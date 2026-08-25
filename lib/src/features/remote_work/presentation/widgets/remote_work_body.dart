@@ -18,7 +18,10 @@ class _RemoteWorkBody extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 16.szH,
-                _RemoteTimerCard(record: controller.activeRecord(records)),
+                _RemoteTimerCard(
+                  record: controller.activeRecord(records),
+                  controller: controller,
+                ),
                 20.szH,
                 _AttendanceHistorySection(
                   records: records,

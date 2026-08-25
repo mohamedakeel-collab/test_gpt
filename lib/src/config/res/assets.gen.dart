@@ -244,6 +244,9 @@ class $AssetsSvgBaseSvgGen {
   SvgGenImage get homeSelected =>
       const SvgGenImage('assets/svg/base_svg/home_selected.svg');
 
+  /// File path: assets/svg/base_svg/lang.svg
+  SvgGenImage get lang => const SvgGenImage('assets/svg/base_svg/lang.svg');
+
   /// File path: assets/svg/base_svg/logo_login.png
   AssetGenImage get logoLogin =>
       const AssetGenImage('assets/svg/base_svg/logo_login.png');
@@ -376,6 +379,7 @@ class $AssetsSvgBaseSvgGen {
     holiday,
     home,
     homeSelected,
+    lang,
     logoLogin,
     logout,
     note,

@@ -37,11 +37,6 @@ class NewRequestViewController {
     final extension = (picked.extension ?? '').toLowerCase();
     if (!const ['pdf', 'jpg', 'jpeg', 'png'].contains(extension)) {
       if (!context.mounted) return;
-      MessageUtils.showSnackBar(
-        context: context,
-        baseStatus: BaseStatus.error,
-        message: LocaleKeys.invalidFileType,
-      );
       return;
     }
 

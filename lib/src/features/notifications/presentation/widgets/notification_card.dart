@@ -2,38 +2,27 @@ part of '../imports/notifications_imports.dart';
 
 class _NotificationCard extends StatelessWidget {
   const _NotificationCard({
-    required this.title,
-    required this.message,
-    required this.time,
-    required this.type,
+    required this.notification,
+    required this.controller,
   });
 
-  final String title;
-  final String message;
-  final String time;
-  final NotificationType type;
+  final NotificationEntity notification;
+  final NotificationsViewController controller;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(AppPadding.pH16),
-
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(AppCircular.r12),
-        border: Border.all(
-          color: AppColors.border,
-          width: 1,
-        ),
+        border: Border.all(color: AppColors.border, width: 1),
       ),
-
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _NotificationIcon(type: type),
-
+          _NotificationIcon(controller: controller),
           12.szW,
-
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,24 +31,22 @@ class _NotificationCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _NotificationChip(type: type),
-
+                    _NotificationChip(
+                      label: notification.title,
+                      color: AppColors.notificationBackground,
+                      textColor: AppColors.brandSurface,
+                      borderColor: AppColors.notificationBorder,
+                    ),
                     8.szW,
-
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        time,
-                        style: const TextStyle().setHintColor.s11.regular,
-                      ),
+                    Text(
+                      controller.createdAtLabel(notification.createdAt),
+                      style: const TextStyle().setHintColor.s11.regular,
                     ),
                   ],
                 ),
-
-                8.szH,
-
+                4.szH,
                 Text(
-                  message,
+                  notification.message,
                   textAlign: TextAlign.right,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
@@ -69,64 +56,6 @@ class _NotificationCard extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _NotificationChip extends StatelessWidget {
-  const _NotificationChip({
-    required this.type,
-  });
-
-  final NotificationType type;
-
-  @override
-  Widget build(BuildContext context) {
-    final isRejected = type == NotificationType.rejected;
-
-    final color = isRejected
-        ? const Color(0xFFFFDAD6)
-        : const Color(0xFFF3F6DF);
-
-    final textColor = isRejected
-        ? AppColors.error
-        : AppColors.brandSurface;
-
-    final borderColor = isRejected
-        ? const Color(0xFFFFB8B0)
-        : const Color(0xFFDDF08A);
-
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: AppPadding.pW10,
-        vertical: AppPadding.pH4,
-      ),
-
-      decoration: BoxDecoration(
-        color: color,
-
-        borderRadius: BorderRadius.circular(
-          AppCircular.r20,
-        ),
-
-        border: Border.all(
-          color: borderColor,
-          width: 1,
-        ),
-      ),
-
-      child: Text(
-        isRejected
-            ? 'إجازة مرضية'
-            : 'تمت الموافقة',
-
-        style: const TextStyle()
-            .s12
-            .medium
-            .copyWith(
-          color: textColor,
-        ),
       ),
     );
   }

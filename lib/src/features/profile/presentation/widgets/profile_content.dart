@@ -71,8 +71,18 @@ class _ProfileContent extends StatelessWidget {
           ),
           20.szH,
           _ProfileMenuItem(
-            title: LocaleKeys.accountSettings,
-            icon: AppAssets.svg.baseSvg.settings.path,
+            title: context.locale.languageCode == 'ar'
+                ? LocaleKeys.arabic
+                : LocaleKeys.english,
+            icon: AppAssets.svg.baseSvg.lang.path,
+            onTap: (){
+              showModalBottomSheet<Languages>(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                builder: (_) => const LanguageSelectionSheet(),
+              );
+            },
           ),
           if (F.appFlavor == Flavor.user)
             _ProfileMenuItem(
@@ -82,6 +92,7 @@ class _ProfileContent extends StatelessWidget {
               title: LocaleKeys.remoteWork,
               icon: AppAssets.svg.baseSvg.remote.path,
             ),
+          20.szH,
           const _LogoutButton(),
         ],
       ),
@@ -94,20 +105,36 @@ class _LogoutButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: () {},
-      child: Row(
-        children: [
-          IconWidget(
-            icon: AppAssets.svg.baseSvg.logout.path,
-            height: AppSize.sH22,
-          ),
-          15.szW,
-          Text(
-            LocaleKeys.logout,
-            style: const TextStyle().setErrorColor.s14.medium,
-          ),
-        ],
+    final state = context.watch<LogoutCubit>().state;
+    final isLoggingOut = state is AsyncLoading<String>;
+    return GestureDetector(
+      onTap: isLoggingOut ? null : () => context.read<LogoutCubit>().logout(),
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 200),
+        child: isLoggingOut
+            ? SizedBox(
+                key: const ValueKey('logout-loading'),
+                height: AppSize.sH22,
+                width: AppSize.sH22,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: AppColors.error,
+                ),
+              )
+            : Row(
+                key: const ValueKey('logout-content'),
+                children: [
+                  IconWidget(
+                    icon: AppAssets.svg.baseSvg.logout.path,
+                    height: AppSize.sH22,
+                  ),
+                  15.szW,
+                  Text(
+                    LocaleKeys.logout,
+                    style: const TextStyle().setErrorColor.s14.medium,
+                  ),
+                ],
+              ),
       ),
     );
   }

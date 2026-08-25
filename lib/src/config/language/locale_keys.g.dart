@@ -73,6 +73,9 @@ abstract class LocaleKeys {
   static const String _filedValidation = 'filed_validation';
   static String get filedValidation => _filedValidation.tr();
 
+  static const String _lang = 'lang';
+  static String get lang => _lang.tr();
+
   static const String _fillField = 'fill_field';
   static String get fillField => _fillField.tr();
 
@@ -487,6 +490,9 @@ abstract class LocaleKeys {
   static const String _logout = 'logout';
   static String get logout => _logout.tr();
 
+  static const String _logoutSuccess = 'logout_success';
+  static String get logoutSuccess => _logoutSuccess.tr();
+
   static const String _notifications = 'notifications';
   static String get notifications => _notifications.tr();
 
@@ -664,7 +670,40 @@ abstract class LocaleKeys {
   static const String _startWork = 'start_work';
   static String get startWork => _startWork.tr();
 
+  static const String _attendanceCheckedIn = 'attendance_checked_in';
+  static String get attendanceCheckedIn => _attendanceCheckedIn.tr();
+
+  static const String _attendanceCheckedOut = 'attendance_checked_out';
+  static String get attendanceCheckedOut => _attendanceCheckedOut.tr();
+
   static const String _noAttendanceRecords = 'no_attendance_records';
   static String get noAttendanceRecords => _noAttendanceRecords.tr();
+
+  static const String _notificationApproved = 'notification_approved';
+  static String get notificationApproved => _notificationApproved.tr();
+
+  static const String _notificationRejected = 'notification_rejected';
+  static String get notificationRejected => _notificationRejected.tr();
+
+  static const String _notificationPending = 'notification_pending';
+  static String get notificationPending => _notificationPending.tr();
+
+  static const String _notificationSystem = 'notification_system';
+  static String get notificationSystem => _notificationSystem.tr();
+
+  static const String _notificationRead = 'notification_read';
+  static String get notificationRead => _notificationRead.tr();
+
+  static const String _notificationUnread = 'notification_unread';
+  static String get notificationUnread => _notificationUnread.tr();
+
+  static const String _noNotifications = 'no_notifications';
+  static String get noNotifications => _noNotifications.tr();
+
+  static const String _amPeriod = 'am_period';
+  static String get amPeriod => _amPeriod.tr();
+
+  static const String _pmPeriod = 'pm_period';
+  static String get pmPeriod => _pmPeriod.tr();
 
 }

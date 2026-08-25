@@ -39,4 +39,4 @@ part '../widgets/login_body.dart';
 part '../widgets/login_logo_section.dart';
 part '../widgets/login_form_section.dart';
 part '../widgets/login_footer.dart';
-part '../widgets/choose_language_pop_up.dart';
+part '../../../profile/presentation/widgets/choose_language_pop_up.dart';

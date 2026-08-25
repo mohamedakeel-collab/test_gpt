@@ -12,21 +12,29 @@ class MessageUtils {
     required String message,
   }) {
     final snackBar = SnackBar(
-      duration: const Duration(seconds: 2),
+      duration: const Duration(seconds: 3),
+
       content: Text(message, style: const TextStyle().setWhiteColor.s11.medium),
+
       action: SnackBarAction(
         label: LocaleKeys.cancel,
+
         textColor: AppColors.white,
+
         onPressed: () {
           ScaffoldMessenger.of(context ?? Go.context).clearSnackBars();
         },
       ),
+
       backgroundColor: baseStatus == BaseStatus.error
-          ? AppColors.secondary
-          : AppColors.primary,
+          ? AppColors.error
+          : AppColors.brandSurface,
+
       behavior: SnackBarBehavior.floating,
+
       elevation: 4,
     );
+
     ScaffoldMessenger.of(context ?? Go.context).showSnackBar(snackBar);
   }
 }

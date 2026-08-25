@@ -49,7 +49,11 @@ class AppColors {
   static const Color warningSurface = Color(0xFFFFF8EC);
   static const Color info = Color(0xFF3A70E2);
   static const Color infoSurface = Color(0xFFEEF3FD);
+  static const Color notificationBackground =
+  Color(0xFFF3F6DF);
 
+  static const Color notificationBorder =
+  Color(0xFFDDF08A);
   // ── Base ─────────────────────────────────────────────────────────────────
   static const Color black = Color(0xFF000000);
   static const Color white = Color(0xFFFFFFFF);
