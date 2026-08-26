@@ -1,4 +1,5 @@
 import '../../../../core/shared/extensions/json_extensions.dart';
+import '../../../login/data/models/employee_model.dart';
 import 'comment_model.dart';
 import 'reviewer_model.dart';
 
@@ -23,6 +24,7 @@ class LeaveRequestModel {
   final bool reviewedByManager;
   final bool reviewedByHr;
   final String? file;
+  final EmployeeModel? employee;
 
   /// Raw status string from the wire — kept here so the data layer never
   /// has to know about domain enums.
@@ -50,6 +52,7 @@ class LeaveRequestModel {
     this.submittedAt,
     this.reviewedAt,
     this.reviewer,
+    this.employee,
     this.comments = const [],
   });
 
@@ -71,7 +74,7 @@ class LeaveRequestModel {
         submittedAt: json.getStringOrNull('submitted_at'),
         reviewedAt: json.getStringOrNull('reviewed_at'),
         reviewer: json.getObject('reviewer', ReviewerModel.fromJson),
-        comments:
-            json.getObjectList('comments', CommentModel.fromJson),
+        employee: json.getObject('employee', EmployeeModel.fromJson),
+        comments: json.getObjectList('comments', CommentModel.fromJson),
       );
 }

@@ -254,6 +254,10 @@ class $AssetsSvgBaseSvgGen {
   /// File path: assets/svg/base_svg/logout.svg
   SvgGenImage get logout => const SvgGenImage('assets/svg/base_svg/logout.svg');
 
+  /// File path: assets/svg/base_svg/my_team.svg
+  SvgGenImage get myTeam =>
+      const SvgGenImage('assets/svg/base_svg/my_team.svg');
+
   /// File path: assets/svg/base_svg/note.svg
   SvgGenImage get note => const SvgGenImage('assets/svg/base_svg/note.svg');
 
@@ -388,6 +392,7 @@ class $AssetsSvgBaseSvgGen {
     lang,
     logoLogin,
     logout,
+    myTeam,
     note,
     notificationDelete,
     notificationDialog,

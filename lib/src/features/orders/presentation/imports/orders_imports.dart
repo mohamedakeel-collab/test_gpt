@@ -1,7 +1,7 @@
 /// `part / part of` hub for the Orders feature presentation layer.
 ///
 /// All `view/`, `widgets/`, `cubits/`, and `controllers/` files declare
-/// `part of '../imports/orders_imports.dart';` at their top.
+/// `part of '../imports/my_team_imports.dart';` at their top.
 ///
 /// Benefits
 ///   - Every file inherits this library's imports — no boilerplate at the

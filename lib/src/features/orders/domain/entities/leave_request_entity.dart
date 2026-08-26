@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import 'comment_entity.dart';
+import '../../../login/domain/entities/employee_entity.dart';
 import 'reviewer_entity.dart';
 
 /// Pure domain object — a single leave request returned by the Orders API.
@@ -21,6 +22,7 @@ class LeaveRequestEntity extends Equatable {
   final bool reviewedByHr;
   final String? file;
   final String status;
+  final EmployeeEntity? employee;
 
   /// Backend-provided localized status label (e.g. "قيد المراجعة").
   final String statusText;
@@ -46,27 +48,29 @@ class LeaveRequestEntity extends Equatable {
     this.submittedAt,
     this.reviewedAt,
     this.reviewer,
+    this.employee,
     this.comments = const [],
   });
 
   @override
   List<Object?> get props => [
-        id,
-        employeeId,
-        reviewerId,
-        leaveType,
-        startDate,
-        endDate,
-        duration,
-        reason,
-        reviewedByManager,
-        reviewedByHr,
-        file,
-        status,
-        statusText,
-        submittedAt,
-        reviewedAt,
-        reviewer,
-        comments,
-      ];
+    id,
+    employeeId,
+    reviewerId,
+    leaveType,
+    startDate,
+    endDate,
+    duration,
+    reason,
+    reviewedByManager,
+    reviewedByHr,
+    file,
+    status,
+    employee,
+    statusText,
+    submittedAt,
+    reviewedAt,
+    reviewer,
+    comments,
+  ];
 }

@@ -44,7 +44,7 @@ class _OrdersBody extends StatelessWidget {
                   ),
                   itemCount: orders.length,
                   separatorBuilder: (_, _) => 12.szH,
-                  itemBuilder: (_, i) => _OrderCard(
+                  itemBuilder: (_, i) => OrderCard(
                     order: orders[i],
                     onTap: () => Go.to(OrderDetailsScreen(id: orders[i].id)),
                     onDelete: () => _confirmDelete(context, orders[i].id),

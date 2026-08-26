@@ -43,11 +43,7 @@ class _LanguageSelectionSheetState extends State<LanguageSelectionSheet> {
               ),
             );
             if (!context.mounted) return;
-            MessageUtils.showSnackBar(
-              context: context,
-              baseStatus: BaseStatus.success,
-              message: LocaleKeys.languageUpdatedSuccessfully,
-            );
+
             if (context.mounted) {
               Navigator.of(context).pop();
             }

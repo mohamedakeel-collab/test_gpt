@@ -408,11 +408,6 @@ abstract class LocaleKeys {
   static const String _chooseLanguage = 'choose_language';
   static String get chooseLanguage => _chooseLanguage.tr();
 
-  static const String _languageUpdatedSuccessfully =
-      'language_updated_successfully';
-  static String get languageUpdatedSuccessfully =>
-      _languageUpdatedSuccessfully.tr();
-
   static const String _homePendingRequests = 'home_pending_requests';
   static String homePendingRequests({required String count}) =>
       _homePendingRequests.tr(namedArgs: {'count': count});
@@ -527,6 +522,15 @@ abstract class LocaleKeys {
 
   static const String _remote = 'remote';
   static String get remote => _remote.tr();
+
+  static const String _myTeam = 'my_team';
+  static String get myTeam => _myTeam.tr();
+
+  static const String _teamRequests = 'team_requests';
+  static String get teamRequests => _teamRequests.tr();
+
+  static const String _noTeamRequests = 'no_team_requests';
+  static String get noTeamRequests => _noTeamRequests.tr();
 
   static const String _details = 'details';
   static String get details => _details.tr();

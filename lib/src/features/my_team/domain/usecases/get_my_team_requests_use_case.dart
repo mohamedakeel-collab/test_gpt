@@ -1,0 +1,20 @@
+import 'package:dartz/dartz.dart';
+import 'package:injectable/injectable.dart';
+
+import '../../../../core/network/error/failures.dart';
+import '../../../orders/domain/entities/leave_request_entity.dart';
+import '../repositories/my_team_repository.dart';
+
+@injectable
+class GetMyTeamRequestsUseCase {
+  const GetMyTeamRequestsUseCase(this.repository);
+
+  final MyTeamRepository repository;
+
+  Future<Either<Failure, List<LeaveRequestEntity>>> call({
+    int? perPage,
+    String? status,
+  }) {
+    return repository.getTeamRequests(perPage: perPage, status: status);
+  }
+}

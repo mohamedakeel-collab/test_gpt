@@ -42,6 +42,16 @@ import '../../../features/logout/domain/repositories/logout_repository.dart'
 import '../../../features/logout/domain/usecases/logout_use_case.dart' as _i528;
 import '../../../features/logout/presentation/imports/logout_imports.dart'
     as _i259;
+import '../../../features/my_team/data/datasources/my_team_remote_data_source.dart'
+    as _i420;
+import '../../../features/my_team/data/repositories/my_team_repository_impl.dart'
+    as _i1021;
+import '../../../features/my_team/domain/repositories/my_team_repository.dart'
+    as _i676;
+import '../../../features/my_team/domain/usecases/get_my_team_requests_use_case.dart'
+    as _i455;
+import '../../../features/my_team/presentation/imports/my_team_imports.dart'
+    as _i477;
 import '../../../features/new_request/data/datasources/new_request_remote_data_source.dart'
     as _i272;
 import '../../../features/new_request/data/repositories/new_request_repository_impl.dart'
@@ -175,6 +185,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i947.ProductsRemoteDataSource>(
       () => _i126.ProductsRemoteDataSourceImpl(),
     );
+    gh.lazySingleton<_i420.MyTeamRemoteDataSource>(
+      () => _i420.MyTeamRemoteDataSourceImpl(),
+    );
     gh.lazySingleton<_i193.LanguageRemoteDataSource>(
       () => _i193.LanguageRemoteDataSourceImpl(),
     );
@@ -245,6 +258,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i1053.LoginRepository>(
       () => _i928.LoginRepositoryImpl(gh<_i1009.LoginRemoteDataSource>()),
     );
+    gh.lazySingleton<_i676.MyTeamRepository>(
+      () => _i1021.MyTeamRepositoryImpl(gh<_i420.MyTeamRemoteDataSource>()),
+    );
     gh.factory<_i574.GetOrdersUseCase>(
       () => _i574.GetOrdersUseCase(gh<_i287.OrdersRepository>()),
     );
@@ -284,6 +300,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i919.GetOrderDetailsUseCase>(
       () => _i919.GetOrderDetailsUseCase(gh<_i904.OrderDetailsRepository>()),
     );
+    gh.factory<_i455.GetMyTeamRequestsUseCase>(
+      () => _i455.GetMyTeamRequestsUseCase(gh<_i676.MyTeamRepository>()),
+    );
     gh.factory<_i1033.OrderDetailsCubit>(
       () => _i1033.OrderDetailsCubit(gh<_i919.GetOrderDetailsUseCase>()),
     );
@@ -305,6 +324,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i1051.LoginUseCase>(
       () => _i1051.LoginUseCase(gh<_i1053.LoginRepository>()),
+    );
+    gh.factory<_i477.MyTeamCubit>(
+      () => _i477.MyTeamCubit(gh<_i455.GetMyTeamRequestsUseCase>()),
     );
     gh.factory<_i281.NotificationsCubit>(
       () => _i281.NotificationsCubit(gh<_i176.GetNotificationsUseCase>()),

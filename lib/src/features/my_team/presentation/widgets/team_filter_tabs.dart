@@ -1,41 +1,43 @@
-part of '../imports/orders_imports.dart';
+part of '../imports/my_team_imports.dart';
 
-/// Filter tabs. Each tab maps to a `leave_type` query value through the
-/// [OrdersViewController] — switching a tab re-fetches the list from the
-/// cubit with that filter.
-class _OrdersTabs extends StatelessWidget {
-  const _OrdersTabs({required this.controller});
+class _TeamFilterTabs extends StatelessWidget {
+  const _TeamFilterTabs({required this.controller});
 
-  final OrdersViewController controller;
+  final MyTeamViewController controller;
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<int>(
-      valueListenable: controller.selectedTab,
+    return ValueListenableBuilder<String>(
+      valueListenable: controller.selectedStatus,
       builder: (context, selected, _) {
         return Row(
           children: [
+
             Expanded(
-              child: _OrderTab(
-                title: LocaleKeys.leaves,
-                active: selected == 0,
-                onTap: () => controller.selectTab(0),
+              child: _TeamTab(
+                title: LocaleKeys.pending,
+                active: selected == 'pending',
+                onTap: () => controller.selectStatus('pending'),
               ),
             ),
+
             8.szW,
+
             Expanded(
-              child: _OrderTab(
-                title: LocaleKeys.permissions,
-                active: selected == 1,
-                onTap: () => controller.selectTab(1),
+              child: _TeamTab(
+                title: LocaleKeys.approved,
+                active: selected == 'approved',
+                onTap: () => controller.selectStatus('approved'),
               ),
             ),
+
             8.szW,
+
             Expanded(
-              child: _OrderTab(
-                title: LocaleKeys.remote,
-                active: selected == 2,
-                onTap: () => controller.selectTab(2),
+              child: _TeamTab(
+                title: LocaleKeys.rejected,
+                active: selected == 'rejected',
+                onTap: () => controller.selectStatus('rejected'),
               ),
             ),
           ],
@@ -45,8 +47,8 @@ class _OrdersTabs extends StatelessWidget {
   }
 }
 
-class _OrderTab extends StatelessWidget {
-  const _OrderTab({
+class _TeamTab extends StatelessWidget {
+  const _TeamTab({
     required this.title,
     required this.active,
     required this.onTap,
@@ -60,19 +62,27 @@ class _OrderTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
+
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
+
         padding: EdgeInsets.symmetric(vertical: AppPadding.pH8),
+
         decoration: BoxDecoration(
           color: active ? AppColors.brandSurface : AppColors.white,
+
           borderRadius: BorderRadius.circular(AppCircular.r20),
+
           border: Border.all(
             color: active ? AppColors.brandSurface : AppColors.border,
           ),
         ),
+
         child: Text(
           title,
+
           textAlign: TextAlign.center,
+
           style: active
               ? const TextStyle().setWhiteColor.s13.medium
               : const TextStyle().setLabelColor.s13.medium,

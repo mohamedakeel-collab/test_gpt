@@ -44,6 +44,7 @@ class ApiEndpoints {
   static const String checkOut = 'attendance/check-out';
 
   // Leave requests
+  static const String leaveRequests = 'leave-requests';
   static const String storeLeaveRequest = 'leave-requests/store';
   static const String myLeaveRequests = 'me/leave-requests';
   static String leaveRequestDetails(int id) => 'leave-requests/$id';

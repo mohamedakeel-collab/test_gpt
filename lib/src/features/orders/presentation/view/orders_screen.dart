@@ -8,7 +8,9 @@ part of '../imports/orders_imports.dart';
 ///   - Compose scaffold + body. **Never** layout content directly here —
 ///     that's the body widget's job. No methods beyond the lifecycle ones.
 class OrdersScreen extends StatefulWidget {
-  const OrdersScreen({super.key});
+  const OrdersScreen({super.key, this.refreshToken = 0});
+
+  final int refreshToken;
 
   @override
   State<OrdersScreen> createState() => _OrdersScreenState();
@@ -25,6 +27,14 @@ class _OrdersScreenState extends State<OrdersScreen> {
     _vc = OrdersViewController(
       onTabChanged: (leaveType) => _cubit.getOrders(leaveType: leaveType),
     );
+  }
+
+  @override
+  void didUpdateWidget(covariant OrdersScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.refreshToken != oldWidget.refreshToken) {
+      _cubit.getOrders(leaveType: _vc.selectedLeaveType);
+    }
   }
 
   @override
