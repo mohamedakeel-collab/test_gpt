@@ -323,6 +323,9 @@ class $AssetsSvgBaseSvgGen {
   /// File path: assets/svg/base_svg/remote.svg
   SvgGenImage get remote => const SvgGenImage('assets/svg/base_svg/remote.svg');
 
+  /// File path: assets/svg/base_svg/role.svg
+  SvgGenImage get role => const SvgGenImage('assets/svg/base_svg/role.svg');
+
   /// File path: assets/svg/base_svg/search.svg
   SvgGenImage get search => const SvgGenImage('assets/svg/base_svg/search.svg');
 
@@ -344,6 +347,9 @@ class $AssetsSvgBaseSvgGen {
 
   /// File path: assets/svg/base_svg/team.svg
   SvgGenImage get team => const SvgGenImage('assets/svg/base_svg/team.svg');
+
+  /// File path: assets/svg/base_svg/team_p.svg
+  SvgGenImage get teamP => const SvgGenImage('assets/svg/base_svg/team_p.svg');
 
   /// File path: assets/svg/base_svg/vacation_balance.svg
   SvgGenImage get vacationBalance =>
@@ -401,12 +407,14 @@ class $AssetsSvgBaseSvgGen {
     profile,
     reject,
     remote,
+    role,
     search,
     security,
     sessionsEmpty,
     settings,
     tagLogo,
     team,
+    teamP,
     vacationBalance,
   ];
 }

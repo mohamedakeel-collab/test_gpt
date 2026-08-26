@@ -5,11 +5,13 @@ class _ProfileInfoItem extends StatelessWidget {
     required this.title,
     required this.value,
     required this.icon,
+     this.size,
   });
 
   final String title;
   final String value;
   final String icon;
+  final double? size;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class _ProfileInfoItem extends StatelessWidget {
       ),
       child: Row(
         children: [
-          IconWidget(icon: icon, height: AppSize.sH35),
+          IconWidget(icon: icon, height:  size ?? AppSize.sH35,),
           12.szW,
           Expanded(
             child: Column(

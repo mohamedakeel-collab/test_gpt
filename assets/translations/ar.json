@@ -132,6 +132,7 @@
   "arabic": "العربية",
   "new_request_title": "طلب جديد",
   "choose_language": "اختر اللغة",
+  "language_updated_successfully": "تم تحديث اللغة بنجاح.",
   "home_pending_requests": "لديك {count} طلبات معلقة تتطلب المراجعه",
   "english": "English",
   "request_type": "نوع الطلب",

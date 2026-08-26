@@ -33,7 +33,7 @@ class _ProfileContent extends StatelessWidget {
           _ProfileInfoItem(
             title: LocaleKeys.role,
             value: profile.role,
-            icon: AppAssets.svg.baseSvg.person.path,
+            icon: AppAssets.svg.baseSvg.role.path,
           ),
           12.szH,
           _ProfileInfoItem(
@@ -45,7 +45,7 @@ class _ProfileContent extends StatelessWidget {
           _ProfileInfoItem(
             title: LocaleKeys.team,
             value: employee.team?.teamName ?? '',
-            icon: AppAssets.svg.baseSvg.team.path,
+            icon: AppAssets.svg.baseSvg.teamP.path,
           ),
           16.szH,
           Row(
@@ -80,7 +80,10 @@ class _ProfileContent extends StatelessWidget {
                 context: context,
                 isScrollControlled: true,
                 backgroundColor: Colors.transparent,
-                builder: (_) => const LanguageSelectionSheet(),
+                builder: (_) => BlocProvider.value(
+                  value: context.read<LanguageCubit>(),
+                  child: const LanguageSelectionSheet(),
+                ),
               );
             },
           ),

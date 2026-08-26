@@ -11,7 +11,10 @@ class _LoginFooter extends StatelessWidget {
           context: context,
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
-          builder: (_) => const LanguageSelectionSheet(),
+          builder: (_) => BlocProvider.value(
+            value: context.read<LanguageCubit>(),
+            child: const LanguageSelectionSheet(),
+          ),
         );
       },
       child: Container(

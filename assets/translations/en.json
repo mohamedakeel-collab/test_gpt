@@ -132,6 +132,7 @@
   "arabic": "Arabic",
   "new_request_title": "New request",
   "choose_language": "Choose language",
+  "language_updated_successfully": "Language updated successfully.",
   "home_pending_requests": "You have {count} pending requests that require review",
   "english": "English",
   "request_type": "Request Type",

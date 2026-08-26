@@ -94,8 +94,7 @@ Future<void> bootstrap(Flavor flavor) async {
     EasyLocalization(
       supportedLocales: Languages.supportLocales,
       path: 'assets/translations',
-      startLocale: const Locale('ar'),
-      fallbackLocale: const Locale('ar'),
+      fallbackLocale: Languages.english.locale,
       saveLocale: true,
       child: const App(),
     ),

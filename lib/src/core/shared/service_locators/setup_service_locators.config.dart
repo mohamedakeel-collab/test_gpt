@@ -108,14 +108,22 @@ import '../../../features/products/domain/usecases/get_products_usecase.dart'
     as _i533;
 import '../../../features/products/presentation/imports/products_imports.dart'
     as _i121;
+import '../../../features/profile/data/datasources/language_remote_data_source.dart'
+    as _i193;
 import '../../../features/profile/data/datasources/profile_remote_data_source.dart'
     as _i214;
+import '../../../features/profile/data/repositories/language_repository_impl.dart'
+    as _i415;
 import '../../../features/profile/data/repositories/profile_repository_impl.dart'
     as _i695;
+import '../../../features/profile/domain/repositories/language_repository.dart'
+    as _i52;
 import '../../../features/profile/domain/repositories/profile_repository.dart'
     as _i919;
 import '../../../features/profile/domain/usecases/get_profile_use_case.dart'
     as _i493;
+import '../../../features/profile/domain/usecases/set_language_use_case.dart'
+    as _i247;
 import '../../../features/profile/presentation/imports/profile_imports.dart'
     as _i41;
 import '../../../features/remote_work/data/datasources/attendance_remote_data_source.dart'
@@ -166,6 +174,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i947.ProductsRemoteDataSource>(
       () => _i126.ProductsRemoteDataSourceImpl(),
+    );
+    gh.lazySingleton<_i193.LanguageRemoteDataSource>(
+      () => _i193.LanguageRemoteDataSourceImpl(),
     );
     gh.lazySingleton<_i355.LogOutRemoteDataSource>(
       () => _i355.LogOutRemoteDataSourceImpl(),
@@ -249,6 +260,9 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i600.CheckOutUseCase>(),
       ),
     );
+    gh.lazySingleton<_i52.LanguageRepository>(
+      () => _i415.LanguageRepositoryImpl(gh<_i193.LanguageRemoteDataSource>()),
+    );
     gh.factory<_i1024.CreateProductUseCase>(
       () => _i1024.CreateProductUseCase(gh<_i239.ProductsRepository>()),
     );
@@ -295,6 +309,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i281.NotificationsCubit>(
       () => _i281.NotificationsCubit(gh<_i176.GetNotificationsUseCase>()),
     );
+    gh.factory<_i247.SetLanguageUseCase>(
+      () => _i247.SetLanguageUseCase(gh<_i52.LanguageRepository>()),
+    );
     gh.factory<_i493.GetProfileUseCase>(
       () => _i493.GetProfileUseCase(gh<_i919.ProfileRepository>()),
     );
@@ -316,6 +333,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i41.ProfileCubit>(
       () => _i41.ProfileCubit(gh<_i493.GetProfileUseCase>()),
+    );
+    gh.factory<_i41.LanguageCubit>(
+      () => _i41.LanguageCubit(gh<_i247.SetLanguageUseCase>()),
     );
     return this;
   }

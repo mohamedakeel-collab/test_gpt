@@ -11,6 +11,7 @@ class MessageUtils {
     required BaseStatus baseStatus,
     required String message,
   }) {
+    final messenger = ScaffoldMessenger.of(context ?? Go.context);
     final snackBar = SnackBar(
       duration: const Duration(seconds: 3),
 
@@ -22,7 +23,7 @@ class MessageUtils {
         textColor: AppColors.white,
 
         onPressed: () {
-          ScaffoldMessenger.of(context ?? Go.context).clearSnackBars();
+          messenger.clearSnackBars();
         },
       ),
 
@@ -35,6 +36,6 @@ class MessageUtils {
       elevation: 4,
     );
 
-    ScaffoldMessenger.of(context ?? Go.context).showSnackBar(snackBar);
+    messenger.showSnackBar(snackBar);
   }
 }

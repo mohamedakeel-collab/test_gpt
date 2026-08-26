@@ -7,6 +7,7 @@ class _ProfileBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return BlocListener<LogoutCubit, AsyncState<String>>(
       listenWhen: (previous, current) =>
           previous.runtimeType != current.runtimeType,

@@ -18,6 +18,7 @@ class ApiEndpoints {
   static const String refreshToken = 'auth/refresh-token';
   static const String logout = 'auth/logout';
   static const String profile = 'auth/me';
+  static const String setLanguage = 'auth/set-lang';
   static const String forgotPassword = 'auth/forgot-password';
   static const String resetPassword = 'auth/reset-password';
 

@@ -11,11 +11,7 @@ enum Languages {
   final Locale locale;
   final String languageCode;
 
-  const Languages(
-    this.locale,
-    this.title,
-    this.languageCode,
-  );
+  const Languages(this.locale, this.title, this.languageCode);
 
   static List<Locale> get supportLocales =>
       Languages.values.map((e) => e.locale).toList();
@@ -23,8 +19,8 @@ enum Languages {
   static List<String> get titles =>
       Languages.values.map((e) => e.title).toList();
 
-  static void setLocale(Languages lang) {
-    Go.navigatorKey.currentContext!.setLocale(lang.locale);
+  static Future<void> setLocale(Languages lang) async {
+    await Go.navigatorKey.currentContext!.setLocale(lang.locale);
   }
 
   static void setLocaleWithContext(BuildContext context, Languages lang) {
@@ -36,9 +32,12 @@ enum Languages {
   }
 
   static Languages get currentLanguage {
-    final currentLocale =
-        EasyLocalization.of(Go.navigatorKey.currentContext!)!.locale;
-    return Languages.values
-        .firstWhere((element) => element.locale == currentLocale);
+    final currentLocale = EasyLocalization.of(
+      Go.navigatorKey.currentContext!,
+    )!.locale;
+
+    return Languages.values.firstWhere(
+      (element) => element.languageCode == currentLocale.languageCode,
+    );
   }
 }
