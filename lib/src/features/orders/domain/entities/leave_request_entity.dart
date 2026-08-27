@@ -15,7 +15,9 @@ class LeaveRequestEntity extends Equatable {
   final int? reviewerId;
   final String leaveType;
   final String? startDate;
+  final String? startTime;
   final String? endDate;
+  final String? endTime;
   final String? duration;
   final String reason;
   final bool reviewedByManager;
@@ -41,7 +43,9 @@ class LeaveRequestEntity extends Equatable {
     required this.status,
     this.reviewerId,
     this.startDate,
+    this.startTime,
     this.endDate,
+    this.endTime,
     this.duration,
     this.file,
     this.statusText = '',
@@ -59,7 +63,9 @@ class LeaveRequestEntity extends Equatable {
     reviewerId,
     leaveType,
     startDate,
+    startTime,
     endDate,
+    endTime,
     duration,
     reason,
     reviewedByManager,

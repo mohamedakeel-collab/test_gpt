@@ -25,7 +25,9 @@ extension LeaveRequestModelMapper on LeaveRequestModel {
     reviewerId: reviewerId,
     leaveType: leaveType,
     startDate: startDate,
+    startTime: startTime,
     endDate: endDate,
+    endTime: endTime,
     duration: duration,
     reason: reason,
     reviewedByManager: reviewedByManager,
@@ -58,6 +60,10 @@ extension ReviewerModelMapper on ReviewerModel {
 }
 
 extension CommentModelMapper on CommentModel {
-  CommentEntity toEntity() =>
-      CommentEntity(id: id, comment: comment, createdAt: createdAt);
+  CommentEntity toEntity() => CommentEntity(
+    id: id,
+    comment: comment,
+    createdAt: createdAt,
+    authorFullName: authorFullName,
+  );
 }

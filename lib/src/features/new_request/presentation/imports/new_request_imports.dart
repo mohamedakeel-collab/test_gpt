@@ -31,6 +31,7 @@ import '../../../orders/domain/entities/leave_request_entity.dart';
 import '../../domain/entities/new_request_result_entity.dart';
 import '../../domain/params/create_new_request_params.dart';
 import '../../domain/usecases/create_new_request_use_case.dart';
+import '../../domain/usecases/update_provider_request_use_case.dart';
 import '../../domain/usecases/update_request_use_case.dart';
 
 import '../../../home/presentation/imports/home_imports.dart';

@@ -72,7 +72,24 @@ class _MyTeamBody extends StatelessWidget {
                   itemCount: requests.length,
                   separatorBuilder: (_, _) => 12.szH,
                   itemBuilder: (_, index) => TeamRequestCard(
-                    onTap: () => Go.to(RequestDetailsScreen()),
+                    onEdit: () async {
+                      final result = await Go.to(
+                        NewRequestScreen(
+                          request: requests[index],
+                          mode: RequestMode.editProvider,
+                        ),
+                      );
+
+                      if (result == true && context.mounted) {
+                        context.read<MyTeamCubit>().getTeamRequests(
+                          perPage: 15,
+                          status: controller.selectedStatusFilter,
+                        );
+                      }
+                    },
+
+                    onTap: () =>
+                        Go.to(RequestDetailsScreen(id: requests[index].id)),
                     request: requests[index],
                     controller: controller,
                   ),
@@ -83,5 +100,49 @@ class _MyTeamBody extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  Future<void> _confirmReview(
+    BuildContext context,
+    LeaveRequestEntity request, {
+    required bool isApprove,
+  }) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (_) => _ConfirmReviewDialog(isApprove: isApprove),
+    );
+    if (confirmed != true || !context.mounted) return;
+
+    final cubit = context.read<MyTeamCubit>();
+    final status = isApprove
+        ? F.appFlavor == Flavor.user
+              ? 'approved_by_manager'
+              : 'approved'
+        : 'rejected';
+
+    await cubit.reviewRequest(request.id, status);
+
+    if (!context.mounted) return;
+
+    switch (cubit.state) {
+      case AsyncSuccess<List<LeaveRequestEntity>>():
+        MessageUtils.showSnackBar(
+          context: context,
+          baseStatus: BaseStatus.success,
+          message: isApprove
+              ? LocaleKeys.requestApprovedSuccessfully
+              : LocaleKeys.requestRejectedSuccessfully,
+        );
+      case AsyncFailure<List<LeaveRequestEntity>>(:final failure):
+        if (failure is! CancelledFailure) {
+          MessageUtils.showSnackBar(
+            context: context,
+            baseStatus: BaseStatus.error,
+            message: failure.userMessage,
+          );
+        }
+      default:
+        break;
+    }
   }
 }

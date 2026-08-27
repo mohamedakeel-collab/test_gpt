@@ -30,6 +30,7 @@ class MyTeamViewController {
 
   String statusLabel(String status) => switch (status) {
     'pending' => LocaleKeys.pending,
+    'approved_by_manager' => LocaleKeys.approved,
     'approved' => LocaleKeys.approved,
     'rejected' => LocaleKeys.rejected,
     _ => LocaleKeys.failureUnknown,
@@ -37,6 +38,7 @@ class MyTeamViewController {
 
   Color statusColor(String status) => switch (status) {
     'pending' => AppColors.warning,
+    'approved_by_manager' => AppColors.success,
     'approved' => AppColors.success,
     'rejected' => AppColors.error,
     _ => AppColors.labelText,
@@ -44,6 +46,7 @@ class MyTeamViewController {
 
   Color statusBackground(String status) => switch (status) {
     'pending' => AppColors.warningSurface,
+    'approved_by_manager' => AppColors.successSurface,
     'approved' => AppColors.successSurface,
     'rejected' => AppColors.dangerSurface,
     _ => AppColors.fill,

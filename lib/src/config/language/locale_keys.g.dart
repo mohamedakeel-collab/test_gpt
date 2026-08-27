@@ -637,11 +637,30 @@ abstract class LocaleKeys {
   static const String _noComments = 'no_comments';
   static String get noComments => _noComments.tr();
 
+  static const String _loadingComments = 'loading_comments';
+  static String get loadingComments => _loadingComments.tr();
+
   static const String _approveRequest = 'approve_request';
   static String get approveRequest => _approveRequest.tr();
 
   static const String _rejectRequest = 'reject_request';
   static String get rejectRequest => _rejectRequest.tr();
+
+  static const String _confirmApproval = 'confirm_approval';
+  static String get confirmApproval => _confirmApproval.tr();
+
+  static const String _confirmRejection = 'confirm_rejection';
+  static String get confirmRejection => _confirmRejection.tr();
+
+  static const String _requestApprovedSuccessfully =
+      'request_approved_successfully';
+  static String get requestApprovedSuccessfully =>
+      _requestApprovedSuccessfully.tr();
+
+  static const String _requestRejectedSuccessfully =
+      'request_rejected_successfully';
+  static String get requestRejectedSuccessfully =>
+      _requestRejectedSuccessfully.tr();
 
   static const String _status = 'status';
   static String get status => _status.tr();

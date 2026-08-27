@@ -70,6 +70,28 @@ class NewRequestRemoteDataSourceImpl extends BaseRemoteSource
     );
   }
 
+  /// PATCH /leave-requests/{id} (multipart/form-data)
+  @override
+  Future<Either<Failure, NewRequestResultEntity>> updateProviderRequest(
+    int id,
+    CreateNewRequestParams params,
+  ) async {
+    return request<NewRequestResultEntity>(
+      method: HttpMethod.patch,
+      endpoint: ApiEndpoints.updateLeaveRequest(id),
+      asFormData: true,
+      body: {
+        'leave_type': params.leaveType,
+        'start_date': _formatDate(params.startDate),
+        'end_date': _formatDate(params.endDate),
+        'reason': params.reason,
+        if (params.file != null)
+          'file': await MultipartFile.fromFile(params.file!.path),
+      },
+      fromJson: _parseResponse,
+    );
+  }
+
   static NewRequestResultEntity _parseResponse(dynamic json) {
     final map = json is Map<String, dynamic>
         ? json
@@ -84,5 +106,10 @@ class NewRequestRemoteDataSourceImpl extends BaseRemoteSource
     String pad(int n) => n.toString().padLeft(2, '0');
     return '${date.year}-${pad(date.month)}-${pad(date.day)} '
         '${pad(date.hour)}:${pad(date.minute)}:${pad(date.second)}';
+  }
+
+  static String _formatDate(DateTime date) {
+    String pad(int n) => n.toString().padLeft(2, '0');
+    return '${date.year}-${pad(date.month)}-${pad(date.day)}';
   }
 }

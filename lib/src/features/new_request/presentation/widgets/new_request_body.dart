@@ -18,7 +18,10 @@ class _NewRequestBodyState extends State<_NewRequestBody> {
   void initState() {
     super.initState();
 
-    if (widget.mode == RequestMode.edit && widget.request != null) {
+    final isEdit =
+        widget.mode == RequestMode.edit ||
+        widget.mode == RequestMode.editProvider;
+    if (isEdit && widget.request != null) {
       _vc.prefillFromRequest(widget.request!);
     }
   }
@@ -38,7 +41,8 @@ class _NewRequestBodyState extends State<_NewRequestBody> {
                   children: [
                     _RequestTypeSelector(
                       selectedType: _vc.selectedRequestType,
-                      isEdit: widget.mode == RequestMode.edit,
+                      isEdit: widget.mode == RequestMode.edit ||
+                          widget.mode == RequestMode.editProvider,
                       leaveType: widget.request?.leaveType,
                     ),
 

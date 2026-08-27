@@ -9,6 +9,7 @@ class _EmployeeDetailsBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final requests = [
       const RequestData(
+        id: 36,
         title: 'إجازة سنوية',
         status: 'قيد المراجعة',
         statusType: RequestStatus.pending,
@@ -17,6 +18,7 @@ class _EmployeeDetailsBody extends StatelessWidget {
       ),
 
       const RequestData(
+        id: 37,
         title: 'إذن خروج',
         status: 'تمت الموافقة',
         statusType: RequestStatus.approved,
@@ -25,6 +27,7 @@ class _EmployeeDetailsBody extends StatelessWidget {
       ),
 
       const RequestData(
+        id: 38,
         title: 'إجازة مرضية',
         status: 'مرفوض',
         statusType: RequestStatus.rejected,

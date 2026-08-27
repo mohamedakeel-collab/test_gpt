@@ -1,46 +1,55 @@
 part of '../imports/request_details_imports.dart';
 
 class RequestEmployeeCard extends StatelessWidget {
-  const RequestEmployeeCard();
+  const RequestEmployeeCard({super.key, this.employee});
+
+  final EmployeeEntity? employee;
 
   @override
   Widget build(BuildContext context) {
+    final data = employee ?? EmployeeEntity.initial();
+
     return Container(
       padding: EdgeInsets.all(AppPadding.pH12),
-
       decoration: BoxDecoration(
         color: AppColors.splashBackground,
-
         borderRadius: BorderRadius.circular(AppCircular.r12),
       ),
-
       child: Row(
         children: [
-          ProfileImageCard(
-            image:
-                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZvzcHwf_E84xtTdBJclC4gsogNLWekM0qXQ&s',
-
-            size: AppSize.sW55,
+          Container(
+            width: AppSize.sW55,
+            height: AppSize.sW55,
+            decoration: BoxDecoration(
+              color: AppColors.white,
+              borderRadius: BorderRadius.circular(AppCircular.infinity),
+            ),
+            child: IconWidget(
+              icon: AppAssets.svg.baseSvg.profile.path,
+              width: AppSize.sW55,
+              height: AppSize.sW55,
+            ),
           ),
-
           12.szW,
-
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-
-            children: [
-              Text(
-                'أحمد منصور',
-
-                style: const TextStyle().setPrimaryColor.s15.bold,
-              ),
-
-              Text(
-                'مطور برمجيات - الفريق التقني',
-
-                style: const TextStyle().setWhiteColor.s12.regular,
-              ),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  data.fullName,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle().setPrimaryColor.s15.bold,
+                ),
+                4.szH,
+                Text(
+                  data.position,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle().setWhiteColor.s12.regular,
+                ),
+              ],
+            ),
           ),
         ],
       ),

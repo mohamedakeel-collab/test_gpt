@@ -50,6 +50,8 @@ import '../../../features/my_team/domain/repositories/my_team_repository.dart'
     as _i676;
 import '../../../features/my_team/domain/usecases/get_my_team_requests_use_case.dart'
     as _i455;
+import '../../../features/my_team/domain/usecases/review_request_use_case.dart'
+    as _i1117;
 import '../../../features/my_team/presentation/imports/my_team_imports.dart'
     as _i477;
 import '../../../features/new_request/data/datasources/new_request_remote_data_source.dart'
@@ -62,6 +64,8 @@ import '../../../features/new_request/domain/repositories/new_request_repository
     as _i875;
 import '../../../features/new_request/domain/usecases/create_new_request_use_case.dart'
     as _i143;
+import '../../../features/new_request/domain/usecases/update_provider_request_use_case.dart'
+    as _i1116;
 import '../../../features/new_request/domain/usecases/update_request_use_case.dart'
     as _i213;
 import '../../../features/new_request/presentation/imports/new_request_imports.dart'
@@ -86,6 +90,10 @@ import '../../../features/order_details/domain/usecases/get_order_details_use_ca
     as _i919;
 import '../../../features/order_details/presentation/imports/order_details_imports.dart'
     as _i1033;
+import '../../../features/provider/request_details/domain/usecases/get_request_comments_use_case.dart'
+    as _i1118;
+import '../../../features/provider/request_details/presentation/imports/request_details_imports.dart'
+    as _i969;
 import '../../../features/orders/data/datasources/orders_remote_data_source.dart'
     as _i688;
 import '../../../features/orders/data/repositories/orders_repository_impl.dart'
@@ -136,6 +144,14 @@ import '../../../features/profile/domain/usecases/set_language_use_case.dart'
     as _i247;
 import '../../../features/profile/presentation/imports/profile_imports.dart'
     as _i41;
+import '../../../features/provider/request_details/data/datasources/request_details_remote_data_source.dart'
+    as _i406;
+import '../../../features/provider/request_details/data/repositories/request_details_repository_impl.dart'
+    as _i235;
+import '../../../features/provider/request_details/domain/repositories/request_details_repository.dart'
+    as _i376;
+import '../../../features/provider/request_details/domain/usecases/get_request_details_use_case.dart'
+    as _i353;
 import '../../../features/remote_work/data/datasources/attendance_remote_data_source.dart'
     as _i546;
 import '../../../features/remote_work/data/repositories/attendance_repository_impl.dart'
@@ -203,6 +219,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i214.ProfileRemoteDataSource>(
       () => _i214.ProfileRemoteDataSourceImpl(),
     );
+    gh.lazySingleton<_i406.RequestDetailsRemoteDataSource>(
+      () => _i406.RequestDetailsRemoteDataSourceImpl(),
+    );
     gh.lazySingleton<_i1009.LoginRemoteDataSource>(
       () => _i670.LoginRemoteDataSourceImpl(),
     );
@@ -226,6 +245,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i213.UpdateRequestUseCase>(
       () => _i213.UpdateRequestUseCase(gh<_i875.NewRequestRepository>()),
     );
+    gh.factory<_i1116.UpdateProviderRequestUseCase>(
+      () => _i1116.UpdateProviderRequestUseCase(
+        gh<_i875.NewRequestRepository>(),
+      ),
+    );
     gh.lazySingleton<_i1007.NotificationsRepository>(
       () => _i466.NotificationsRepositoryImpl(
         gh<_i1066.NotificationsRemoteDataSource>(),
@@ -238,6 +262,7 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i91.NewRequestCubit(
         gh<_i143.CreateNewRequestUseCase>(),
         gh<_i213.UpdateRequestUseCase>(),
+        gh<_i1116.UpdateProviderRequestUseCase>(),
       ),
     );
     gh.lazySingleton<_i287.OrdersRepository>(
@@ -303,6 +328,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i455.GetMyTeamRequestsUseCase>(
       () => _i455.GetMyTeamRequestsUseCase(gh<_i676.MyTeamRepository>()),
     );
+    gh.factory<_i1117.ReviewRequestUseCase>(
+      () => _i1117.ReviewRequestUseCase(gh<_i676.MyTeamRepository>()),
+    );
     gh.factory<_i1033.OrderDetailsCubit>(
       () => _i1033.OrderDetailsCubit(gh<_i919.GetOrderDetailsUseCase>()),
     );
@@ -311,6 +339,11 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i533.GetProductsUseCase>(),
         gh<_i1024.CreateProductUseCase>(),
         gh<_i975.DeleteProductUseCase>(),
+      ),
+    );
+    gh.lazySingleton<_i376.RequestDetailsRepository>(
+      () => _i235.RequestDetailsRepositoryImpl(
+        gh<_i406.RequestDetailsRemoteDataSource>(),
       ),
     );
     gh.factory<_i528.LogoutUseCase>(
@@ -325,8 +358,23 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i1051.LoginUseCase>(
       () => _i1051.LoginUseCase(gh<_i1053.LoginRepository>()),
     );
+    gh.factory<_i353.GetRequestDetailsUseCase>(
+      () =>
+          _i353.GetRequestDetailsUseCase(gh<_i376.RequestDetailsRepository>()),
+    );
+    gh.factory<_i1118.GetRequestCommentsUseCase>(
+      () => _i1118.GetRequestCommentsUseCase(
+        gh<_i376.RequestDetailsRepository>(),
+      ),
+    );
     gh.factory<_i477.MyTeamCubit>(
-      () => _i477.MyTeamCubit(gh<_i455.GetMyTeamRequestsUseCase>()),
+      () => _i477.MyTeamCubit(
+        gh<_i455.GetMyTeamRequestsUseCase>(),
+        gh<_i1117.ReviewRequestUseCase>(),
+      ),
+    );
+    gh.factory<_i969.RequestCommentsCubit>(
+      () => _i969.RequestCommentsCubit(gh<_i1118.GetRequestCommentsUseCase>()),
     );
     gh.factory<_i281.NotificationsCubit>(
       () => _i281.NotificationsCubit(gh<_i176.GetNotificationsUseCase>()),
@@ -358,6 +406,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i41.LanguageCubit>(
       () => _i41.LanguageCubit(gh<_i247.SetLanguageUseCase>()),
+    );
+    gh.factory<_i969.RequestDetailsCubit>(
+      () => _i969.RequestDetailsCubit(gh<_i353.GetRequestDetailsUseCase>()),
     );
     return this;
   }

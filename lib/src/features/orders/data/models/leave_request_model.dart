@@ -18,7 +18,9 @@ class LeaveRequestModel {
   final int? reviewerId;
   final String leaveType;
   final String? startDate;
+  final String? startTime;
   final String? endDate;
+  final String? endTime;
   final String? duration;
   final String reason;
   final bool reviewedByManager;
@@ -34,6 +36,7 @@ class LeaveRequestModel {
   final String? reviewedAt;
   final ReviewerModel? reviewer;
   final List<CommentModel> comments;
+  final List<Map<String, dynamic>> attendanceRecords;
 
   const LeaveRequestModel({
     required this.id,
@@ -45,7 +48,9 @@ class LeaveRequestModel {
     required this.status,
     this.reviewerId,
     this.startDate,
+    this.startTime,
     this.endDate,
+    this.endTime,
     this.duration,
     this.file,
     this.statusText = '',
@@ -54,6 +59,7 @@ class LeaveRequestModel {
     this.reviewer,
     this.employee,
     this.comments = const [],
+    this.attendanceRecords = const [],
   });
 
   factory LeaveRequestModel.fromJson(Map<String, dynamic> json) =>
@@ -63,7 +69,9 @@ class LeaveRequestModel {
         reviewerId: json.getIntOrNull('reviewer_id'),
         leaveType: json.getString('leave_type'),
         startDate: json.getStringOrNull('start_date'),
+        startTime: json.getStringOrNull('start_time'),
         endDate: json.getStringOrNull('end_date'),
+        endTime: json.getStringOrNull('end_time'),
         duration: json.getStringOrNull('duration'),
         reason: json.getString('reason'),
         reviewedByManager: json.getBool('reviewed_by_manager'),
@@ -76,5 +84,6 @@ class LeaveRequestModel {
         reviewer: json.getObject('reviewer', ReviewerModel.fromJson),
         employee: json.getObject('employee', EmployeeModel.fromJson),
         comments: json.getObjectList('comments', CommentModel.fromJson),
+        attendanceRecords: json.getList<Map<String, dynamic>>('attendance_records'),
       );
 }

@@ -18,6 +18,11 @@ class _TeamStatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (background, foreground) = switch (status) {
+      'approved_by_manager' => (
+      AppColors.successSurface,
+      AppColors.success,
+      ),
+
       'approved' => (
       AppColors.successSurface,
       AppColors.success,

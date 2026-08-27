@@ -85,7 +85,8 @@ class NewRequestViewController {
     required RequestMode mode,
     int? requestId,
   }) async {
-    if (mode == RequestMode.edit && (requestId == null || requestId <= 0)) {
+    final isEdit = mode == RequestMode.edit || mode == RequestMode.editProvider;
+    if (isEdit && (requestId == null || requestId <= 0)) {
       _showRequiredFieldsError(context);
       return;
     }

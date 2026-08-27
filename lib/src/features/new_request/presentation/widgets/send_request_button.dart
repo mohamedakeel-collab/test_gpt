@@ -17,11 +17,11 @@ class _SendRequestButton extends StatelessWidget {
             MessageUtils.showSnackBar(
               context: context,
               baseStatus: BaseStatus.success,
-              message: mode == RequestMode.edit
-                  ? LocaleKeys.requestUpdatedSuccessfully
-                  : LocaleKeys.requestSubmittedSuccessfully,
+              message: mode == RequestMode.add
+                  ? LocaleKeys.requestSubmittedSuccessfully
+                  : LocaleKeys.requestUpdatedSuccessfully,
             );
-            Go.back();
+            Go.back(true);
           case AsyncFailure<NewRequestResultEntity>(:final failure):
             if (failure is! CancelledFailure) {
               MessageUtils.showSnackBar(

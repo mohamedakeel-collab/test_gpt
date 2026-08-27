@@ -12,6 +12,11 @@ abstract interface class MyTeamRemoteDataSource {
     int? perPage,
     String? status,
   });
+
+  Future<Either<Failure, LeaveRequestModel>> reviewRequest(
+    int id,
+    String status,
+  );
 }
 
 @LazySingleton(as: MyTeamRemoteDataSource)
@@ -37,11 +42,31 @@ class MyTeamRemoteDataSourceImpl extends BaseRemoteSource
     );
   }
 
+  @override
+  Future<Either<Failure, LeaveRequestModel>> reviewRequest(
+    int id,
+    String status,
+  ) {
+    return request<LeaveRequestModel>(
+      method: HttpMethod.patch,
+      endpoint: ApiEndpoints.reviewLeaveRequest(id),
+      body: {'status': status},
+      fromJson: _parseReviewRequest,
+    );
+  }
+
   static List<LeaveRequestModel> _parseTeamRequests(dynamic json) {
     final list = (json is Map ? json['data'] : json) as List? ?? const [];
     return list
         .whereType<Map<String, dynamic>>()
         .map(LeaveRequestModel.fromJson)
         .toList();
+  }
+
+  static LeaveRequestModel _parseReviewRequest(dynamic json) {
+    final map = json is Map<String, dynamic>
+        ? (json['data'] ?? json) as Map<String, dynamic>
+        : <String, dynamic>{};
+    return LeaveRequestModel.fromJson(map);
   }
 }

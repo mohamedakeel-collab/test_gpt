@@ -1,9 +1,6 @@
 part of '../imports/new_request_imports.dart';
 
-enum RequestMode {
-  add,
-  edit,
-}
+enum RequestMode { add, edit, editProvider }
 
 class NewRequestScreen extends StatefulWidget {
   const NewRequestScreen({
@@ -11,7 +8,6 @@ class NewRequestScreen extends StatefulWidget {
     this.request,
     this.mode = RequestMode.add,
   });
-
 
   final LeaveRequestEntity? request;
   final RequestMode mode;
@@ -40,7 +36,9 @@ class _NewRequestScreenState extends State<NewRequestScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isEdit = widget.mode == RequestMode.edit;
+    final isEdit =
+        widget.mode == RequestMode.edit ||
+        widget.mode == RequestMode.editProvider;
 
     return BlocProvider<NewRequestCubit>.value(
       value: _cubit,
@@ -52,9 +50,7 @@ class _NewRequestScreenState extends State<NewRequestScreen> {
         ),
         child: Scaffold(
           appBar: CustomAppBar(
-            title: isEdit
-                ? LocaleKeys.editRequest
-                : LocaleKeys.newRequestTitle,
+            title: isEdit ? LocaleKeys.editRequest : LocaleKeys.newRequestTitle,
             showArrow: true,
             onTap: () {
               Go.back();

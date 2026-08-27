@@ -121,6 +121,7 @@ class RequestCard extends StatelessWidget {
 
 class RequestData {
   const RequestData({
+    required this.id,
     required this.title,
     required this.status,
     required this.statusType,
@@ -128,6 +129,7 @@ class RequestData {
     required this.date,
   });
 
+  final int id;
   final String title;
   final String status;
   final RequestStatus statusType;

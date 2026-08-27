@@ -25,4 +25,10 @@ class NewRequestRepositoryImpl implements NewRequestRepository {
     int id,
     CreateNewRequestParams params,
   ) => _remote.updateRequest(id, params);
+
+  @override
+  Future<Either<Failure, NewRequestResultEntity>> updateProviderRequest(
+    int id,
+    CreateNewRequestParams params,
+  ) => _remote.updateProviderRequest(id, params);
 }

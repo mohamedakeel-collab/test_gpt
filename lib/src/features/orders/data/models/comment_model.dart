@@ -8,16 +8,22 @@ class CommentModel {
   final int id;
   final String comment;
   final String? createdAt;
+  final String authorFullName;
 
   const CommentModel({
     required this.id,
     required this.comment,
     this.createdAt,
+    this.authorFullName = '',
   });
 
   factory CommentModel.fromJson(Map<String, dynamic> json) => CommentModel(
         id: json.getInt('id'),
-        comment: json.getString('comment'),
+        comment: json.getString(
+          'comment_text',
+          fallback: json.getString('comment'),
+        ),
         createdAt: json.getStringOrNull('created_at'),
+        authorFullName: json.getMap('author').getString('full_name'),
       );
 }

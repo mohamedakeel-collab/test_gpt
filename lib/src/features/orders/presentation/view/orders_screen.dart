@@ -29,13 +29,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
     );
   }
 
-  @override
-  void didUpdateWidget(covariant OrdersScreen oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.refreshToken != oldWidget.refreshToken) {
-      _cubit.getOrders(leaveType: _vc.selectedLeaveType);
-    }
-  }
+
 
   @override
   void dispose() {

@@ -8,6 +8,7 @@ class _RequestsBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final requests = [
       const RequestData(
+        id: 36,
         title: 'إجازة سنوية',
         status: 'قيد المراجعة',
         statusType: RequestStatus.pending,
@@ -16,6 +17,7 @@ class _RequestsBody extends StatelessWidget {
       ),
 
       const RequestData(
+        id: 37,
         title: 'إذن خروج',
         status: 'تمت الموافقة',
         statusType: RequestStatus.approved,
@@ -24,6 +26,7 @@ class _RequestsBody extends StatelessWidget {
       ),
 
       const RequestData(
+        id: 38,
         title: 'إجازة مرضية',
         status: 'مرفوض',
         statusType: RequestStatus.rejected,
@@ -53,6 +56,7 @@ class _RequestsBody extends StatelessWidget {
                 onTap: () {
                   Go.to(
                     RequestDetailsScreen(
+                      id: 12,
                     ),
                   );
                 },

@@ -4,11 +4,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../config/language/locale_keys.g.dart';
 import '../../../../config/res/assets.gen.dart';
 import '../../../../config/res/config_imports.dart';
+import '../../../../core/navigation/navigator.dart';
 import '../../../../core/shared/extensions/text_style_extensions.dart';
 import '../../../../core/shared/extensions/widgets/padding_extension.dart';
 import '../../../../core/shared/extensions/widgets/widget_extentions.dart';
@@ -18,6 +20,7 @@ import '../../../../core/widgets/handling_views/empty_widget.dart';
 import '../../../../core/widgets/icon_widget.dart';
 import '../../../../core/widgets/image_widgets/cached_image.dart';
 import '../../../home/presentation/imports/home_imports.dart';
+import '../../../provider/request_details/presentation/imports/request_details_imports.dart';
 import '../../domain/entities/comment_entity.dart';
 import '../../domain/entities/employee_details_entity.dart';
 import '../../domain/entities/leave_request_details_entity.dart';
