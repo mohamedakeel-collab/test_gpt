@@ -16,17 +16,39 @@ class RequestDetailsRepositoryImpl implements RequestDetailsRepository {
 
   @override
   Future<Either<Failure, LeaveRequestEntity>> getRequestDetails(int id) {
-    return _remote.getRequestDetails(id).then(
-          (result) => result.map((model) => model.toEntity()),
-        );
+    return _remote
+        .getRequestDetails(id)
+        .then((result) => result.map((model) => model.toEntity()));
+  }
+
+  @override
+  Future<Either<Failure, LeaveRequestEntity>> reviewRequest(
+    int id,
+    String status,
+  ) {
+    return _remote
+        .reviewRequest(id, status)
+        .then((result) => result.map((model) => model.toEntity()));
   }
 
   @override
   Future<Either<Failure, List<CommentEntity>>> getComments(int requestId) {
-    return _remote.getComments(requestId).then(
+    return _remote
+        .getComments(requestId)
+        .then(
           (result) => result.map(
             (models) => models.map((model) => model.toEntity()).toList(),
           ),
         );
+  }
+
+  @override
+  Future<Either<Failure, CommentEntity>> addComment(
+    int requestId,
+    String comment,
+  ) {
+    return _remote
+        .addComment(requestId, comment)
+        .then((result) => result.map((model) => model.toEntity()));
   }
 }

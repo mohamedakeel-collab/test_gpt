@@ -14,11 +14,21 @@ class _MyTeamScreenState extends State<MyTeamScreen> {
   @override
   void initState() {
     super.initState();
-    _cubit = injector<MyTeamCubit>()..getTeamRequests(perPage: 15);
+
     _controller = MyTeamViewController(
       onStatusChanged: (status) =>
-          _cubit.getTeamRequests(perPage: 15, status: status),
+          _cubit.getTeamRequests(
+            perPage: 15,
+            status: status,
+          ),
     );
+
+
+    _cubit = injector<MyTeamCubit>()
+      ..getTeamRequests(
+        perPage: 15,
+        status: _controller.selectedStatusFilter,
+      );
   }
 
   @override

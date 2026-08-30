@@ -1,4 +1,4 @@
-part of '../imports/my_team_imports.dart';
+part of '../imports/request_details_imports.dart';
 
 class _ConfirmReviewDialog extends StatelessWidget {
   const _ConfirmReviewDialog({required this.isApprove});
@@ -21,7 +21,9 @@ class _ConfirmReviewDialog extends StatelessWidget {
               width: AppSize.sW60,
               height: AppSize.sH60,
               decoration: BoxDecoration(
-                color: isApprove ? AppColors.successSurface : AppColors.dangerSurface,
+                color: isApprove
+                    ? AppColors.successSurface
+                    : AppColors.dangerSurface,
                 shape: BoxShape.circle,
               ),
               child: IconWidget(
@@ -34,7 +36,9 @@ class _ConfirmReviewDialog extends StatelessWidget {
             ),
             20.szH,
             Text(
-              isApprove ? LocaleKeys.confirmApproval : LocaleKeys.confirmRejection,
+              isApprove
+                  ? LocaleKeys.confirmApproval
+                  : LocaleKeys.confirmRejection,
               textAlign: TextAlign.center,
               style: const TextStyle().setMainTextColor.s16.bold,
             ),
@@ -46,7 +50,9 @@ class _ConfirmReviewDialog extends StatelessWidget {
             ),
             24.szH,
             LoadingButton(
-              title: isApprove ? LocaleKeys.approveRequest : LocaleKeys.rejectRequest,
+              title: isApprove
+                  ? LocaleKeys.approveRequest
+                  : LocaleKeys.rejectRequest,
               color: isApprove ? AppColors.success : AppColors.error,
               textColor: AppColors.white,
               borderRadius: AppCircular.r20,

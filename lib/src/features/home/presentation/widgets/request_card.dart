@@ -42,9 +42,14 @@ class _RequestCard extends StatelessWidget {
             ),
           ),
           12.szW,
-          _RequestStatusBadge(
-            status: request.status,
-            statusText: request.statusText,
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: AppSize.sW90,
+            ),
+            child: _RequestStatusBadge(
+              status: request.status,
+              statusText: request.statusText,
+            ),
           ),
         ],
       ),

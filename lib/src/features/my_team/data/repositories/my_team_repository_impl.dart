@@ -2,7 +2,6 @@ import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/network/error/failures.dart';
-import '../../../orders/data/mappers/orders_mapper.dart';
 import '../mappers/my_team_mapper.dart';
 import '../../../orders/domain/entities/leave_request_entity.dart';
 import '../../domain/repositories/my_team_repository.dart';
@@ -24,14 +23,5 @@ class MyTeamRepositoryImpl implements MyTeamRepository {
       status: status,
     );
     return result.map((items) => items.toEntities());
-  }
-
-  @override
-  Future<Either<Failure, LeaveRequestEntity>> reviewRequest(
-    int id,
-    String status,
-  ) async {
-    final result = await _remote.reviewRequest(id, status);
-    return result.map((item) => item.toEntity());
   }
 }

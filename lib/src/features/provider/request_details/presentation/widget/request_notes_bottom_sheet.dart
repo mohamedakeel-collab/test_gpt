@@ -12,6 +12,7 @@ class _RequestNotesBottomSheet extends StatefulWidget {
 
 class _RequestNotesBottomSheetState extends State<_RequestNotesBottomSheet> {
   late final RequestCommentsCubit _cubit;
+  final TextEditingController _commentController = TextEditingController();
 
   @override
   void initState() {
@@ -22,13 +23,19 @@ class _RequestNotesBottomSheetState extends State<_RequestNotesBottomSheet> {
   @override
   void dispose() {
     _cubit.close();
+    _commentController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<RequestCommentsCubit>.value(
-      value: _cubit,
+        value: _cubit,
+        child: WillPopScope(
+          onWillPop: () async {
+            Navigator.of(context).pop(true);
+            return true;
+          },
       child: Container(
         height: MediaQuery.of(context).size.height * .85,
         decoration: BoxDecoration(
@@ -62,59 +69,117 @@ class _RequestNotesBottomSheetState extends State<_RequestNotesBottomSheet> {
             ),
             Divider(color: AppColors.border),
             Expanded(
-              child: AsyncBlocBuilder<RequestCommentsCubit, List<CommentEntity>>(
-                onRetry: () => context
-                    .read<RequestCommentsCubit>()
-                    .getComments(widget.requestId),
-                initialBuilder: (_) => Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const CircularProgressIndicator(),
-                      12.szH,
-                      Text(
-                        LocaleKeys.loadingComments,
-                        style: const TextStyle().setMainTextColor.s13.medium,
+              child:
+                  AsyncBlocBuilder<RequestCommentsCubit, List<CommentEntity>>(
+                    onRetry: () => context
+                        .read<RequestCommentsCubit>()
+                        .getComments(widget.requestId),
+                    initialBuilder: (_) => Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const CircularProgressIndicator(),
+                          12.szH,
+                          Text(
+                            LocaleKeys.loadingComments,
+                            style:
+                                const TextStyle().setMainTextColor.s13.medium,
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-                loadingBuilder: (_) => Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const CircularProgressIndicator(),
-                      12.szH,
-                      Text(
-                        LocaleKeys.loadingComments,
-                        style: const TextStyle().setMainTextColor.s13.medium,
-                      ),
-                    ],
-                  ),
-                ),
-                builder: (context, comments) {
-                  if (comments.isEmpty) {
-                    return EmptyWidget(
-                      title: LocaleKeys.noComments,
-                      desc: LocaleKeys.errorexceptionNotcontaindesc,
-                    );
-                  }
-
-                  return ListView.separated(
-                    padding: EdgeInsets.all(AppPadding.pH16),
-                    itemCount: comments.length,
-                    separatorBuilder: (_, _) => 12.szH,
-                    itemBuilder: (_, index) => _NoteItem(
-                      comment: comments[index],
                     ),
-                  );
-                },
-              ),
+                    loadingBuilder: (_) => Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const CircularProgressIndicator(),
+                          12.szH,
+                          Text(
+                            LocaleKeys.loadingComments,
+                            style:
+                                const TextStyle().setMainTextColor.s13.medium,
+                          ),
+                        ],
+                      ),
+                    ),
+                    builder: (context, comments) {
+                      if (comments.isEmpty) {
+                        return EmptyWidget(
+                          title: LocaleKeys.noComments,
+                          desc: LocaleKeys.errorexceptionNotcontaindesc,
+                        );
+                      }
+
+                      return ListView.separated(
+                        padding: EdgeInsets.all(AppPadding.pH16),
+                        itemCount: comments.length,
+                        separatorBuilder: (_, _) => 12.szH,
+                        itemBuilder: (_, index) =>
+                            _NoteItem(comment: comments[index]),
+                      );
+                    },
+                  ),
+            ),
+            12.szH,
+
+            BlocBuilder<RequestCommentsCubit, AsyncState<List<CommentEntity>>>(
+              builder: (context, state) {
+                return SendNoteButton(
+                  controller: _commentController,
+                  enabled: !_cubit.isAddingComment && state is! AsyncLoading,
+                  onSend: () async {
+                    final text = _commentController.text.trim();
+
+                    final validation = Validators.validateEmpty(
+                      text,
+                      fieldTitle: LocaleKeys.writeYourNote,
+                    );
+                    if (validation != null) {
+                      MessageUtils.showSnackBar(
+                        context: context,
+                        baseStatus: BaseStatus.error,
+                        message: validation,
+                      );
+                      return;
+                    }
+
+                    if (_cubit.isAddingComment) return;
+
+                    await _cubit.addComment(
+                      requestId: widget.requestId,
+                      comment: text,
+                    );
+
+                    if (!context.mounted) return;
+
+                    switch (_cubit.state) {
+                      case AsyncSuccess<List<CommentEntity>>():
+                        _commentController.clear();
+                        MessageUtils.showSnackBar(
+                          context: context,
+                          baseStatus: BaseStatus.success,
+                          message: LocaleKeys.commentAddedSuccessfully,
+                        );
+
+                      case AsyncFailure<List<CommentEntity>>(:final failure):
+                        if (failure is! CancelledFailure) {
+                          MessageUtils.showSnackBar(
+                            context: context,
+                            baseStatus: BaseStatus.error,
+                            message: failure.userMessage,
+                          );
+                        }
+                      default:
+                        break;
+                    }
+                  },
+                );
+              },
             ),
           ],
         ),
       ),
-    );
+    ));
   }
 }
 

@@ -8,9 +8,4 @@ abstract interface class MyTeamRepository {
     int? perPage,
     String? status,
   });
-
-  Future<Either<Failure, LeaveRequestEntity>> reviewRequest(
-    int id,
-    String status,
-  );
 }

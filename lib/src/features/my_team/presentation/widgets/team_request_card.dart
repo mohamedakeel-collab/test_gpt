@@ -102,15 +102,15 @@ class TeamRequestCard extends StatelessWidget {
 
                           16.szW,
 
-                          GestureDetector(
-                            onTap: onDelete,
+                        //  GestureDetector(
+                         //   onTap: onDelete,
+//
+                        //    child: IconWidget(
+                        //      icon: AppAssets.svg.baseSvg.deleteAll.path,
 
-                            child: IconWidget(
-                              icon: AppAssets.svg.baseSvg.deleteAll.path,
-
-                              height: AppSize.sH28,
-                            ),
-                          ),
+                          //    height: AppSize.sH28,
+                         //   ),
+                        //  ),
                         ],
                       ),
                     ],

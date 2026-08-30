@@ -37,7 +37,7 @@ class _RequestDetailsBody extends StatelessWidget {
                   RequestAttachmentCard(file: details.file),
                 ],
                 12.szH,
-                RequestNotesCard(requestId: details.id),
+                RequestNotesCard(requestId: details.id,comments: details.comments,),
               ],
             ),
           ),

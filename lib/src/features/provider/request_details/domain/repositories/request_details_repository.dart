@@ -7,5 +7,15 @@ import '../../../../orders/domain/entities/leave_request_entity.dart';
 abstract interface class RequestDetailsRepository {
   Future<Either<Failure, LeaveRequestEntity>> getRequestDetails(int id);
 
+  Future<Either<Failure, LeaveRequestEntity>> reviewRequest(
+    int id,
+    String status,
+  );
+
   Future<Either<Failure, List<CommentEntity>>> getComments(int requestId);
+
+  Future<Either<Failure, CommentEntity>> addComment(
+    int requestId,
+    String comment,
+  );
 }

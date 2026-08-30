@@ -1,20 +1,38 @@
 part of '../imports/request_details_imports.dart';
 
 class RequestNotesCard extends StatelessWidget {
-  const RequestNotesCard({super.key, required this.requestId});
+  const RequestNotesCard({
+    super.key,
+    required this.requestId,
+    required this.comments,
+  });
 
   final int requestId;
+  final List<CommentEntity> comments;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        showModalBottomSheet(
+      onTap: () async {
+        showModalBottomSheet<bool>(
           context: context,
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
-          builder: (_) => _RequestNotesBottomSheet(requestId: requestId),
-        );
+
+          builder: (sheetContext) {
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(sheetContext).viewInsets.bottom,
+              ),
+
+              child: _RequestNotesBottomSheet(requestId: requestId),
+            );
+          },
+        ).then((e) {
+          if (context.mounted) {
+            context.read<RequestDetailsCubit>().getRequestDetails(requestId);
+          }
+        });
       },
       child: Container(
         padding: EdgeInsets.symmetric(
@@ -36,6 +54,21 @@ class RequestNotesCard extends StatelessWidget {
             Text(
               LocaleKeys.notes,
               style: const TextStyle().setMainTextColor.s15.medium,
+            ),
+            6.szW,
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: AppPadding.pW8,
+                vertical: AppPadding.pH2,
+              ),
+              decoration: BoxDecoration(
+                color: AppColors.primary,
+                borderRadius: BorderRadius.circular(AppCircular.r20),
+              ),
+              child: Text(
+                '${comments.length}',
+                style: const TextStyle().setBlackColor.s12.bold,
+              ),
             ),
             const Spacer(),
             Icon(

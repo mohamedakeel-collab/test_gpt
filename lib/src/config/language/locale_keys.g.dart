@@ -83,6 +83,9 @@ abstract class LocaleKeys {
   static const String _lang = 'lang';
   static String get lang => _lang.tr();
 
+  static const String _writeYourNote = 'write_your_note';
+  static String get writeYourNote => _writeYourNote.tr();
+
   static const String _fillField = 'fill_field';
   static String get fillField => _fillField.tr();
 
@@ -526,12 +529,6 @@ abstract class LocaleKeys {
   static const String _myTeam = 'my_team';
   static String get myTeam => _myTeam.tr();
 
-  static const String _teamRequests = 'team_requests';
-  static String get teamRequests => _teamRequests.tr();
-
-  static const String _noTeamRequests = 'no_team_requests';
-  static String get noTeamRequests => _noTeamRequests.tr();
-
   static const String _details = 'details';
   static String get details => _details.tr();
 
@@ -652,16 +649,6 @@ abstract class LocaleKeys {
   static const String _confirmRejection = 'confirm_rejection';
   static String get confirmRejection => _confirmRejection.tr();
 
-  static const String _requestApprovedSuccessfully =
-      'request_approved_successfully';
-  static String get requestApprovedSuccessfully =>
-      _requestApprovedSuccessfully.tr();
-
-  static const String _requestRejectedSuccessfully =
-      'request_rejected_successfully';
-  static String get requestRejectedSuccessfully =>
-      _requestRejectedSuccessfully.tr();
-
   static const String _status = 'status';
   static String get status => _status.tr();
 
@@ -670,6 +657,9 @@ abstract class LocaleKeys {
 
   static const String _notes = 'notes';
   static String get notes => _notes.tr();
+
+  static const String _commentAddedSuccessfully = 'comment_added_successfully';
+  static String get commentAddedSuccessfully => _commentAddedSuccessfully.tr();
 
   static const String _profile = 'profile';
   static String get profile => _profile.tr();
@@ -737,8 +727,24 @@ abstract class LocaleKeys {
   static const String _notificationRead = 'notification_read';
   static String get notificationRead => _notificationRead.tr();
 
+  static const String _teamRequests = 'team_requests';
+  static String get teamRequests => _teamRequests.tr();
+
+  static const String _requestApprovedSuccessfully =
+      'request_approved_successfully';
+  static String get requestApprovedSuccessfully =>
+      _requestApprovedSuccessfully.tr();
+
+  static const String _requestRejectedSuccessfully =
+      'request_rejected_successfully';
+  static String get requestRejectedSuccessfully =>
+      _requestRejectedSuccessfully.tr();
+
   static const String _notificationUnread = 'notification_unread';
   static String get notificationUnread => _notificationUnread.tr();
+
+  static const String _noTeamRequests = 'no_team_requests';
+  static String get noTeamRequests => _noTeamRequests.tr();
 
   static const String _noNotifications = 'no_notifications';
   static String get noNotifications => _noNotifications.tr();
