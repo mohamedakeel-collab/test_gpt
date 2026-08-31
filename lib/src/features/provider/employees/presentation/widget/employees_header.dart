@@ -1,7 +1,9 @@
 part of '../imports/employees_imports.dart';
 
 class _EmployeesHeader extends StatelessWidget {
-  const _EmployeesHeader();
+  const _EmployeesHeader({required this.totalCount});
+
+  final int totalCount;
 
   @override
   Widget build(BuildContext context) {
@@ -9,12 +11,9 @@ class _EmployeesHeader extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
       children: [
-        Text('كل الموظفين', style: const TextStyle().setMainTextColor.s20.bold),
+        Text(LocaleKeys.employees, style: const TextStyle().setMainTextColor.s20.bold),
 
-        Text(
-          '٢٤ موظف إجمالي',
-          style: const TextStyle().setHintColor.s12.regular,
-        ),
+        Text('$totalCount ${LocaleKeys.employee}', style: const TextStyle().setHintColor.s12.regular),
       ],
     );
   }

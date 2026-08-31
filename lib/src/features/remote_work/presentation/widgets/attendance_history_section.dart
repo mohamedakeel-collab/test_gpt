@@ -4,10 +4,12 @@ class _AttendanceHistorySection extends StatelessWidget {
   const _AttendanceHistorySection({
     required this.records,
     required this.controller,
+    required this.isLoadingMore,
   });
 
   final List<AttendanceEntity> records;
   final RemoteWorkViewController controller;
+  final bool isLoadingMore;
 
   @override
   Widget build(BuildContext context) {
@@ -25,15 +27,23 @@ class _AttendanceHistorySection extends StatelessWidget {
             desc: LocaleKeys.errorexceptionNotcontaindesc,
           )
         else
-          ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: records.length,
-            separatorBuilder: (_, _) => 12.szH,
-            itemBuilder: (_, index) =>
-                _AttendanceCard(record: records[index], controller: controller),
+          Column(
+            children: [
+              for (final record in records) ...[
+                _AttendanceCard(record: record, controller: controller),
+                12.szH,
+              ],
+            ],
           ),
-        12.szH,
+        if (isLoadingMore) ...[
+          Center(
+            child: SizedBox.square(
+              dimension: AppSize.sH24,
+              child: const CircularProgressIndicator(strokeWidth: 2),
+            ),
+          ),
+          12.szH,
+        ],
       ],
     );
   }

@@ -1,97 +1,146 @@
 part of '../imports/employees_imports.dart';
 
-class _EmployeesBody extends StatelessWidget {
-  const _EmployeesBody();
+class _EmployeesBody extends StatefulWidget {
+  const _EmployeesBody({required this.controller});
+
+  final EmployeesViewController controller;
+
+  @override
+  State<_EmployeesBody> createState() => _EmployeesBodyState();
+}
+
+class _EmployeesBodyState extends State<_EmployeesBody> {
+  late final ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _scrollController = ScrollController()..addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) {
+      return;
+    }
+
+    final position = _scrollController.position;
+
+    if (position.pixels >= position.maxScrollExtent - 100) {
+      context.read<EmployeesCubit>().loadMore();
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController
+      ..removeListener(_onScroll)
+      ..dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final employees = [
-      const _EmployeeData(
-        name: 'أحمد المنصوري',
-        job: 'مطور موبايل',
-        status: 'طلب معلق',
-        image:
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZvzcHwf_E84xtTdBJclC4gsogNLWekM0qXQ&s',
-      ),
+    return AsyncBlocBuilder<EmployeesCubit, List<EmployeeEntity>>(
+      onRetry: () => context.read<EmployeesCubit>().getEmployees(perPage: 15),
 
-      const _EmployeeData(
-        name: 'سارة الحربي',
-        job: 'مصممة واجهة المستخدم',
-        status: 'طلب معلق',
-        image:
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZvzcHwf_E84xtTdBJclC4gsogNLWekM0qXQ&s',
-      ),
+      builder: (context, employees) {
+        return ValueListenableBuilder<String>(
+          valueListenable: widget.controller.searchQuery,
 
-      const _EmployeeData(
-        name: 'يوسف العتيبي',
-        job: 'مطور Flutter',
-        status: 'على رأس العمل',
-        image:
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZvzcHwf_E84xtTdBJclC4gsogNLWekM0qXQ&s',
-      ),
-    ];
+          builder: (context, _, __) {
+            final filteredEmployees = widget.controller.filterEmployees(
+              employees,
+            );
 
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          16.szH,
+            final pendingCount = widget.controller.pendingCount(
+              filteredEmployees,
+            );
 
-          const _EmployeesHeader(),
+            final cubit = context.read<EmployeesCubit>();
 
-          16.szH,
+            return RefreshIndicator(
+              onRefresh: () => cubit.getEmployees(perPage: 15),
 
-          const _EmployeesSummaryCard(),
+              child: ListView(
+                controller: _scrollController,
 
-          16.szH,
+                physics: const AlwaysScrollableScrollPhysics(),
 
-          Row(
-            children: [
-              Expanded(child: _EmployeesSearch()),
+                children: [
+                  16.szH,
 
-              8.szW,
+                  _EmployeesHeader(
+                    totalCount: filteredEmployees.length,
+                  ).paddingSymmetric(horizontal: AppPadding.pH16),
 
-              const _EmployeesFilter(),
-            ],
-          ),
+                  16.szH,
 
-          16.szH,
+                  _EmployeesSummaryCard(
+                    totalCount: filteredEmployees.length,
 
-          ...employees.map(
-            (employee) => Padding(
-              padding: EdgeInsets.only(bottom: AppPadding.pH12),
+                    pendingCount: pendingCount,
+                  ).paddingSymmetric(horizontal: AppPadding.pH16),
 
-              child: _EmployeeCard(
-                name: employee.name,
-                job: employee.job,
-                status: employee.status,
-                image: employee.image,
-                onTap: () {
-                  Go.to(
-                    EmployeesDetailsScreen(
+                  16.szH,
 
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _EmployeesSearch(controller: widget.controller),
+                      ),
+
+                      8.szW,
+
+                      _EmployeesFilter(controller: widget.controller),
+                    ],
+                  ).paddingSymmetric(horizontal: AppPadding.pH16),
+
+                  16.szH,
+
+                  if (filteredEmployees.isEmpty)
+                    EmptyWidget(
+                      title: LocaleKeys.noEmployees,
+
+                      desc: LocaleKeys.errorexceptionNotcontaindesc,
+                    ).paddingSymmetric(horizontal: AppPadding.pH16)
+                  else
+                    ...filteredEmployees.map(
+                      (employee) =>
+                          _EmployeeCard(
+                            employee: employee,
+
+                            controller: widget.controller,
+
+                            onTap: () {
+                              Go.to(EmployeesDetailsScreen(employee: employee));
+                            },
+                          ).paddingOnly(
+                            left: AppPadding.pH16,
+
+                            right: AppPadding.pH16,
+
+                            bottom: AppPadding.pH12,
+                          ),
                     ),
-                  );
-                },
+
+                  if (cubit.isLoadingMore)
+                    Center(
+                      child: SizedBox.square(
+                        dimension: AppSize.sH24,
+
+                        child: const CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                    ),
+
+                  24.szH,
+                ],
               ),
-            ),
-          ),
-        ],
-      ).paddingSymmetric(horizontal: AppPadding.pH16),
+            );
+          },
+        );
+      },
     );
   }
-}
-
-class _EmployeeData {
-  const _EmployeeData({
-    required this.name,
-    required this.job,
-    required this.status,
-    required this.image,
-  });
-
-  final String name;
-  final String job;
-  final String status;
-  final String image;
 }

@@ -25,7 +25,6 @@ class LoginCubit extends AsyncCubit<LoginEntity> {
       // Persist the token only on success. `fold` awaits both branches so a
       // failed keychain write still surfaces before navigation.
       await result.fold((_) async {}, (data) async {
-        _tokenStorage.save(access: data.token);
         final user = data.toUserModel();
         print(data.toUserModel().toJson());
         await _userCubit.setUserLoggedIn(user: user, token: data.token);

@@ -13,7 +13,6 @@ class _ProfileBody extends StatelessWidget {
           previous.runtimeType != current.runtimeType,
       listener: (context, state) async {
         if (state case AsyncSuccess<String>()) {
-          await TokenStorage.instance.clear();
           MessageUtils.showSnackBar(
             baseStatus: BaseStatus.success,
             message: LocaleKeys.logoutSuccess,

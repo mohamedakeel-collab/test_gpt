@@ -11,7 +11,13 @@ class GetAttendanceUseCase {
 
   final AttendanceRepository _repository;
 
-  Future<Either<Failure, List<AttendanceEntity>>> call() {
-    return _repository.getAttendance();
+  Future<Either<Failure, List<AttendanceEntity>>> call({
+    int? page,
+    int? perPage,
+  }) {
+    return _repository.getAttendance(
+      page: page,
+      perPage: perPage,
+    );
   }
 }

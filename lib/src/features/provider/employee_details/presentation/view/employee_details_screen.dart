@@ -1,7 +1,9 @@
 part of '../imports/employee_details_imports.dart';
 
 class EmployeesDetailsScreen extends StatelessWidget {
-  const EmployeesDetailsScreen({super.key});
+  const EmployeesDetailsScreen({super.key, required this.employee});
+
+  final EmployeeEntity employee;
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +12,7 @@ class EmployeesDetailsScreen extends StatelessWidget {
         showArrow: true,onTap: (){
           Go.back();
         },),
-      body: _EmployeeDetailsBody(),
+      body: _EmployeeDetailsBody(employee: employee),
 
     );
   }

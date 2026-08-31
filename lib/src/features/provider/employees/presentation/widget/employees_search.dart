@@ -1,7 +1,9 @@
 part of '../imports/employees_imports.dart';
 
 class _EmployeesSearch extends StatelessWidget {
-  const _EmployeesSearch();
+  const _EmployeesSearch({required this.controller});
+
+  final EmployeesViewController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +22,34 @@ class _EmployeesSearch extends StatelessWidget {
 
       child: Row(
         children: [
-          Icon(Icons.search, color: AppColors.hintText),
+          IconWidget(
+            icon: Icons.search,
+
+            color: AppColors.hintText,
+
+            height: AppSize.sH20,
+          ),
 
           8.szW,
 
-          Text(
-            'بحث عن موظف...',
-            style: const TextStyle().setHintColor.s13.regular,
+          Expanded(
+            child: TextField(
+              controller: controller.searchController,
+
+              onChanged: controller.onSearchChanged,
+
+              decoration: InputDecoration(
+                hintText: LocaleKeys.search,
+
+                border: InputBorder.none,
+
+                isDense: true,
+
+                hintStyle: const TextStyle().setHintColor.s13.regular,
+              ),
+
+              style: const TextStyle().setMainTextColor.s13.regular,
+            ),
           ),
         ],
       ),

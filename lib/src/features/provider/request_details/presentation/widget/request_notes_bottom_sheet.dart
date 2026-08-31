@@ -188,8 +188,19 @@ class _NoteItem extends StatelessWidget {
 
   final CommentEntity comment;
 
+  String _formatDate(DateTime? date) {
+    if (date == null) return '';
+
+    return DateFormat(
+      'dd MMM yyyy - hh:mm a',
+      'ar',
+    ).format(date);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final formattedDate = _formatDate(comment.createdAt);
+
     return Container(
       padding: EdgeInsets.all(AppPadding.pH12),
       decoration: BoxDecoration(
@@ -212,14 +223,17 @@ class _NoteItem extends StatelessWidget {
                   style: const TextStyle().setMainTextColor.s13.medium,
                 ),
               ),
-              if (comment.createdAt?.isNotEmpty ?? false)
+
+              if (formattedDate.isNotEmpty)
                 Text(
-                  comment.createdAt!,
+                  formattedDate,
                   style: const TextStyle().setHintColor.s12.regular,
                 ),
             ],
           ),
+
           8.szH,
+
           Text(
             comment.comment,
             textAlign: TextAlign.start,

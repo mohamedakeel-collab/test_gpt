@@ -330,6 +330,30 @@ abstract class LocaleKeys {
   static const String _selectSuitableTeam = 'select_suitable_team';
   static String get selectSuitableTeam => _selectSuitableTeam.tr();
 
+  static const String _selectDepartment = 'select_department';
+  static String get selectDepartment => _selectDepartment.tr();
+
+  static const String _selectSuitableDepartment = 'select_suitable_department';
+  static String get selectSuitableDepartment => _selectSuitableDepartment.tr();
+
+  static const String _noDepartments = 'no_departments';
+  static String get noDepartments => _noDepartments.tr();
+
+  static const String _loadingManagers = 'loading_managers';
+  static String get loadingManagers => _loadingManagers.tr();
+
+  static const String _noManagers = 'no_managers';
+  static String get noManagers => _noManagers.tr();
+
+  static const String _createEmployee = 'create_employee';
+  static String get createEmployee => _createEmployee.tr();
+
+  static const String _employeeCreatedSuccessfully = 'employee_created_successfully';
+  static String get employeeCreatedSuccessfully => _employeeCreatedSuccessfully.tr();
+
+  static const String _employeeCreationFailed = 'employee_creation_failed';
+  static String get employeeCreationFailed => _employeeCreationFailed.tr();
+
   static const String _directManager = 'direct_manager';
   static String get directManager => _directManager.tr();
 
@@ -489,6 +513,18 @@ abstract class LocaleKeys {
 
   static const String _employees = 'employees';
   static String get employees => _employees.tr();
+
+  static const String _employee = 'employee';
+  static String get employee => _employee.tr();
+
+  static const String _pendingRequest = 'pending_request';
+  static String get pendingRequest => _pendingRequest.tr();
+
+  static const String _noPendingRequests = 'no_pending_requests';
+  static String get noPendingRequests => _noPendingRequests.tr();
+
+  static const String _noEmployees = 'no_employees';
+  static String get noEmployees => _noEmployees.tr();
 
   static const String _permissions = 'permissions';
   static String get permissions => _permissions.tr();

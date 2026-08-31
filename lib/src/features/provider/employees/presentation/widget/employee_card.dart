@@ -2,17 +2,13 @@ part of '../imports/employees_imports.dart';
 
 class _EmployeeCard extends StatelessWidget {
   const _EmployeeCard({
-    required this.name,
-    required this.job,
-    required this.status,
-    required this.image,
+    required this.employee,
+    required this.controller,
     this.onTap,
   });
 
-  final String name;
-  final String job;
-  final String status;
-  final String image;
+  final EmployeeEntity employee;
+  final EmployeesViewController controller;
   final VoidCallback? onTap;
 
   @override
@@ -38,13 +34,19 @@ class _EmployeeCard extends StatelessWidget {
                 border: Border.all(color: AppColors.fill, width: 2),
               ),
               child: ClipOval(
-                child: Image.network(
-                  image,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return AppAssets.svg.baseSvg.person.svg();
-                  },
-                ),
+                child: employee.image.isEmpty
+                    ? AppAssets.svg.baseSvg.person.svg(
+                        fit: BoxFit.cover,
+                        width: AppSize.sW60,
+                        height: AppSize.sH60,
+                      )
+                    : CachedImage(
+                        url: employee.image,
+                        fit: BoxFit.cover,
+                        width: AppSize.sW60,
+                        height: AppSize.sH60,
+                        ignoreClick: true,
+                      ),
               ),
             ),
 
@@ -56,11 +58,18 @@ class _EmployeeCard extends StatelessWidget {
 
                 children: [
                   Text(
-                    name,maxLines: 1,
+                    employee.fullName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: const TextStyle().setMainTextColor.s14.medium,
                   ),
 
-                  Text(job,maxLines: 1, style: const TextStyle().setHintColor.s12.regular),
+                  Text(
+                    employee.position,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle().setHintColor.s12.regular,
+                  ),
                 ],
               ),
             ),
@@ -72,22 +81,25 @@ class _EmployeeCard extends StatelessWidget {
               ),
 
               decoration: BoxDecoration(
-                color: AppColors.statusEmployee,
+                color: controller.statusSurface(employee),
 
                 borderRadius: BorderRadius.circular(AppCircular.r20),
               ),
 
               child: Text(
-                status,
-
-                style: const TextStyle().setWhiteColor.s11.medium,
+                controller.statusLabel(employee),
+                style: const TextStyle()
+                    .setWhiteColor
+                    .s11
+                    .medium
+                    .copyWith(color: controller.statusColor(employee)),
               ),
             ),
             10.szW,
-            Icon(
-              Icons.arrow_forward_ios_rounded,
+            IconWidget(
+              icon: Icons.arrow_forward_ios_rounded,
               color: AppColors.icons,
-              size: 18.sp,
+              height: AppSize.sH18,
             ),
           ],
         ),

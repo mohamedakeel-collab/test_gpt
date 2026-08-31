@@ -1,13 +1,10 @@
 import '../../../../core/shared/extensions/json_extensions.dart';
+import 'package:intl/intl.dart';
 
-/// DTO mirroring the `comment` object nested inside a leave request.
-///
-/// Uses the `JsonGetters` extension to read every field — never throws,
-/// always gives back a sensible fallback when a key is missing or mistyped.
 class CommentModel {
   final int id;
   final String comment;
-  final String? createdAt;
+  final DateTime? createdAt;
   final String authorFullName;
 
   const CommentModel({
@@ -18,12 +15,31 @@ class CommentModel {
   });
 
   factory CommentModel.fromJson(Map<String, dynamic> json) => CommentModel(
-        id: json.getInt('id'),
-        comment: json.getString(
-          'comment_text',
-          fallback: json.getString('comment'),
-        ),
-        createdAt: json.getStringOrNull('created_at'),
-        authorFullName: json.getMap('author').getString('full_name'),
-      );
+    id: json.getInt('id'),
+    comment: json.getString(
+      'comment_text',
+      fallback: json.getString('comment'),
+    ),
+    createdAt: _parseDate(json.getStringOrNull('created_at')),
+    authorFullName: json.getMap('author').getString('full_name'),
+  );
+
+  static DateTime? _parseDate(String? value) {
+    if (value == null || value.isEmpty) return null;
+
+    try {
+      return DateTime.parse(value).toLocal();
+    } catch (_) {
+      return null;
+    }
+  }
+
+  String get formattedCreatedAt {
+    if (createdAt == null) return '';
+
+    return DateFormat(
+      'dd MMM yyyy - hh:mm a',
+      'ar',
+    ).format(createdAt!);
+  }
 }

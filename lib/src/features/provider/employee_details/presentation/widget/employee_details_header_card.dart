@@ -1,7 +1,9 @@
 part of '../imports/employee_details_imports.dart';
 
 class _EmployeeDetailsHeaderCard extends StatelessWidget {
-  const _EmployeeDetailsHeaderCard();
+  const _EmployeeDetailsHeaderCard({required this.employee});
+
+  final EmployeeEntity employee;
 
   @override
   Widget build(BuildContext context) {
@@ -17,18 +19,22 @@ class _EmployeeDetailsHeaderCard extends StatelessWidget {
       child: Column(
         children: [
           ProfileImageCard(
-            image:
-                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZvzcHwf_E84xtTdBJclC4gsogNLWekM0qXQ&s',
+            image: employee.image.isEmpty
+                ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZvzcHwf_E84xtTdBJclC4gsogNLWekM0qXQ&s'
+                : employee.image,
           ),
 
           12.szH,
 
-          Text('أحمد منصور', style: const TextStyle().setPrimaryColor.s18.bold),
+          Text(
+            employee.fullName,
+            style: const TextStyle().setPrimaryColor.s18.bold,
+          ),
 
           4.szH,
 
           Text(
-            'مدير المشاريع التقنية',
+            employee.position,
 
             style: const TextStyle().setWhiteColor.s13.regular,
           ),
@@ -36,7 +42,7 @@ class _EmployeeDetailsHeaderCard extends StatelessWidget {
           8.szH,
 
           Text(
-            'a.mansour@tagwinner.com',
+            employee.department,
 
             style: const TextStyle().setWhiteColor.s12.regular,
           ),
@@ -44,7 +50,7 @@ class _EmployeeDetailsHeaderCard extends StatelessWidget {
           4.szH,
 
           Text(
-            '+966 50 123 4567',
+            employee.phone,
 
             style: const TextStyle().setWhiteColor.s12.regular,
           ),

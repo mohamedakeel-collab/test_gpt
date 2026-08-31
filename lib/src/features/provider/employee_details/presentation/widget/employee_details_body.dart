@@ -1,7 +1,9 @@
 part of '../imports/employee_details_imports.dart';
 
 class _EmployeeDetailsBody extends StatelessWidget {
-  _EmployeeDetailsBody();
+  _EmployeeDetailsBody({required this.employee});
+
+  final EmployeeEntity employee;
 
   final ValueNotifier<int> selectedTab = ValueNotifier(0);
 
@@ -43,7 +45,7 @@ class _EmployeeDetailsBody extends StatelessWidget {
         children: [
           16.szH,
 
-          const _EmployeeDetailsHeaderCard(),
+          _EmployeeDetailsHeaderCard(employee: employee),
 
           16.szH,
 

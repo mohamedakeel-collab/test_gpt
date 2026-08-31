@@ -14,8 +14,14 @@ class AttendanceRepositoryImpl implements AttendanceRepository {
   final AttendanceRemoteDataSource _remote;
 
   @override
-  Future<Either<Failure, List<AttendanceEntity>>> getAttendance() async {
-    final result = await _remote.getAttendance();
+  Future<Either<Failure, List<AttendanceEntity>>> getAttendance({
+    int? page,
+    int? perPage,
+  }) async {
+    final result = await _remote.getAttendance(
+      page: page,
+      perPage: perPage,
+    );
     return result.map(
       (records) => records.map((record) => record.toEntity()).toList(),
     );

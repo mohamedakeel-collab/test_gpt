@@ -8,7 +8,10 @@ import '../../../../core/network/http_method.dart';
 import '../models/attendance_model.dart';
 
 abstract interface class AttendanceRemoteDataSource {
-  Future<Either<Failure, List<AttendanceModel>>> getAttendance();
+  Future<Either<Failure, List<AttendanceModel>>> getAttendance({
+    int? page,
+    int? perPage,
+  });
 
   Future<Either<Failure, AttendanceModel>> checkIn();
 
@@ -21,10 +24,22 @@ class AttendanceRemoteDataSourceImpl extends BaseRemoteSource
   AttendanceRemoteDataSourceImpl();
 
   @override
-  Future<Either<Failure, List<AttendanceModel>>> getAttendance() {
+  Future<Either<Failure, List<AttendanceModel>>> getAttendance({
+    int? page,
+    int? perPage,
+  }) {
+    final queryParameters = <String, dynamic>{};
+    if (page != null) {
+      queryParameters['page'] = page;
+    }
+    if (perPage != null) {
+      queryParameters['per_page'] = perPage;
+    }
+
     return request<List<AttendanceModel>>(
       method: HttpMethod.get,
       endpoint: ApiEndpoints.myAttendance,
+      queryParameters: queryParameters,
       fromJson: _parseAttendance,
     );
   }
