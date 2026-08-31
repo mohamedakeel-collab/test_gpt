@@ -23,13 +23,14 @@ class _OrdersScreenState extends State<OrdersScreen> {
   @override
   void initState() {
     super.initState();
-    _cubit = injector<OrdersCubit>()..getOrders(leaveType: 'leave');
+    _cubit = injector<OrdersCubit>()..getOrders(leaveType: 'leave', perPage: 15);
     _vc = OrdersViewController(
-      onTabChanged: (leaveType) => _cubit.getOrders(leaveType: leaveType),
+      onTabChanged: (leaveType) => _cubit.getOrders(
+        leaveType: leaveType,
+        perPage: 15,
+      ),
     );
   }
-
-
 
   @override
   void dispose() {

@@ -12,9 +12,14 @@ class GetMyTeamRequestsUseCase {
   final MyTeamRepository repository;
 
   Future<Either<Failure, List<LeaveRequestEntity>>> call({
+    int? page,
     int? perPage,
     String? status,
   }) {
-    return repository.getTeamRequests(perPage: perPage, status: status);
+    return repository.getTeamRequests(
+      page: page,
+      perPage: perPage,
+      status: status,
+    );
   }
 }

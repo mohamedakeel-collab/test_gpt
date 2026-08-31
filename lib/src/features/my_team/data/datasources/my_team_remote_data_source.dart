@@ -9,6 +9,7 @@ import '../../../orders/data/models/leave_request_model.dart';
 
 abstract interface class MyTeamRemoteDataSource {
   Future<Either<Failure, List<LeaveRequestModel>>> getTeamRequests({
+    int? page,
     int? perPage,
     String? status,
   });
@@ -21,10 +22,17 @@ class MyTeamRemoteDataSourceImpl extends BaseRemoteSource
 
   @override
   Future<Either<Failure, List<LeaveRequestModel>>> getTeamRequests({
+    int? page,
     int? perPage,
     String? status,
   }) {
-    final queryParameters = <String, dynamic>{'per_page': perPage ?? 15};
+    final queryParameters = <String, dynamic>{};
+    if (page != null) {
+      queryParameters['page'] = page;
+    }
+    if (perPage != null) {
+      queryParameters['per_page'] = perPage;
+    }
     if (status?.isNotEmpty == true) {
       queryParameters['status'] = status;
     }

@@ -18,7 +18,7 @@ class _MyTeamScreenState extends State<MyTeamScreen> {
     _controller = MyTeamViewController(
       onStatusChanged: (status) =>
           _cubit.getTeamRequests(
-            perPage: 15,
+            perPage: 10,
             status: status,
           ),
     );
@@ -26,7 +26,7 @@ class _MyTeamScreenState extends State<MyTeamScreen> {
 
     _cubit = injector<MyTeamCubit>()
       ..getTeamRequests(
-        perPage: 15,
+        perPage: 10,
         status: _controller.selectedStatusFilter,
       );
   }

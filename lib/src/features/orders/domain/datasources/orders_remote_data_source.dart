@@ -11,6 +11,8 @@ import '../entities/leave_request_entity.dart';
 abstract interface class OrdersRemoteDataSource {
   // Reads
   Future<Either<Failure, List<LeaveRequestEntity>>> getOrders({
+    int? page,
+    int? perPage,
     String? leaveType,
   });
 

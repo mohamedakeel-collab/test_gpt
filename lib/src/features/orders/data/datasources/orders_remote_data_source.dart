@@ -26,15 +26,25 @@ class OrdersRemoteDataSourceImpl extends BaseRemoteSource
   // ── GET list — query params ──────────────────────────────────────
   @override
   Future<Either<Failure, List<LeaveRequestEntity>>> getOrders({
+    int? page,
+    int? perPage,
     String? leaveType,
   }) {
+    final queryParameters = <String, dynamic>{};
+    if (page != null) {
+      queryParameters['page'] = page;
+    }
+    if (perPage != null) {
+      queryParameters['per_page'] = perPage;
+    }
+    if (leaveType != null && leaveType.isNotEmpty) {
+      queryParameters['leave_type'] = leaveType;
+    }
+
     return request<List<LeaveRequestEntity>>(
       method: HttpMethod.get,
       endpoint: ApiEndpoints.myLeaveRequests,
-
-      queryParameters: {
-        if (leaveType != null && leaveType.isNotEmpty) 'leave_type': leaveType,
-      },
+      queryParameters: queryParameters,
       fromJson: _parseLeaveRequestList,
     );
   }

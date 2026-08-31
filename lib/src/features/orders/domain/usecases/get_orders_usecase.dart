@@ -21,8 +21,14 @@ class GetOrdersUseCase {
 
   /// Callable syntax: `useCase(leaveType: 'sick')`.
   Future<Either<Failure, List<LeaveRequestEntity>>> call({
+    int? page,
+    int? perPage,
     String? leaveType,
   }) {
-    return _repo.getOrders(leaveType: leaveType);
+    return _repo.getOrders(
+      page: page,
+      perPage: perPage,
+      leaveType: leaveType,
+    );
   }
 }

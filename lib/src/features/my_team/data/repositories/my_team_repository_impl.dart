@@ -15,10 +15,12 @@ class MyTeamRepositoryImpl implements MyTeamRepository {
 
   @override
   Future<Either<Failure, List<LeaveRequestEntity>>> getTeamRequests({
+    int? page,
     int? perPage,
     String? status,
   }) async {
     final result = await _remote.getTeamRequests(
+      page: page,
       perPage: perPage,
       status: status,
     );

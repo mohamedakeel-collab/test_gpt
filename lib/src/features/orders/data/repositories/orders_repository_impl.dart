@@ -20,8 +20,10 @@ class OrdersRepositoryImpl implements OrdersRepository {
 
   @override
   Future<Either<Failure, List<LeaveRequestEntity>>> getOrders({
+    int? page,
+    int? perPage,
     String? leaveType,
-  }) => _remote.getOrders(leaveType: leaveType);
+  }) => _remote.getOrders(page: page, perPage: perPage, leaveType: leaveType);
 
   @override
   Future<Either<Failure, void>> deleteRequest(int id) =>
