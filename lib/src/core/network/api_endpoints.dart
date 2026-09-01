@@ -33,6 +33,7 @@ class ApiEndpoints {
   static String productById(int id) => 'products/$id';
   static const String departments = 'departments';
   static const String employees = 'employees';
+  static String employeeDetails(int id) => 'employees/$id';
   static String departmentManagers(int id) => 'departments/$id/managers';
 
   // Home dashboard

@@ -49,30 +49,23 @@ abstract class LocaleKeys {
   static const String _blocked = 'blocked';
   static String get blocked => _blocked.tr();
 
-  static const String _dataUpdatingNowComeLater =
-      'data_updating_now_come_later';
+  static const String _dataUpdatingNowComeLater = 'data_updating_now_come_later';
   static String get dataUpdatingNowComeLater => _dataUpdatingNowComeLater.tr();
 
-  static const String _errorExceptionNoconnection =
-      'error_exception_noconnection';
-  static String get errorExceptionNoconnection =>
-      _errorExceptionNoconnection.tr();
+  static const String _errorExceptionNoconnection = 'error_exception_noconnection';
+  static String get errorExceptionNoconnection => _errorExceptionNoconnection.tr();
 
   static const String _errorExceptionNotContain = 'error_exception_not_contain';
   static String get errorExceptionNotContain => _errorExceptionNotContain.tr();
 
-  static const String _errorexceptionNotcontaindesc =
-      'errorexception_notcontaindesc';
-  static String get errorexceptionNotcontaindesc =>
-      _errorexceptionNotcontaindesc.tr();
+  static const String _errorexceptionNotcontaindesc = 'errorexception_notcontaindesc';
+  static String get errorexceptionNotcontaindesc => _errorexceptionNotcontaindesc.tr();
 
   static const String _exceptionError = 'exception_error';
   static String get exceptionError => _exceptionError.tr();
 
-  static const String _internetConnectionRestored =
-      'internet_connection_restored';
-  static String get internetConnectionRestored =>
-      _internetConnectionRestored.tr();
+  static const String _internetConnectionRestored = 'internet_connection_restored';
+  static String get internetConnectionRestored => _internetConnectionRestored.tr();
 
   static const String _confirmValidation = 'confirm_validation';
   static String get confirmValidation => _confirmValidation.tr();
@@ -167,11 +160,23 @@ abstract class LocaleKeys {
   static const String _productsDelete = 'products_delete';
   static String get productsDelete => _productsDelete.tr();
 
+  static const String _employeeUpdatedSuccessfully = 'employee_updated_successfully';
+  static String get employeeUpdatedSuccessfully => _employeeUpdatedSuccessfully.tr();
+
   static const String _productsCurrency = 'products_currency';
   static String get productsCurrency => _productsCurrency.tr();
 
   static const String _productStatusAvailable = 'product_status_available';
   static String get productStatusAvailable => _productStatusAvailable.tr();
+
+  static const String _noEmployees = 'no_employees';
+  static String get noEmployees => _noEmployees.tr();
+
+  static const String _noDepartments = 'no_departments';
+  static String get noDepartments => _noDepartments.tr();
+
+  static const String _commentAddedSuccessfully = 'comment_added_successfully';
+  static String get commentAddedSuccessfully => _commentAddedSuccessfully.tr();
 
   static const String _productStatusOutOfStock = 'product_status_out_of_stock';
   static String get productStatusOutOfStock => _productStatusOutOfStock.tr();
@@ -179,11 +184,44 @@ abstract class LocaleKeys {
   static const String _productStatusDraft = 'product_status_draft';
   static String get productStatusDraft => _productStatusDraft.tr();
 
+  static const String _employee = 'employee';
+  static String get employee => _employee.tr();
+
+  static const String _selectSuitableDepartment = 'select_suitable_department';
+  static String get selectSuitableDepartment => _selectSuitableDepartment.tr();
+
+  static const String _noPendingRequests = 'no_pending_requests';
+  static String get noPendingRequests => _noPendingRequests.tr();
+
+  static const String _pendingRequest = 'pending_request';
+  static String get pendingRequest => _pendingRequest.tr();
+
+  static const String _updateEmployee = 'update_employee';
+  static String get updateEmployee => _updateEmployee.tr();
+
+  static const String _createEmployee = 'create_employee';
+  static String get createEmployee => _createEmployee.tr();
+
+  static const String _employeeCreatedSuccessfully = 'employee_created_successfully';
+  static String get employeeCreatedSuccessfully => _employeeCreatedSuccessfully.tr();
+
   static const String _productStatusArchived = 'product_status_archived';
   static String get productStatusArchived => _productStatusArchived.tr();
 
+  static const String _selectAnOption = 'select_an_option';
+  static String get selectAnOption => _selectAnOption.tr();
+
   static const String _cancel = 'cancel';
   static String get cancel => _cancel.tr();
+
+  static const String _loadingManagers = 'loading_managers';
+  static String get loadingManagers => _loadingManagers.tr();
+
+  static const String _noManagers = 'no_managers';
+  static String get noManagers => _noManagers.tr();
+
+  static const String _selectDepartment = 'select_department';
+  static String get selectDepartment => _selectDepartment.tr();
 
   static const String _confirm = 'confirm';
   static String get confirm => _confirm.tr();
@@ -227,9 +265,6 @@ abstract class LocaleKeys {
   static const String _search = 'search';
   static String get search => _search.tr();
 
-  static const String _selectAnOption = 'select_an_option';
-  static String get selectAnOption => _selectAnOption.tr();
-
   static const String _selectFile = 'select_file';
   static String get selectFile => _selectFile.tr();
 
@@ -261,8 +296,7 @@ abstract class LocaleKeys {
   static String get balanceDays => _balanceDays.tr();
 
   static const String _balanceTitle = 'balance_title';
-  static String balanceTitle({required String count}) =>
-      _balanceTitle.tr(namedArgs: {'count': count});
+  static String balanceTitle({required String count}) => _balanceTitle.tr(namedArgs: {'count': count});
 
   static const String _homeWelcome = 'home_welcome';
   static String get homeWelcome => _homeWelcome.tr();
@@ -329,30 +363,6 @@ abstract class LocaleKeys {
 
   static const String _selectSuitableTeam = 'select_suitable_team';
   static String get selectSuitableTeam => _selectSuitableTeam.tr();
-
-  static const String _selectDepartment = 'select_department';
-  static String get selectDepartment => _selectDepartment.tr();
-
-  static const String _selectSuitableDepartment = 'select_suitable_department';
-  static String get selectSuitableDepartment => _selectSuitableDepartment.tr();
-
-  static const String _noDepartments = 'no_departments';
-  static String get noDepartments => _noDepartments.tr();
-
-  static const String _loadingManagers = 'loading_managers';
-  static String get loadingManagers => _loadingManagers.tr();
-
-  static const String _noManagers = 'no_managers';
-  static String get noManagers => _noManagers.tr();
-
-  static const String _createEmployee = 'create_employee';
-  static String get createEmployee => _createEmployee.tr();
-
-  static const String _employeeCreatedSuccessfully = 'employee_created_successfully';
-  static String get employeeCreatedSuccessfully => _employeeCreatedSuccessfully.tr();
-
-  static const String _employeeCreationFailed = 'employee_creation_failed';
-  static String get employeeCreationFailed => _employeeCreationFailed.tr();
 
   static const String _directManager = 'direct_manager';
   static String get directManager => _directManager.tr();
@@ -436,8 +446,7 @@ abstract class LocaleKeys {
   static String get chooseLanguage => _chooseLanguage.tr();
 
   static const String _homePendingRequests = 'home_pending_requests';
-  static String homePendingRequests({required String count}) =>
-      _homePendingRequests.tr(namedArgs: {'count': count});
+  static String homePendingRequests({required String count}) => _homePendingRequests.tr(namedArgs: {'count': count});
 
   static const String _english = 'english';
   static String get english => _english.tr();
@@ -513,18 +522,6 @@ abstract class LocaleKeys {
 
   static const String _employees = 'employees';
   static String get employees => _employees.tr();
-
-  static const String _employee = 'employee';
-  static String get employee => _employee.tr();
-
-  static const String _pendingRequest = 'pending_request';
-  static String get pendingRequest => _pendingRequest.tr();
-
-  static const String _noPendingRequests = 'no_pending_requests';
-  static String get noPendingRequests => _noPendingRequests.tr();
-
-  static const String _noEmployees = 'no_employees';
-  static String get noEmployees => _noEmployees.tr();
 
   static const String _permissions = 'permissions';
   static String get permissions => _permissions.tr();
@@ -622,10 +619,8 @@ abstract class LocaleKeys {
   static const String _loginTitle = 'login_title';
   static String get loginTitle => _loginTitle.tr();
 
-  static const String _requestSubmittedSuccessfully =
-      'request_submitted_successfully';
-  static String get requestSubmittedSuccessfully =>
-      _requestSubmittedSuccessfully.tr();
+  static const String _requestSubmittedSuccessfully = 'request_submitted_successfully';
+  static String get requestSubmittedSuccessfully => _requestSubmittedSuccessfully.tr();
 
   static const String _submitRequest = 'submit_request';
   static String get submitRequest => _submitRequest.tr();
@@ -648,18 +643,14 @@ abstract class LocaleKeys {
   static const String _documentHint = 'document_hint';
   static String get documentHint => _documentHint.tr();
 
-  static const String _requestDeletedSuccessfully =
-      'request_deleted_successfully';
-  static String get requestDeletedSuccessfully =>
-      _requestDeletedSuccessfully.tr();
+  static const String _requestDeletedSuccessfully = 'request_deleted_successfully';
+  static String get requestDeletedSuccessfully => _requestDeletedSuccessfully.tr();
 
   static const String _deleteRequestFailed = 'delete_request_failed';
   static String get deleteRequestFailed => _deleteRequestFailed.tr();
 
-  static const String _requestUpdatedSuccessfully =
-      'request_updated_successfully';
-  static String get requestUpdatedSuccessfully =>
-      _requestUpdatedSuccessfully.tr();
+  static const String _requestUpdatedSuccessfully = 'request_updated_successfully';
+  static String get requestUpdatedSuccessfully => _requestUpdatedSuccessfully.tr();
 
   static const String _noAttachment = 'no_attachment';
   static String get noAttachment => _noAttachment.tr();
@@ -693,9 +684,6 @@ abstract class LocaleKeys {
 
   static const String _notes = 'notes';
   static String get notes => _notes.tr();
-
-  static const String _commentAddedSuccessfully = 'comment_added_successfully';
-  static String get commentAddedSuccessfully => _commentAddedSuccessfully.tr();
 
   static const String _profile = 'profile';
   static String get profile => _profile.tr();
@@ -766,15 +754,11 @@ abstract class LocaleKeys {
   static const String _teamRequests = 'team_requests';
   static String get teamRequests => _teamRequests.tr();
 
-  static const String _requestApprovedSuccessfully =
-      'request_approved_successfully';
-  static String get requestApprovedSuccessfully =>
-      _requestApprovedSuccessfully.tr();
+  static const String _requestApprovedSuccessfully = 'request_approved_successfully';
+  static String get requestApprovedSuccessfully => _requestApprovedSuccessfully.tr();
 
-  static const String _requestRejectedSuccessfully =
-      'request_rejected_successfully';
-  static String get requestRejectedSuccessfully =>
-      _requestRejectedSuccessfully.tr();
+  static const String _requestRejectedSuccessfully = 'request_rejected_successfully';
+  static String get requestRejectedSuccessfully => _requestRejectedSuccessfully.tr();
 
   static const String _notificationUnread = 'notification_unread';
   static String get notificationUnread => _notificationUnread.tr();
@@ -790,4 +774,5 @@ abstract class LocaleKeys {
 
   static const String _pmPeriod = 'pm_period';
   static String get pmPeriod => _pmPeriod.tr();
+
 }

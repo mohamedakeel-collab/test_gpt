@@ -1,37 +1,41 @@
 part of '../imports/requests_imports.dart';
 
 class _RequestsBody extends StatelessWidget {
-   _RequestsBody();
+  _RequestsBody();
+
   final ValueNotifier<int> selectedTab = ValueNotifier(0);
 
   @override
   Widget build(BuildContext context) {
     final requests = [
-      const RequestData(
-        id: 36,
-        title: 'إجازة سنوية',
-        status: 'قيد المراجعة',
-        statusType: RequestStatus.pending,
-        createdAt: 'تم الطلب في 10 أكتوبر 2023',
+      const EmployeeDetailsLeaveRequestEntity(
+        requestType: 'leave',
         date: 'من 20 أكتوبر إلى 25 أكتوبر (5 أيام)',
+        status: 'pending',
+        id: 1,
+        duration: "0.75 ساعات",
+        reason: 'هوعوغةةفةفةل هوعوغةةفةفةل',
+        statusText: "تمت الموافقة",
       ),
 
-      const RequestData(
-        id: 37,
-        title: 'إذن خروج',
-        status: 'تمت الموافقة',
-        statusType: RequestStatus.approved,
-        createdAt: 'تمت الموافقة بواسطة: سارة الشهري',
+      const EmployeeDetailsLeaveRequestEntity(
+        requestType: 'permission',
         date: 'الأحد 22 سبتمبر (ساعتان - 10 صباحاً)',
+        status: 'approved',
+        duration: "0.75 ساعات",
+        id: 2,
+        reason: 'هوعوغةةفةفةل هوعوغةةفةفةل',
+        statusText: "تمت الموافقة",
       ),
 
-      const RequestData(
-        id: 38,
-        title: 'إجازة مرضية',
-        status: 'مرفوض',
-        statusType: RequestStatus.rejected,
-        createdAt: 'تم إرفاق التقرير الطبي',
+      const EmployeeDetailsLeaveRequestEntity(
+        requestType: 'sick',
         date: '12 يناير (يوم واحد)',
+        status: 'rejected',
+        duration: "0.75 ساعات",
+        id: 3,
+        reason: 'هوعوغةةفةفةل هوعوغةةفةفةل',
+        statusText: "تمت الموافقة",
       ),
     ];
 
@@ -40,10 +44,7 @@ class _RequestsBody extends StatelessWidget {
         children: [
           16.szH,
 
-
-          _RequestsTabs(
-            selectedTab: selectedTab,
-          ),
+          _RequestsTabs(selectedTab: selectedTab),
           16.szH,
 
           ...requests.map(
@@ -51,15 +52,11 @@ class _RequestsBody extends StatelessWidget {
               padding: EdgeInsets.only(bottom: AppPadding.pH12),
 
               child: RequestCard(
-                data: request,
-
                 onTap: () {
-                  Go.to(
-                    RequestDetailsScreen(
-                      id: 12,
-                    ),
-                  );
+                  Go.to(RequestDetailsScreen(id: 12));
                 },
+                request: request,
+                controller: EmployeeDetailsViewController(),
               ),
             ),
           ),

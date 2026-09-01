@@ -48,8 +48,7 @@ class _EmployeesBodyState extends State<_EmployeesBody> {
       builder: (context, employees) {
         return ValueListenableBuilder<String>(
           valueListenable: widget.controller.searchQuery,
-
-          builder: (context, _, __) {
+          builder: (context, query, _) {
             final filteredEmployees = widget.controller.filterEmployees(
               employees,
             );
@@ -114,7 +113,7 @@ class _EmployeesBodyState extends State<_EmployeesBody> {
                             controller: widget.controller,
 
                             onTap: () {
-                              Go.to(EmployeesDetailsScreen(employee: employee));
+                               Go.to(EmployeesDetailsScreen(id: employee.id));
                             },
                           ).paddingOnly(
                             left: AppPadding.pH16,

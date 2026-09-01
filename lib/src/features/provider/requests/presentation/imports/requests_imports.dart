@@ -24,11 +24,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../config/language/languages.dart';
 import '../../../../../config/language/locale_keys.g.dart';
 import '../../../../../config/res/config_imports.dart';
+import '../../../employee_details/domain/entities/employee_details_entity.dart';
+import '../../../employee_details/presentation/imports/employee_details_imports.dart';
 import '../../../request_details/presentation/imports/request_details_imports.dart';
 part '../view/requests_screen.dart';
 part '../widget/requests_body.dart';
 part '../widget/requests_tabs.dart';
 part '../widget/request_card.dart';
+part '../widget/request_status.dart';
 part '../widget/request_status_chip.dart';
 
 

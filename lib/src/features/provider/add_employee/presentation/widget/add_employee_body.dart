@@ -15,6 +15,9 @@ class _AddEmployeeBody extends StatelessWidget {
           _EmployeeImagePicker(
             image: controller.employeeImage,
 
+            existingImage:
+            controller.existingImage,
+
             onPick: () async {
               await controller.pickEmployeeImage();
             },

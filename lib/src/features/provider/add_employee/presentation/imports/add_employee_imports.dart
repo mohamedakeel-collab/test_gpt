@@ -25,6 +25,8 @@ import '../../../../../core/widgets/fields/drop_downs/app_drop_down/app_dropdown
 import '../../../../../core/widgets/fields/text_fields/default_text_field.dart';
 import '../../../../../core/widgets/handling_views/empty_widget.dart';
 import '../../../../home/presentation/imports/home_imports.dart';
+
+import '../../../employee_details/domain/entities/employee_details_entity.dart';
 import '../../domain/entities/department_entity.dart';
 import '../../domain/params/create_employee_params.dart';
 import '../../domain/usecases/create_employee_use_case.dart';

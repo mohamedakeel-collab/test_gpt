@@ -3,7 +3,7 @@ part of '../imports/employee_details_imports.dart';
 class _EmployeeDetailsHeaderCard extends StatelessWidget {
   const _EmployeeDetailsHeaderCard({required this.employee});
 
-  final EmployeeEntity employee;
+  final EmployeeDetailsEntity employee;
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +18,14 @@ class _EmployeeDetailsHeaderCard extends StatelessWidget {
 
       child: Column(
         children: [
-          ProfileImageCard(
-            image: employee.image.isEmpty
-                ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZvzcHwf_E84xtTdBJclC4gsogNLWekM0qXQ&s'
-                : employee.image,
+          CachedImage(
+            url: employee.image,
+            width: AppSize.sW90,
+            height: AppSize.sW90,
+            fit: BoxFit.cover,
+            boxShape: BoxShape.circle,
+            borderColor: AppColors.primary,
+            borderWidth: 3,
           ),
 
           12.szH,
@@ -30,7 +34,13 @@ class _EmployeeDetailsHeaderCard extends StatelessWidget {
             employee.fullName,
             style: const TextStyle().setPrimaryColor.s18.bold,
           ),
+          4.szH,
 
+          Text(
+            employee.email,
+
+            style: const TextStyle().setWhiteColor.s12.regular,
+          ),
           4.szH,
 
           Text(
@@ -42,7 +52,7 @@ class _EmployeeDetailsHeaderCard extends StatelessWidget {
           8.szH,
 
           Text(
-            employee.department,
+            employee.department.name,
 
             style: const TextStyle().setWhiteColor.s12.regular,
           ),
@@ -56,7 +66,6 @@ class _EmployeeDetailsHeaderCard extends StatelessWidget {
           ),
 
           16.szH,
-
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -78,10 +87,18 @@ class _EmployeeDetailsHeaderCard extends StatelessWidget {
                 textColor: AppColors.primary,
                 borderRadius: AppCircular.r5,
                 borderSide: BorderSide(color: AppColors.primary, width: 1),
-                onTap: () async {},
+                onTap: () async {
+                  Go.to(
+                    AddEmployeeScreen(
+                      employee: employee,
+                      mode: EmployeeMode.edit,
+                    ),
+                  );
+                },
               ),
             ],
           ),
+          8.szH,
         ],
       ),
     );

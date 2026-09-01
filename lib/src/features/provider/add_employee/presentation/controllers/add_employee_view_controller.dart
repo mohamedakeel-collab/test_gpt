@@ -1,7 +1,13 @@
 part of '../imports/add_employee_imports.dart';
 
 class AddEmployeeViewController {
-  AddEmployeeViewController();
+
+  AddEmployeeViewController({
+    this.isEdit = false,
+  });
+
+
+  final bool isEdit;
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController fullNameController = TextEditingController();
@@ -19,8 +25,9 @@ class AddEmployeeViewController {
 
   File? attachment;
 
-  final ValueNotifier<File?> employeeImage =
-  ValueNotifier<File?>(null);
+  String? existingImage;
+
+  final ValueNotifier<File?> employeeImage = ValueNotifier<File?>(null);
 
   String? attachmentName;
 
@@ -40,17 +47,29 @@ class AddEmployeeViewController {
       managerId: selectedManagerId!,
       remainingLeaveBalance:
           int.tryParse(initialLeaveBalanceController.text.trim()) ?? 0,
-      balanceExpiration:
-          DateTime.now().add(const Duration(days: 365)).toString().split('.').first,
+      balanceExpiration: DateTime.now()
+          .add(const Duration(days: 365))
+          .toString()
+          .split('.')
+          .first,
       permissionHours: 4,
       role: 'employee',
     );
   }
 
   bool validateForm() {
-    final formValid = formKey.currentState?.validate() ?? false;
-    final hasImage = employeeImage.value != null;
-    return formValid && hasImage;
+
+    final formValid =
+        formKey.currentState?.validate() ?? false;
+
+
+    final hasImage =
+        employeeImage.value != null ||
+            existingImage != null;
+
+
+    return formValid &&
+        (isEdit || hasImage);
   }
 
   void setSelectedDepartment(DepartmentEntity? value) {
@@ -77,46 +96,25 @@ class AddEmployeeViewController {
     return employeeImage.value == null ? LocaleKeys.fillField : null;
   }
 
-
-
-
   Future<void> pickAttachment(BuildContext context) async {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: const [
-        'pdf',
-        'jpg',
-        'jpeg',
-        'png',
-      ],
+      allowedExtensions: const ['pdf', 'jpg', 'jpeg', 'png'],
     );
-
 
     if (result == null || result.files.isEmpty) return;
 
-
     final picked = result.files.first;
-
 
     if (picked.path == null) return;
 
+    final extension = (picked.extension ?? '').toLowerCase();
 
-    final extension =
-    (picked.extension ?? '').toLowerCase();
-
-
-    if (!const [
-      'pdf',
-      'jpg',
-      'jpeg',
-      'png',
-    ].contains(extension)) {
+    if (!const ['pdf', 'jpg', 'jpeg', 'png'].contains(extension)) {
       return;
     }
 
-
     if (picked.size > 5 * 1024 * 1024) {
-
       if (!context.mounted) return;
 
       MessageUtils.showSnackBar(
@@ -128,16 +126,10 @@ class AddEmployeeViewController {
       return;
     }
 
-
-    attachment = File(
-      picked.path!,
-    );
-
+    attachment = File(picked.path!);
 
     attachmentName = picked.name;
   }
-
-
 
   Future<void> pickEmployeeImage() async {
     final result = await ImagePicker().pickImage(
@@ -149,8 +141,40 @@ class AddEmployeeViewController {
 
     employeeImage.value = File(result.path);
   }
-  void dispose() {
 
+  void prefill(EmployeeDetailsEntity employee) {
+    fullNameController.text = employee.fullName;
+
+    jobTitleController.text = employee.position;
+
+    mobileNumberController.text = employee.phone;
+
+    emailController.text = employee.email;
+
+    existingImage = employee.image;
+
+    selectedDepartment.value = DepartmentEntity(
+      id: employee.department.id,
+      name: employee.department.name,
+      managerId: employee.manager.id,
+      employeesCount: 0,
+      managerName: '',
+      phone: '',
+      position: '',
+    );
+
+    selectedManager.value = DepartmentEntity(
+      id: employee.manager.id,
+      name: employee.manager.name,
+      employeesCount: 0,
+      managerName: '',
+      phone: '',
+      position: '',
+      managerId: employee.manager.id,
+    );
+  }
+
+  void dispose() {
     fullNameController.dispose();
     jobTitleController.dispose();
     mobileNumberController.dispose();
@@ -160,6 +184,5 @@ class AddEmployeeViewController {
     employeeImage.dispose();
     selectedDepartment.dispose();
     selectedManager.dispose();
-
   }
 }
