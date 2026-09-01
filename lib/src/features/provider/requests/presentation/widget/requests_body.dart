@@ -1,69 +1,128 @@
 part of '../imports/requests_imports.dart';
 
-class _RequestsBody extends StatelessWidget {
-  _RequestsBody();
+class _RequestsBody extends StatefulWidget {
+  const _RequestsBody({required this.controller});
 
-  final ValueNotifier<int> selectedTab = ValueNotifier(0);
+  final RequestsViewController controller;
+
+  @override
+  State<_RequestsBody> createState() => _RequestsBodyState();
+}
+
+class _RequestsBodyState extends State<_RequestsBody> {
+  late final ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController()..addListener(_onScroll);
+    widget.controller.selectedTab.addListener(_onTabChanged);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    widget.controller.selectedTab.removeListener(_onTabChanged);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) return;
+    final position = _scrollController.position;
+    if (position.pixels >= position.maxScrollExtent) {
+      context.read<OrdersCubit>().loadMore();
+    }
+  }
+
+  void _onTabChanged() {
+    if (!_scrollController.hasClients) return;
+    _scrollController.jumpTo(0);
+  }
+
+  Future<void> _refresh() {
+    return context.read<OrdersCubit>().getOrders(
+      leaveType: widget.controller.selectedLeaveType,
+      perPage: 15,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final requests = [
-      const EmployeeDetailsLeaveRequestEntity(
-        requestType: 'leave',
-        date: 'من 20 أكتوبر إلى 25 أكتوبر (5 أيام)',
-        status: 'pending',
-        id: 1,
-        duration: "0.75 ساعات",
-        reason: 'هوعوغةةفةفةل هوعوغةةفةفةل',
-        statusText: "تمت الموافقة",
-      ),
+    return Column(
+      children: [
+        16.szH,
+        _RequestsTabs(
+          controller: widget.controller,
+        ).paddingSymmetric(horizontal: AppPadding.pH16),
+        16.szH,
+        Expanded(
+          child: AsyncBlocBuilder<OrdersCubit, List<LeaveRequestEntity>>(
+            onRetry: _refresh,
+            builder: (context, requests) {
+              final isLoadingMore = context.read<OrdersCubit>().isLoadingMore;
 
-      const EmployeeDetailsLeaveRequestEntity(
-        requestType: 'permission',
-        date: 'الأحد 22 سبتمبر (ساعتان - 10 صباحاً)',
-        status: 'approved',
-        duration: "0.75 ساعات",
-        id: 2,
-        reason: 'هوعوغةةفةفةل هوعوغةةفةفةل',
-        statusText: "تمت الموافقة",
-      ),
+              if (requests.isEmpty) {
+                return RefreshIndicator(
+                  onRefresh: _refresh,
+                  child: ListView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: EdgeInsetsDirectional.symmetric(
+                      horizontal: AppPadding.pH16,
+                    ),
+                    children: [
+                      SizedBox(height: AppSize.sH120),
+                      EmptyWidget(
+                        title: LocaleKeys.ordersEmpty,
+                        desc: LocaleKeys.errorexceptionNotcontaindesc,
+                      ),
+                    ],
+                  ),
+                );
+              }
 
-      const EmployeeDetailsLeaveRequestEntity(
-        requestType: 'sick',
-        date: '12 يناير (يوم واحد)',
-        status: 'rejected',
-        duration: "0.75 ساعات",
-        id: 3,
-        reason: 'هوعوغةةفةفةل هوعوغةةفةفةل',
-        statusText: "تمت الموافقة",
-      ),
-    ];
+              return RefreshIndicator(
+                onRefresh: _refresh,
+                child: ListView.separated(
+                  controller: _scrollController,
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: EdgeInsetsDirectional.symmetric(
+                    horizontal: AppPadding.pH16,
+                    vertical: AppPadding.pH8,
+                  ),
+                  itemCount: requests.length + (isLoadingMore ? 1 : 0),
+                  separatorBuilder: (_, index) {
+                    if (index >= requests.length - 1) {
+                      return const SizedBox.shrink();
+                    }
+                    return 12.szH;
+                  },
+                  itemBuilder: (_, index) {
+                    if (index == requests.length) {
+                      return const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    }
 
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          16.szH,
+                    final request = requests[index].toEmployeeDetailsRequest();
 
-          _RequestsTabs(selectedTab: selectedTab),
-          16.szH,
+                    return RequestCard(
+                      request: request,
 
-          ...requests.map(
-            (request) => Padding(
-              padding: EdgeInsets.only(bottom: AppPadding.pH12),
+                      controller: EmployeeDetailsViewController(),
 
-              child: RequestCard(
-                onTap: () {
-                  Go.to(RequestDetailsScreen(id: 12));
-                },
-                request: request,
-                controller: EmployeeDetailsViewController(),
-              ),
-            ),
+                      onTap: () {
+                        Go.to(RequestDetailsScreen(id: requests[index].id));
+                      },
+                    );
+                  },
+                ),
+              );
+            },
           ),
-
-          80.szH,
-        ],
-      ).paddingSymmetric(horizontal: AppPadding.pH16),
+        ),
+      ],
     );
   }
 }

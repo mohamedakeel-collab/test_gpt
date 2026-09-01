@@ -1,3 +1,4 @@
+import '../../../provider/employee_details/domain/entities/employee_details_entity.dart';
 import '../../domain/entities/comment_entity.dart';
 import '../../domain/entities/leave_request_entity.dart';
 import '../../domain/entities/reviewer_entity.dart';
@@ -66,4 +67,24 @@ extension CommentModelMapper on CommentModel {
     createdAt: createdAt,
     authorFullName: authorFullName,
   );
+}
+
+extension LeaveRequestToEmployeeDetailsMapper on LeaveRequestEntity {
+  EmployeeDetailsLeaveRequestEntity toEmployeeDetailsRequest() {
+    return EmployeeDetailsLeaveRequestEntity(
+      id: id,
+
+      requestType: leaveType,
+
+      date: startDate ?? '',
+
+      duration: duration ?? '',
+
+      reason: reason,
+
+      status: status,
+
+      statusText: statusText,
+    );
+  }
 }

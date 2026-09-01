@@ -35,7 +35,7 @@ class _EmployeesSummaryCard extends StatelessWidget {
         children: [
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
 
             children: [
 
@@ -43,13 +43,13 @@ class _EmployeesSummaryCard extends StatelessWidget {
 
               12.szH,
 
-              Text('$pendingCount ${LocaleKeys.employee}', style: const TextStyle().setWhiteColor.s16.medium),
+              Text('${LocaleKeys.requests} : $pendingCount ', style: const TextStyle().setWhiteColor.s16.medium),
             ],
           ),
           const Spacer(),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(LocaleKeys.employees, style: const TextStyle().setPrimaryColor.s12.medium),
               4.szH,
