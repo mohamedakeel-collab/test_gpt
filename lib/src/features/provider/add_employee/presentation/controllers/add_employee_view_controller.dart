@@ -1,13 +1,10 @@
 part of '../imports/add_employee_imports.dart';
 
 class AddEmployeeViewController {
-
-  AddEmployeeViewController({
-    this.isEdit = false,
-  });
-
+  AddEmployeeViewController({this.isEdit = false});
 
   final bool isEdit;
+  EmployeeDetailsEntity? employee;
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController fullNameController = TextEditingController();
@@ -37,7 +34,7 @@ class AddEmployeeViewController {
 
   CreateEmployeeParams toParams() {
     return CreateEmployeeParams(
-      image: employeeImage.value!,
+      image: employeeImage.value,
       fullName: fullNameController.text.trim(),
       position: jobTitleController.text.trim(),
       phone: mobileNumberController.text.trim(),
@@ -58,18 +55,11 @@ class AddEmployeeViewController {
   }
 
   bool validateForm() {
+    final formValid = formKey.currentState?.validate() ?? false;
 
-    final formValid =
-        formKey.currentState?.validate() ?? false;
+    final hasImage = employeeImage.value != null || existingImage != null;
 
-
-    final hasImage =
-        employeeImage.value != null ||
-            existingImage != null;
-
-
-    return formValid &&
-        (isEdit || hasImage);
+    return formValid && (isEdit || hasImage);
   }
 
   void setSelectedDepartment(DepartmentEntity? value) {
@@ -93,6 +83,10 @@ class AddEmployeeViewController {
   }
 
   String? validateImage() {
+    if (isEdit && (employeeImage.value != null || existingImage != null)) {
+      return null;
+    }
+
     return employeeImage.value == null ? LocaleKeys.fillField : null;
   }
 
@@ -142,7 +136,9 @@ class AddEmployeeViewController {
     employeeImage.value = File(result.path);
   }
 
-  void prefill(EmployeeDetailsEntity employee) {
+  void prefillEmployee(EmployeeDetailsEntity employee) {
+    this.employee = employee;
+
     fullNameController.text = employee.fullName;
 
     jobTitleController.text = employee.position;
@@ -172,6 +168,9 @@ class AddEmployeeViewController {
       position: '',
       managerId: employee.manager.id,
     );
+
+    initialLeaveBalanceController.text = employee.remainingLeaveBalance
+        .toString();
   }
 
   void dispose() {

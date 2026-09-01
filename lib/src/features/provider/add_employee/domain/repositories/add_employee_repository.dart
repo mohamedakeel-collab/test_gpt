@@ -8,4 +8,9 @@ abstract interface class AddEmployeeRepository {
   Future<Either<Failure, EmployeeEntity>> createEmployee(
     CreateEmployeeParams params,
   );
+
+  Future<Either<Failure, EmployeeEntity>> updateEmployee(
+    int id,
+    CreateEmployeeParams params,
+  );
 }

@@ -34,6 +34,7 @@ class ApiEndpoints {
   static const String departments = 'departments';
   static const String employees = 'employees';
   static String employeeDetails(int id) => 'employees/$id';
+  static String updateEmployee(int id) => 'employees/$id';
   static String departmentManagers(int id) => 'departments/$id/managers';
 
   // Home dashboard

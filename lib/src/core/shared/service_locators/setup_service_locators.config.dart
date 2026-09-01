@@ -158,6 +158,8 @@ import '../../../features/provider/add_employee/domain/usecases/get_department_m
     as _i1038;
 import '../../../features/provider/add_employee/domain/usecases/get_departments_use_case.dart'
     as _i420;
+import '../../../features/provider/add_employee/domain/usecases/update_employee_use_case.dart'
+    as _i1118;
 import '../../../features/provider/add_employee/presentation/imports/add_employee_imports.dart'
     as _i537;
 import '../../../features/provider/employee_details/data/datasources/employee_details_remote_data_source.dart'
@@ -356,6 +358,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i217.CreateEmployeeUseCase>(
       () => _i217.CreateEmployeeUseCase(gh<_i210.AddEmployeeRepository>()),
     );
+    gh.factory<_i1118.UpdateEmployeeUseCase>(
+      () => _i1118.UpdateEmployeeUseCase(gh<_i210.AddEmployeeRepository>()),
+    );
     gh.factory<_i1038.GetDepartmentManagersUseCase>(
       () => _i1038.GetDepartmentManagersUseCase(
         gh<_i987.DepartmentsRepository>(),
@@ -433,7 +438,10 @@ extension GetItInjectableX on _i174.GetIt {
       ),
     );
     gh.factory<_i537.AddEmployeeCubit>(
-      () => _i537.AddEmployeeCubit(gh<_i217.CreateEmployeeUseCase>()),
+      () => _i537.AddEmployeeCubit(
+        gh<_i217.CreateEmployeeUseCase>(),
+        gh<_i1118.UpdateEmployeeUseCase>(),
+      ),
     );
     gh.lazySingleton<_i376.RequestDetailsRepository>(
       () => _i235.RequestDetailsRepositoryImpl(

@@ -88,12 +88,18 @@ class _EmployeeDetailsHeaderCard extends StatelessWidget {
                 borderRadius: AppCircular.r5,
                 borderSide: BorderSide(color: AppColors.primary, width: 1),
                 onTap: () async {
-                  Go.to(
+                  final result = await Go.to(
                     AddEmployeeScreen(
                       employee: employee,
                       mode: EmployeeMode.edit,
                     ),
                   );
+
+                  if (result == true && context.mounted) {
+                    context
+                        .read<EmployeeDetailsCubit>()
+                        .getEmployeeDetails(employee.id);
+                  }
                 },
               ),
             ],

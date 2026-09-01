@@ -13,6 +13,9 @@ class RequestCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final statusType = _statusType(request.status);
+
+
     return GestureDetector(
       onTap: onTap,
 
@@ -24,7 +27,9 @@ class RequestCard extends StatelessWidget {
 
           borderRadius: BorderRadius.circular(AppCircular.r12),
 
-          border: Border(right: BorderSide(color: _borderColor, width: 4)),
+          border: Border(
+            right: BorderSide(color: _borderColor(statusType), width: 4),
+          ),
         ),
 
         child: Column(
@@ -50,7 +55,7 @@ class RequestCard extends StatelessWidget {
                 _RequestStatusChip(
                   status: request.statusText,
 
-                  type: _statusType(request.status),
+                  type: statusType,
                 ),
               ],
             ),
@@ -69,18 +74,10 @@ class RequestCard extends StatelessWidget {
 
             8.szH,
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Text(
+              request.duration,
 
-              children: [
-                Text(
-                  request.duration,
-
-                  style: const TextStyle().setMainTextColor.s13.regular,
-                ),
-
-
-              ],
+              style: const TextStyle().setMainTextColor.s13.regular,
             ),
           ],
         ),
@@ -90,21 +87,21 @@ class RequestCard extends StatelessWidget {
 
   RequestStatus _statusType(String status) {
     return switch (status) {
-      'approved' => RequestStatus.approved,
-
-      'approved_by_manager' => RequestStatus.approved,
+      'approved' || 'approved_by_manager' => RequestStatus.approved,
 
       'rejected' => RequestStatus.rejected,
+
+      'pending' => RequestStatus.pending,
 
       _ => RequestStatus.pending,
     };
   }
 
-  Color get _borderColor {
-    return switch (_statusType(request.status)) {
-      RequestStatus.pending => Colors.orange,
+  Color _borderColor(RequestStatus status) {
+    return switch (status) {
+      RequestStatus.pending => AppColors.warning,
 
-      RequestStatus.approved => AppColors.primary,
+      RequestStatus.approved => AppColors.success,
 
       RequestStatus.rejected => AppColors.error,
     };

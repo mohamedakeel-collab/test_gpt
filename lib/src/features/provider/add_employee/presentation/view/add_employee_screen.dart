@@ -34,7 +34,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
     );
 
     if (widget.mode == EmployeeMode.edit && widget.employee != null) {
-      _controller.prefill(widget.employee!);
+      _controller.prefillEmployee(widget.employee!);
     }
   }
 

@@ -32,7 +32,8 @@ class _LoginDataSection extends StatelessWidget {
         DefaultTextField(
           title: LocaleKeys.emailHint,
           controller: controller.emailController,
-          validator: (v) => Validators.validateEmail(v, fieldTitle: LocaleKeys.email),
+          validator: (v) =>
+              Validators.validateEmail(v, fieldTitle: LocaleKeys.email),
           prefixIcon: const Icon(Icons.email_outlined),
         ),
 
@@ -48,7 +49,17 @@ class _LoginDataSection extends StatelessWidget {
           title: LocaleKeys.passwordHint,
           controller: controller.passwordController,
           isPassword: true,
-          validator: (v) => Validators.validatePassword(v, fieldTitle: LocaleKeys.password),
+          readOnly: controller.isEdit,
+          validator: (v) {
+            if (controller.isEdit && (v == null || v.trim().isEmpty)) {
+              return null;
+            }
+
+            return Validators.validatePassword(
+              v,
+              fieldTitle: LocaleKeys.password,
+            );
+          },
 
           prefixIcon: const Icon(Icons.visibility_off_outlined),
         ),
@@ -64,7 +75,10 @@ class _LoginDataSection extends StatelessWidget {
         DefaultTextField(
           title: '0',
           controller: controller.initialLeaveBalanceController,
-          validator: (v) => Validators.validateEmpty(v, fieldTitle: LocaleKeys.initialLeaveBalance),
+          validator: (v) => Validators.validateEmpty(
+            v,
+            fieldTitle: LocaleKeys.initialLeaveBalance,
+          ),
           inputType: TextInputType.number,
           prefixIcon: const Icon(Icons.calendar_today_outlined),
         ),

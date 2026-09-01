@@ -21,4 +21,13 @@ class AddEmployeeRepositoryImpl implements AddEmployeeRepository {
     final result = await _remote.createEmployee(params);
     return result.map((employee) => employee.toEntity());
   }
+
+  @override
+  Future<Either<Failure, EmployeeEntity>> updateEmployee(
+    int id,
+    CreateEmployeeParams params,
+  ) async {
+    final result = await _remote.updateEmployee(id, params);
+    return result.map((employee) => employee.toEntity());
+  }
 }

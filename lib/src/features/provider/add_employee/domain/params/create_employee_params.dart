@@ -2,7 +2,7 @@ import 'dart:io';
 
 class CreateEmployeeParams {
   const CreateEmployeeParams({
-    required this.image,
+    this.image,
     required this.fullName,
     required this.position,
     required this.phone,
@@ -16,7 +16,7 @@ class CreateEmployeeParams {
     required this.role,
   });
 
-  final File image;
+  final File? image;
   final String fullName;
   final String position;
   final String phone;
