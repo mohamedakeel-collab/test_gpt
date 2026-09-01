@@ -102,24 +102,6 @@ import '../../../features/orders/domain/usecases/get_orders_usecase.dart'
     as _i574;
 import '../../../features/orders/presentation/imports/orders_imports.dart'
     as _i17;
-import '../../../features/products/data/datasources/products_remote_data_source_impl.dart'
-    as _i126;
-import '../../../features/products/data/repositories/products_repository_impl.dart'
-    as _i50;
-import '../../../features/products/domain/datasources/products_remote_data_source.dart'
-    as _i947;
-import '../../../features/products/domain/repositories/products_repository.dart'
-    as _i239;
-import '../../../features/products/domain/usecases/create_product_usecase.dart'
-    as _i1024;
-import '../../../features/products/domain/usecases/delete_product_usecase.dart'
-    as _i975;
-import '../../../features/products/domain/usecases/get_product_details_usecase.dart'
-    as _i173;
-import '../../../features/products/domain/usecases/get_products_usecase.dart'
-    as _i533;
-import '../../../features/products/presentation/imports/products_imports.dart'
-    as _i121;
 import '../../../features/profile/data/datasources/language_remote_data_source.dart'
     as _i193;
 import '../../../features/profile/data/datasources/profile_remote_data_source.dart'
@@ -159,7 +141,7 @@ import '../../../features/provider/add_employee/domain/usecases/get_department_m
 import '../../../features/provider/add_employee/domain/usecases/get_departments_use_case.dart'
     as _i420;
 import '../../../features/provider/add_employee/domain/usecases/update_employee_use_case.dart'
-    as _i1118;
+    as _i13;
 import '../../../features/provider/add_employee/presentation/imports/add_employee_imports.dart'
     as _i537;
 import '../../../features/provider/employee_details/data/datasources/employee_details_remote_data_source.dart'
@@ -255,9 +237,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i660.DepartmentsRemoteDataSource>(
       () => _i959.DepartmentsRemoteDataSourceImpl(),
     );
-    gh.lazySingleton<_i947.ProductsRemoteDataSource>(
-      () => _i126.ProductsRemoteDataSourceImpl(),
-    );
     gh.lazySingleton<_i420.MyTeamRemoteDataSource>(
       () => _i420.MyTeamRemoteDataSourceImpl(),
     );
@@ -308,9 +287,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i245.LogOutRepository>(
       () => _i583.LogOutRepositoryImpl(gh<_i355.LogOutRemoteDataSource>()),
     );
-    gh.lazySingleton<_i239.ProductsRepository>(
-      () => _i50.ProductsRepositoryImpl(gh<_i947.ProductsRemoteDataSource>()),
-    );
     gh.factory<_i213.UpdateRequestUseCase>(
       () => _i213.UpdateRequestUseCase(gh<_i875.NewRequestRepository>()),
     );
@@ -358,8 +334,8 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i217.CreateEmployeeUseCase>(
       () => _i217.CreateEmployeeUseCase(gh<_i210.AddEmployeeRepository>()),
     );
-    gh.factory<_i1118.UpdateEmployeeUseCase>(
-      () => _i1118.UpdateEmployeeUseCase(gh<_i210.AddEmployeeRepository>()),
+    gh.factory<_i13.UpdateEmployeeUseCase>(
+      () => _i13.UpdateEmployeeUseCase(gh<_i210.AddEmployeeRepository>()),
     );
     gh.factory<_i1038.GetDepartmentManagersUseCase>(
       () => _i1038.GetDepartmentManagersUseCase(
@@ -403,21 +379,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i518.EmployeeDetailsCubit>(
       () => _i518.EmployeeDetailsCubit(gh<_i125.GetEmployeeDetailsUseCase>()),
     );
-    gh.factory<_i1024.CreateProductUseCase>(
-      () => _i1024.CreateProductUseCase(gh<_i239.ProductsRepository>()),
-    );
-    gh.factory<_i975.DeleteProductUseCase>(
-      () => _i975.DeleteProductUseCase(gh<_i239.ProductsRepository>()),
-    );
-    gh.factory<_i173.GetProductDetailsUseCase>(
-      () => _i173.GetProductDetailsUseCase(gh<_i239.ProductsRepository>()),
-    );
-    gh.factory<_i533.GetProductsUseCase>(
-      () => _i533.GetProductsUseCase(gh<_i239.ProductsRepository>()),
-    );
-    gh.factory<_i121.ProductDetailsCubit>(
-      () => _i121.ProductDetailsCubit(gh<_i173.GetProductDetailsUseCase>()),
-    );
     gh.lazySingleton<_i919.ProfileRepository>(
       () => _i695.ProfileRepositoryImpl(gh<_i214.ProfileRemoteDataSource>()),
     );
@@ -429,19 +390,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i1033.OrderDetailsCubit>(
       () => _i1033.OrderDetailsCubit(gh<_i919.GetOrderDetailsUseCase>()),
-    );
-    gh.factory<_i121.ProductsCubit>(
-      () => _i121.ProductsCubit(
-        gh<_i533.GetProductsUseCase>(),
-        gh<_i1024.CreateProductUseCase>(),
-        gh<_i975.DeleteProductUseCase>(),
-      ),
-    );
-    gh.factory<_i537.AddEmployeeCubit>(
-      () => _i537.AddEmployeeCubit(
-        gh<_i217.CreateEmployeeUseCase>(),
-        gh<_i1118.UpdateEmployeeUseCase>(),
-      ),
     );
     gh.lazySingleton<_i376.RequestDetailsRepository>(
       () => _i235.RequestDetailsRepositoryImpl(
@@ -513,6 +461,12 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i903.EmployeesCubit>(
       () => _i903.EmployeesCubit(gh<_i656.GetEmployeesUseCase>()),
+    );
+    gh.factory<_i537.AddEmployeeCubit>(
+      () => _i537.AddEmployeeCubit(
+        gh<_i217.CreateEmployeeUseCase>(),
+        gh<_i13.UpdateEmployeeUseCase>(),
+      ),
     );
     gh.factory<_i17.OrdersCubit>(
       () => _i17.OrdersCubit(

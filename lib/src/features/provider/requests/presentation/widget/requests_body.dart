@@ -3,7 +3,7 @@ part of '../imports/requests_imports.dart';
 class _RequestsBody extends StatefulWidget {
   const _RequestsBody({required this.controller});
 
-  final RequestsViewController controller;
+  final MyTeamViewController controller;
 
   @override
   State<_RequestsBody> createState() => _RequestsBodyState();
@@ -12,38 +12,64 @@ class _RequestsBody extends StatefulWidget {
 class _RequestsBodyState extends State<_RequestsBody> {
   late final ScrollController _scrollController;
 
+  late final RequestsViewController _requestController;
+
   @override
   void initState() {
     super.initState();
+
     _scrollController = ScrollController()..addListener(_onScroll);
-    widget.controller.selectedTab.addListener(_onTabChanged);
+
+    widget.controller.selectedStatus.addListener(_onStatusChanged);
+
+    _requestController = RequestsViewController(
+      onTabChanged: (leaveType) {
+        context.read<MyTeamCubit>().getTeamRequests(
+          perPage: 10,
+          status: leaveType,
+        );
+      },
+    );
   }
 
   @override
   void dispose() {
-    _scrollController.removeListener(_onScroll);
-    widget.controller.selectedTab.removeListener(_onTabChanged);
-    _scrollController.dispose();
+    _scrollController
+      ..removeListener(_onScroll)
+      ..dispose();
+
+    widget.controller.selectedStatus.removeListener(_onStatusChanged);
+
+    _requestController.dispose();
+
     super.dispose();
   }
 
   void _onScroll() {
-    if (!_scrollController.hasClients) return;
+    if (!_scrollController.hasClients) {
+      return;
+    }
+
     final position = _scrollController.position;
-    if (position.pixels >= position.maxScrollExtent) {
-      context.read<OrdersCubit>().loadMore();
+
+    if (position.pixels >= position.maxScrollExtent - 100) {
+      context.read<MyTeamCubit>().loadMore();
     }
   }
 
-  void _onTabChanged() {
-    if (!_scrollController.hasClients) return;
+  void _onStatusChanged() {
+    if (!_scrollController.hasClients) {
+      return;
+    }
+
     _scrollController.jumpTo(0);
   }
 
   Future<void> _refresh() {
-    return context.read<OrdersCubit>().getOrders(
-      leaveType: widget.controller.selectedLeaveType,
-      perPage: 15,
+    return context.read<MyTeamCubit>().getTeamRequests(
+      perPage: 10,
+
+      status: widget.controller.selectedStatusFilter,
     );
   }
 
@@ -52,28 +78,35 @@ class _RequestsBodyState extends State<_RequestsBody> {
     return Column(
       children: [
         16.szH,
+
         _RequestsTabs(
-          controller: widget.controller,
+          controller: _requestController,
         ).paddingSymmetric(horizontal: AppPadding.pH16),
+
         16.szH,
+
         Expanded(
-          child: AsyncBlocBuilder<OrdersCubit, List<LeaveRequestEntity>>(
+          child: AsyncBlocBuilder<MyTeamCubit, List<LeaveRequestEntity>>(
             onRetry: _refresh,
+
             builder: (context, requests) {
-              final isLoadingMore = context.read<OrdersCubit>().isLoadingMore;
+              final cubit = context.read<MyTeamCubit>();
+
+              final isLoadingMore = cubit.isLoadingMore;
 
               if (requests.isEmpty) {
                 return RefreshIndicator(
                   onRefresh: _refresh,
+
                   child: ListView(
                     physics: const AlwaysScrollableScrollPhysics(),
-                    padding: EdgeInsetsDirectional.symmetric(
-                      horizontal: AppPadding.pH16,
-                    ),
+
                     children: [
                       SizedBox(height: AppSize.sH120),
+
                       EmptyWidget(
                         title: LocaleKeys.ordersEmpty,
+
                         desc: LocaleKeys.errorexceptionNotcontaindesc,
                       ),
                     ],
@@ -83,24 +116,27 @@ class _RequestsBodyState extends State<_RequestsBody> {
 
               return RefreshIndicator(
                 onRefresh: _refresh,
+
                 child: ListView.separated(
                   controller: _scrollController,
+
                   physics: const AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsetsDirectional.symmetric(
+
+                  padding: EdgeInsets.symmetric(
                     horizontal: AppPadding.pH16,
+
                     vertical: AppPadding.pH8,
                   ),
+
                   itemCount: requests.length + (isLoadingMore ? 1 : 0),
-                  separatorBuilder: (_, index) {
-                    if (index >= requests.length - 1) {
-                      return const SizedBox.shrink();
-                    }
-                    return 12.szH;
-                  },
+
+                  separatorBuilder: (_, __) => 12.szH,
+
                   itemBuilder: (_, index) {
                     if (index == requests.length) {
                       return const Padding(
                         padding: EdgeInsets.symmetric(vertical: 16),
+
                         child: Center(child: CircularProgressIndicator()),
                       );
                     }

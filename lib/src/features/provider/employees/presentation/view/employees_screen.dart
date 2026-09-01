@@ -37,7 +37,6 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
       value: _cubit,
       child: Scaffold(
         appBar: CustomAppBar(
-          title: LocaleKeys.employees,
           actions: [
             InkWell(
               onTap: () {

@@ -3,6 +3,15 @@ part of '../imports/requests_imports.dart';
 class RequestsViewController {
   RequestsViewController({required this.onTabChanged});
 
+  String requestTypeLabel(String type){
+    return switch(type){
+      'leave' => LocaleKeys.annualLeave,
+      'permission' => LocaleKeys.permission,
+      'remote' => LocaleKeys.remote,
+      _ => type,
+    };
+  }
+
   final ValueChanged<String?> onTabChanged;
 
   final ValueNotifier<int> selectedTab = ValueNotifier(0);
