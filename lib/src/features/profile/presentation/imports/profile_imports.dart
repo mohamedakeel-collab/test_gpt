@@ -47,3 +47,7 @@ part '../widgets/profile_image_card.dart';
 part '../widgets/profile_info_item.dart';
 part '../widgets/profile_menu_item.dart';
 part '../widgets/choose_language_pop_up.dart';
+part '../widgets/pagination/profile_header_skeleton.dart';
+part '../widgets/pagination/profile_info_skeleton.dart';
+part '../widgets/pagination/profile_balance_skeleton.dart';
+part '../widgets/pagination/profile_menu_skeleton.dart';

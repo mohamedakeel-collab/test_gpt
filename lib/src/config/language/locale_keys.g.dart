@@ -127,6 +127,9 @@ abstract class LocaleKeys {
   static const String _productsEmpty = 'products_empty';
   static String get productsEmpty => _productsEmpty.tr();
 
+  static const String _notificationsEmpty = 'notifications_empty';
+  static String get notificationsEmpty => _notificationsEmpty.tr();
+
   static const String _productsSearchHint = 'products_search_hint';
   static String get productsSearchHint => _productsSearchHint.tr();
 

@@ -20,6 +20,45 @@ class _EmployeeDetailsBodyState extends State<_EmployeeDetailsBody> {
       onRetry: () => context.read<EmployeeDetailsCubit>().getEmployeeDetails(
         widget.employeeId,
       ),
+      loadingBuilder: (_) {
+        return SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+
+            children: [
+              16.szH,
+
+              const _EmployeeDetailsHeaderSkeleton(),
+
+              16.szH,
+
+              Row(
+                children: [
+                  Expanded(child: _EmployeeBalanceSkeleton()),
+
+                  12.szW,
+
+                  Expanded(child: _EmployeeBalanceSkeleton()),
+
+                  12.szW,
+
+                  Expanded(child: _EmployeeBalanceSkeleton()),
+                ],
+              ),
+
+              16.szH,
+
+              ...List.generate(
+                4,
+                (_) => Padding(
+                  padding: EdgeInsets.only(bottom: AppPadding.pH12),
+                  child: const _EmployeeRequestSkeleton(),
+                ),
+              ),
+            ],
+          ).paddingSymmetric(horizontal: AppPadding.pH16),
+        );
+      },
       builder: (context, employee) {
         return SingleChildScrollView(
           child: Column(

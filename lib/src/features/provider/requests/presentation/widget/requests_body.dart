@@ -74,6 +74,30 @@ class _RequestsBodyState extends State<_RequestsBody> {
 
         Expanded(
           child: AsyncBlocBuilder<MyTeamCubit, List<LeaveRequestEntity>>(
+            loadingBuilder: (_) {
+              return ListView(
+                physics: const AlwaysScrollableScrollPhysics(),
+
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppPadding.pH16,
+                  vertical: AppPadding.pH16,
+                ),
+
+                children: [
+                  16.szH,
+
+                  ...List.generate(
+                    6,
+                    (_) => Padding(
+                      padding: EdgeInsets.only(bottom: AppPadding.pH12),
+
+                      child: const _RequestCardSkeleton(),
+                    ),
+                  ),
+                ],
+              );
+            },
+
             onRetry: _refresh,
 
             builder: (context, requests) {

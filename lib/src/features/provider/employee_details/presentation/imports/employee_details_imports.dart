@@ -27,3 +27,6 @@ part '../widget/employee_details_body.dart';
 part '../widget/employee_details_header_card.dart';
 part '../cubits/employee_details_cubit.dart';
 part '../widget/employee_details_balance_card.dart';
+part '../widget/pagination/employee_details_header_skeleton.dart';
+part '../widget/pagination/employee_balance_skeleton.dart';
+part '../widget/pagination/employee_request_skeleton.dart';

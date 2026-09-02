@@ -7,7 +7,6 @@ class _ProfileBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return BlocListener<LogoutCubit, AsyncState<String>>(
       listenWhen: (previous, current) =>
           previous.runtimeType != current.runtimeType,
@@ -44,6 +43,85 @@ class _ProfileBody extends StatelessWidget {
             ),
           ),
           AsyncBlocBuilder<ProfileCubit, LoginEntity>(
+            loadingBuilder: (_) {
+              return Stack(
+                children: [
+                  Container(
+                    height: AppSize.sH320,
+
+                    decoration: BoxDecoration(
+                      color: AppColors.splashBackground,
+
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(AppCircular.r30),
+
+                        bottomRight: Radius.circular(AppCircular.r30),
+                      ),
+                    ),
+                  ),
+
+                  SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        const _ProfileHeaderSkeleton(),
+
+                        50.szH,
+
+                        Container(
+                          padding: EdgeInsets.all(AppPadding.pH16),
+
+                          margin: EdgeInsets.symmetric(
+                            horizontal: AppPadding.pH16,
+                          ),
+
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+
+                            borderRadius: BorderRadius.circular(
+                              AppCircular.r20,
+                            ),
+                          ),
+
+                          child: Column(
+                            children: [
+                              ...List.generate(
+                                5,
+                                (_) => Padding(
+                                  padding: EdgeInsets.only(
+                                    bottom: AppPadding.pH12,
+                                  ),
+
+                                  child: const _ProfileInfoSkeleton(),
+                                ),
+                              ),
+
+                              16.szH,
+
+                              Row(
+                                children: [
+                                  Expanded(child: _ProfileBalanceSkeleton()),
+
+                                  12.szW,
+
+                                  Expanded(child: _ProfileBalanceSkeleton()),
+                                ],
+                              ),
+
+                              20.szH,
+
+                              ...List.generate(
+                                3,
+                                (_) => const _ProfileMenuSkeleton(),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            },
             onRetry: () => context.read<ProfileCubit>().getProfile(),
             builder: (context, profile) {
               return RefreshIndicator(

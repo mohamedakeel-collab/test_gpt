@@ -8,14 +8,41 @@ class _RequestDetailsBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AsyncBlocBuilder<RequestDetailsCubit, LeaveRequestEntity>(
-      onRetry: () => context.read<RequestDetailsCubit>().getRequestDetails(
-        requestId,
-      ),
+      loadingBuilder: (_) {
+        return SingleChildScrollView(
+          padding: EdgeInsets.all(AppPadding.pH16),
+
+          child: Column(
+            children: [
+              16.szH,
+
+              const _RequestEmployeeSkeleton(),
+
+              12.szH,
+
+              const _RequestBalanceSkeleton(),
+
+              12.szH,
+
+              const _RequestInfoSkeleton(),
+
+              12.szH,
+
+              const _RequestSmallCardSkeleton(),
+
+              12.szH,
+
+              const _RequestSmallCardSkeleton(),
+            ],
+          ),
+        );
+      },
+      onRetry: () =>
+          context.read<RequestDetailsCubit>().getRequestDetails(requestId),
       builder: (context, details) {
         return RefreshIndicator(
-          onRefresh: () => context.read<RequestDetailsCubit>().getRequestDetails(
-            requestId,
-          ),
+          onRefresh: () =>
+              context.read<RequestDetailsCubit>().getRequestDetails(requestId),
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             padding: EdgeInsetsDirectional.only(
@@ -37,7 +64,10 @@ class _RequestDetailsBody extends StatelessWidget {
                   RequestAttachmentCard(file: details.file),
                 ],
                 12.szH,
-                RequestNotesCard(requestId: details.id,comments: details.comments,),
+                RequestNotesCard(
+                  requestId: details.id,
+                  comments: details.comments,
+                ),
               ],
             ),
           ),

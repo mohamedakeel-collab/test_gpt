@@ -49,11 +49,27 @@ class _NotificationsBodyState extends State<_NotificationsBody> {
     return AsyncBlocBuilder<NotificationsCubit, List<NotificationEntity>>(
       onRetry: _refresh,
 
+      loadingBuilder: (_) {
+        return ListView.separated(
+          padding: EdgeInsetsDirectional.symmetric(
+            horizontal: AppPadding.pH16,
+            vertical: AppPadding.pH8,
+          ),
+
+          itemCount: 6,
+
+          separatorBuilder: (_, _) => 12.szH,
+
+          itemBuilder: (_, index) {
+            return const _NotificationCardSkeleton();
+          },
+        );
+      },
+
       builder: (context, notifications) {
         final cubit = context.read<NotificationsCubit>();
 
         final isLoadingMore = cubit.isLoadingMore;
-
         if (notifications.isEmpty) {
           return RefreshIndicator(
             onRefresh: _refresh,
@@ -61,17 +77,13 @@ class _NotificationsBodyState extends State<_NotificationsBody> {
             child: ListView(
               physics: const AlwaysScrollableScrollPhysics(),
 
-              padding: EdgeInsetsDirectional.symmetric(
-                horizontal: AppPadding.pH16,
-
-                vertical: AppPadding.pH8,
-              ),
+              padding: EdgeInsets.symmetric(horizontal: AppPadding.pH16),
 
               children: [
-                120.szH,
+                SizedBox(height: AppSize.sH120),
 
                 EmptyWidget(
-                  title: LocaleKeys.noNotifications,
+                  title: LocaleKeys.notificationsEmpty,
 
                   desc: LocaleKeys.errorexceptionNotcontaindesc,
                 ),
@@ -79,7 +91,6 @@ class _NotificationsBodyState extends State<_NotificationsBody> {
             ),
           );
         }
-
         return RefreshIndicator(
           onRefresh: _refresh,
 
@@ -96,11 +107,11 @@ class _NotificationsBodyState extends State<_NotificationsBody> {
 
             itemCount: notifications.length + (isLoadingMore ? 1 : 0),
 
-            separatorBuilder: (_, __) => 12.szH,
+            separatorBuilder: (_, _) => 12.szH,
 
             itemBuilder: (_, index) {
               if (index == notifications.length) {
-                return const Padding(
+                return Padding(
                   padding: EdgeInsets.symmetric(vertical: 16),
 
                   child: Center(child: CircularProgressIndicator()),

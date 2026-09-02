@@ -26,3 +26,4 @@ part '../widgets/notification_card.dart';
 part '../widgets/notification_chip.dart';
 part '../widgets/notification_icon.dart';
 part '../widgets/notifications_body.dart';
+part '../widgets/pagination/notification_card_skeleton.dart';

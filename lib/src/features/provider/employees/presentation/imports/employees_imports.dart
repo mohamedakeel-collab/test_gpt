@@ -24,11 +24,25 @@ import '../../domain/entities/employee_entity.dart';
 import '../../domain/usecases/get_employees_use_case.dart';
 
 part '../controllers/employees_view_controller.dart';
+
 part '../cubits/employees_cubit.dart';
+
 part '../view/employees_screen.dart';
+
 part '../widget/employees_body.dart';
+
 part '../widget/employees_header.dart';
+
 part '../widget/employees_summary_card.dart';
+
 part '../widget/employees_filter.dart';
+
 part '../widget/employee_card.dart';
+
 part '../widget/employees_search.dart';
+
+part '../widget/pagination/employee_card_skeleton.dart';
+
+part '../widget/pagination/employees_summary_card_skeleton.dart';
+
+part '../widget/pagination/employees_search_skeleton.dart';

@@ -48,3 +48,7 @@ part '../widget/request_attachment_card.dart';
 part '../widget/request_action_buttons.dart';
 part '../widget/review_request_dialog.dart';
 part '../widget/send_note_button.dart';
+part '../widget/pagination/request_employee_skeleton.dart';
+part '../widget/pagination/request_balance_skeleton.dart';
+part '../widget/pagination/request_info_skeleton.dart';
+part '../widget/pagination/request_small_card_skeleton.dart';
