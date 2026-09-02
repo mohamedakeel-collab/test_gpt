@@ -9,7 +9,7 @@ class RequestCard extends StatelessWidget {
 
   final EmployeeDetailsLeaveRequestEntity request;
   final VoidCallback? onTap;
-  final EmployeeDetailsViewController controller;
+  final RequestCardController controller;
 
   @override
   Widget build(BuildContext context) {

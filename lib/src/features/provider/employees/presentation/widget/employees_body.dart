@@ -60,7 +60,10 @@ class _EmployeesBodyState extends State<_EmployeesBody> {
             final cubit = context.read<EmployeesCubit>();
 
             return RefreshIndicator(
-              onRefresh: () => cubit.getEmployees(perPage: 15),
+              onRefresh: () => cubit.getEmployees(
+                perPage: 15,
+                search: widget.controller.searchQuery.value,
+              ),
 
               child: ListView(
                 controller: _scrollController,

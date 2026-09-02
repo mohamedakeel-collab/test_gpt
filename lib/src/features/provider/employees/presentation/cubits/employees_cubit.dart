@@ -13,21 +13,20 @@ class EmployeesCubit extends AsyncCubit<List<EmployeeEntity>> {
 
   bool get hasMore => _hasMore;
   String? _search;
+
   bool get isLoadingMore => _isLoadingMore;
 
-  Future<void> getEmployees({
-    int? perPage,
-    String? search,
-  }) {
+  Future<void> getEmployees({int? perPage, String? search}) {
+    _currentPage = 1;
+
+    _perPage = perPage ?? 15;
 
     _search = search;
 
+    _hasMore = true;
+
     return execute(
-          () => _useCase(
-        page: 1,
-        perPage: perPage ?? 15,
-        search: search,
-      ),
+      () => _useCase(page: _currentPage, perPage: _perPage, search: _search),
     );
   }
 
@@ -41,7 +40,11 @@ class EmployeesCubit extends AsyncCubit<List<EmployeeEntity>> {
     _isLoadingMore = true;
     emit(AsyncLoading<List<EmployeeEntity>>(previous: current));
 
-    final result = await _useCase(page: nextPage, perPage: _perPage);
+    final result = await _useCase(
+      page: nextPage,
+      perPage: _perPage,
+      search: _search,
+    );
     _isLoadingMore = false;
 
     result.fold(

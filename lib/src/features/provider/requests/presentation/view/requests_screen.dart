@@ -10,7 +10,7 @@ class RequestsScreen extends StatefulWidget {
 class _RequestsScreenState extends State<RequestsScreen> {
   late final MyTeamCubit _cubit;
 
-  late final MyTeamViewController _controller;
+  late final RequestsViewController _controller;
 
   @override
   void initState() {
@@ -18,15 +18,15 @@ class _RequestsScreenState extends State<RequestsScreen> {
 
     _cubit = injector<MyTeamCubit>();
 
-    _controller = MyTeamViewController(
-      onStatusChanged: (status) {
-        _cubit.getTeamRequests(perPage: 10, status: status);
+    _controller = RequestsViewController(
+      onTabChanged: (leaveType) {
+        _cubit.getTeamRequests(perPage: 10, leaveType: leaveType);
       },
     );
 
     _cubit.getTeamRequests(
       perPage: 10,
-      status: _controller.selectedStatusFilter,
+      leaveType: _controller.selectedLeaveType,
     );
   }
 

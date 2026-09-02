@@ -1,6 +1,6 @@
 part of '../imports/requests_imports.dart';
 
-class RequestsViewController {
+class RequestsViewController implements RequestCardController {
   RequestsViewController({required this.onTabChanged});
 
   String requestTypeLabel(String type){

@@ -12,6 +12,7 @@ abstract interface class MyTeamRemoteDataSource {
     int? page,
     int? perPage,
     String? status,
+    String? leaveType,
   });
 }
 
@@ -25,6 +26,7 @@ class MyTeamRemoteDataSourceImpl extends BaseRemoteSource
     int? page,
     int? perPage,
     String? status,
+    String? leaveType,
   }) {
     final queryParameters = <String, dynamic>{};
     if (page != null) {
@@ -36,7 +38,9 @@ class MyTeamRemoteDataSourceImpl extends BaseRemoteSource
     if (status?.isNotEmpty == true) {
       queryParameters['status'] = status;
     }
-
+    if (leaveType?.isNotEmpty == true) {
+      queryParameters['leave_type'] = leaveType;
+    }
     return request<List<LeaveRequestModel>>(
       method: HttpMethod.get,
       endpoint: ApiEndpoints.leaveRequests,

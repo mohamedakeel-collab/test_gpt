@@ -3,7 +3,7 @@ part of '../imports/requests_imports.dart';
 class _RequestsBody extends StatefulWidget {
   const _RequestsBody({required this.controller});
 
-  final MyTeamViewController controller;
+  final RequestsViewController controller;
 
   @override
   State<_RequestsBody> createState() => _RequestsBodyState();
@@ -12,24 +12,13 @@ class _RequestsBody extends StatefulWidget {
 class _RequestsBodyState extends State<_RequestsBody> {
   late final ScrollController _scrollController;
 
-  late final RequestsViewController _requestController;
-
   @override
   void initState() {
     super.initState();
 
     _scrollController = ScrollController()..addListener(_onScroll);
 
-    widget.controller.selectedStatus.addListener(_onStatusChanged);
-
-    _requestController = RequestsViewController(
-      onTabChanged: (leaveType) {
-        context.read<MyTeamCubit>().getTeamRequests(
-          perPage: 10,
-          status: leaveType,
-        );
-      },
-    );
+    widget.controller.selectedTab.addListener(_onTabChanged);
   }
 
   @override
@@ -38,9 +27,7 @@ class _RequestsBodyState extends State<_RequestsBody> {
       ..removeListener(_onScroll)
       ..dispose();
 
-    widget.controller.selectedStatus.removeListener(_onStatusChanged);
-
-    _requestController.dispose();
+    widget.controller.selectedTab.removeListener(_onTabChanged);
 
     super.dispose();
   }
@@ -57,7 +44,7 @@ class _RequestsBodyState extends State<_RequestsBody> {
     }
   }
 
-  void _onStatusChanged() {
+  void _onTabChanged() {
     if (!_scrollController.hasClients) {
       return;
     }
@@ -69,7 +56,7 @@ class _RequestsBodyState extends State<_RequestsBody> {
     return context.read<MyTeamCubit>().getTeamRequests(
       perPage: 10,
 
-      status: widget.controller.selectedStatusFilter,
+      leaveType: widget.controller.selectedLeaveType,
     );
   }
 
@@ -80,7 +67,7 @@ class _RequestsBodyState extends State<_RequestsBody> {
         16.szH,
 
         _RequestsTabs(
-          controller: _requestController,
+          controller: widget.controller,
         ).paddingSymmetric(horizontal: AppPadding.pH16),
 
         16.szH,
@@ -146,7 +133,7 @@ class _RequestsBodyState extends State<_RequestsBody> {
                     return RequestCard(
                       request: request,
 
-                      controller: EmployeeDetailsViewController(),
+                      controller: widget.controller,
 
                       onTap: () {
                         Go.to(RequestDetailsScreen(id: requests[index].id));

@@ -8,5 +8,6 @@ abstract interface class MyTeamRepository {
     int? page,
     int? perPage,
     String? status,
+    String? leaveType,
   });
 }

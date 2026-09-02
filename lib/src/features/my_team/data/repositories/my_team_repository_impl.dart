@@ -12,18 +12,25 @@ class MyTeamRepositoryImpl implements MyTeamRepository {
   const MyTeamRepositoryImpl(this._remote);
 
   final MyTeamRemoteDataSource _remote;
-
   @override
   Future<Either<Failure, List<LeaveRequestEntity>>> getTeamRequests({
     int? page,
     int? perPage,
     String? status,
+    String? leaveType,
   }) async {
+
     final result = await _remote.getTeamRequests(
       page: page,
       perPage: perPage,
       status: status,
+      leaveType: leaveType,
     );
-    return result.map((items) => items.toEntities());
+
+
+    return result.map(
+          (items) => items.toEntities(),
+    );
+
   }
 }

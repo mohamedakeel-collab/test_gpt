@@ -15,11 +15,13 @@ class GetMyTeamRequestsUseCase {
     int? page,
     int? perPage,
     String? status,
+    String? leaveType,
   }) {
     return repository.getTeamRequests(
       page: page,
       perPage: perPage,
       status: status,
+      leaveType: leaveType
     );
   }
 }

@@ -36,3 +36,6 @@ part '../widget/requests_tabs.dart';
 part '../widget/request_card.dart';
 part '../widget/request_status.dart';
 part '../widget/request_status_chip.dart';
+abstract class RequestCardController {
+  String requestTypeLabel(String type);
+}
