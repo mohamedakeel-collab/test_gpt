@@ -45,7 +45,7 @@ class _EmployeeCard extends StatelessWidget {
                         fit: BoxFit.cover,
                         width: AppSize.sW60,
                         height: AppSize.sH60,
-                        ignoreClick: true,
+                        ignoreClick: false,
                       ),
               ),
             ),
@@ -74,27 +74,26 @@ class _EmployeeCard extends StatelessWidget {
               ),
             ),
 
-            Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: AppPadding.pW8,
-                vertical: AppPadding.pH4,
-              ),
+            if (employee.hasPendingRequests)
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppPadding.pW8,
+                  vertical: AppPadding.pH4,
+                ),
 
-              decoration: BoxDecoration(
-                color: controller.statusSurface(employee),
+                decoration: BoxDecoration(
+                  color: controller.statusSurface(employee),
 
-                borderRadius: BorderRadius.circular(AppCircular.r20),
-              ),
+                  borderRadius: BorderRadius.circular(AppCircular.r20),
+                ),
 
-              child: Text(
-                controller.statusLabel(employee),
-                style: const TextStyle()
-                    .setWhiteColor
-                    .s11
-                    .medium
-                    .copyWith(color: controller.statusColor(employee)),
+                child: Text(
+                  LocaleKeys.pendingRequest,
+                  style: const TextStyle().setWhiteColor.s11.medium.copyWith(
+                    color: controller.statusColor(employee),
+                  ),
+                ),
               ),
-            ),
             10.szW,
             IconWidget(
               icon: Icons.arrow_forward_ios_rounded,

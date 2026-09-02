@@ -12,8 +12,14 @@ class GetNotificationsUseCase {
   final NotificationsRepository _repository;
 
   Future<Either<Failure, List<NotificationEntity>>> call({
-    required int perPage,
+    int? page,
+    int? perPage,
   }) {
-    return _repository.getNotifications(perPage: perPage);
+
+    return _repository.getNotifications(
+      page: page,
+      perPage: perPage ?? 20,
+    );
+
   }
 }

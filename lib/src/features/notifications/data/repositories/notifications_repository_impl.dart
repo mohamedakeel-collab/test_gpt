@@ -15,9 +15,23 @@ class NotificationsRepositoryImpl implements NotificationsRepository {
 
   @override
   Future<Either<Failure, List<NotificationEntity>>> getNotifications({
-    required int perPage,
+    int? page,
+    int? perPage,
   }) async {
-    final result = await _remote.getNotifications(perPage: perPage);
-    return result.map((items) => items.map((item) => item.toEntity()).toList());
+
+    final result =
+    await _remote.getNotifications(
+      page: page,
+      perPage: perPage,
+    );
+
+
+    return result.map(
+          (items) =>
+          items.map(
+                (item)=>item.toEntity(),
+          ).toList(),
+    );
+
   }
 }

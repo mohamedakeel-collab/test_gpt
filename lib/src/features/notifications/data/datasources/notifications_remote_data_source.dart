@@ -9,7 +9,8 @@ import '../models/notification_model.dart';
 
 abstract interface class NotificationsRemoteDataSource {
   Future<Either<Failure, List<NotificationModel>>> getNotifications({
-    required int perPage,
+    int? page,
+    int? perPage,
   });
 }
 
@@ -20,12 +21,23 @@ class NotificationsRemoteDataSourceImpl extends BaseRemoteSource
 
   @override
   Future<Either<Failure, List<NotificationModel>>> getNotifications({
-    required int perPage,
+    int? page,
+    int? perPage,
   }) {
+    final queryParameters = <String, dynamic>{};
+
+    if (page != null) {
+      queryParameters['page'] = page;
+    }
+
+    if (perPage != null) {
+      queryParameters['per_page'] = perPage;
+    }
+
     return request<List<NotificationModel>>(
       method: HttpMethod.get,
       endpoint: ApiEndpoints.notifications,
-      queryParameters: {'per_page': perPage},
+      queryParameters: queryParameters,
       fromJson: _parseNotifications,
     );
   }

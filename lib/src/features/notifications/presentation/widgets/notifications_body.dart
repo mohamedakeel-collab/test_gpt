@@ -1,47 +1,119 @@
 part of '../imports/notifications_imports.dart';
 
-class _NotificationsBody extends StatelessWidget {
+class _NotificationsBody extends StatefulWidget {
   const _NotificationsBody({required this.controller});
 
   final NotificationsViewController controller;
 
   @override
+  State<_NotificationsBody> createState() => _NotificationsBodyState();
+}
+
+class _NotificationsBodyState extends State<_NotificationsBody> {
+  late final ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _scrollController = ScrollController()..addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController
+      ..removeListener(_onScroll)
+      ..dispose();
+
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) {
+      return;
+    }
+
+    final position = _scrollController.position;
+
+    if (position.pixels >= position.maxScrollExtent - 100) {
+      context.read<NotificationsCubit>().loadMore();
+    }
+  }
+
+  Future<void> _refresh() {
+    return context.read<NotificationsCubit>().getNotifications(perPage: 20);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AsyncBlocBuilder<NotificationsCubit, List<NotificationEntity>>(
-      onRetry: () => context.read<NotificationsCubit>().getNotifications(),
+      onRetry: _refresh,
+
       builder: (context, notifications) {
-        return RefreshIndicator(
-          onRefresh: () =>
-              context.read<NotificationsCubit>().getNotifications(),
-          child: notifications.isEmpty
-              ? ListView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsetsDirectional.symmetric(
-                    horizontal: AppPadding.pH16,
-                    vertical: AppPadding.pH8,
-                  ),
-                  children: [
-                    120.szH,
-                    EmptyWidget(
-                      title: LocaleKeys.noNotifications,
-                      desc: LocaleKeys.errorexceptionNotcontaindesc,
-                    ),
-                  ],
-                )
-              : ListView.separated(
-                  padding: EdgeInsetsDirectional.symmetric(
-                    horizontal: AppPadding.pH16,
-                    vertical: AppPadding.pH8,
-                  ),
-                  itemCount: notifications.length,
-                  separatorBuilder: (_, _) => 12.szH,
-                  itemBuilder: (_, i) {
-                    return _NotificationCard(
-                      notification: notifications[i],
-                      controller: controller,
-                    );
-                  },
+        final cubit = context.read<NotificationsCubit>();
+
+        final isLoadingMore = cubit.isLoadingMore;
+
+        if (notifications.isEmpty) {
+          return RefreshIndicator(
+            onRefresh: _refresh,
+
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+
+              padding: EdgeInsetsDirectional.symmetric(
+                horizontal: AppPadding.pH16,
+
+                vertical: AppPadding.pH8,
+              ),
+
+              children: [
+                120.szH,
+
+                EmptyWidget(
+                  title: LocaleKeys.noNotifications,
+
+                  desc: LocaleKeys.errorexceptionNotcontaindesc,
                 ),
+              ],
+            ),
+          );
+        }
+
+        return RefreshIndicator(
+          onRefresh: _refresh,
+
+          child: ListView.separated(
+            controller: _scrollController,
+
+            physics: const AlwaysScrollableScrollPhysics(),
+
+            padding: EdgeInsetsDirectional.symmetric(
+              horizontal: AppPadding.pH16,
+
+              vertical: AppPadding.pH8,
+            ),
+
+            itemCount: notifications.length + (isLoadingMore ? 1 : 0),
+
+            separatorBuilder: (_, __) => 12.szH,
+
+            itemBuilder: (_, index) {
+              if (index == notifications.length) {
+                return const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 16),
+
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              }
+
+              return _NotificationCard(
+                notification: notifications[index],
+
+                controller: widget.controller,
+              );
+            },
+          ),
         );
       },
     );
