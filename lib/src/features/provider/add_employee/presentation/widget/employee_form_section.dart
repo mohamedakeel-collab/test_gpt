@@ -18,7 +18,8 @@ class _EmployeeFormSection extends StatelessWidget {
         DefaultTextField(
           title: LocaleKeys.enterEmployeeNameEnter,
           controller: controller.fullNameController,
-          validator: (v) => Validators.validateEmpty(v, fieldTitle: LocaleKeys.fullName),
+          validator: (v) =>
+              Validators.validateEmpty(v, fieldTitle: LocaleKeys.fullName),
           prefixIcon: const Icon(Icons.person_outline),
         ),
         12.szH,
@@ -30,7 +31,23 @@ class _EmployeeFormSection extends StatelessWidget {
         DefaultTextField(
           title: LocaleKeys.jobTitleExample,
           controller: controller.jobTitleController,
-          validator: (v) => Validators.validateEmpty(v, fieldTitle: LocaleKeys.jobTitle),
+          validator: (v) =>
+              Validators.validateEmpty(v, fieldTitle: LocaleKeys.jobTitle),
+          prefixIcon: const Icon(Icons.badge_outlined),
+        ),
+        12.szH,
+        Text(
+          LocaleKeys.role,
+          style: const TextStyle().setMainTextColor.s14.medium,
+        ),
+        5.szH,
+        DefaultTextField(
+          readOnly: true,
+          title: LocaleKeys.role,
+          controller: controller.roleController,
+          inputType: TextInputType.text,
+          validator: (v) =>
+              Validators.validateEmpty(v, fieldTitle: LocaleKeys.role),
           prefixIcon: const Icon(Icons.badge_outlined),
         ),
         12.szH,
@@ -43,9 +60,11 @@ class _EmployeeFormSection extends StatelessWidget {
           title: LocaleKeys.mobileNumberHint,
           controller: controller.mobileNumberController,
           inputType: TextInputType.phone,
-          validator: (v) => Validators.validatePhone(v, fieldTitle: LocaleKeys.mobileNumber),
+          validator: (v) =>
+              Validators.validatePhone(v, fieldTitle: LocaleKeys.mobileNumber),
           prefixIcon: const Icon(Icons.phone_outlined),
         ),
+
         12.szH,
         AsyncBlocBuilder<DepartmentsCubit, List<DepartmentEntity>>(
           onRetry: () => context.read<DepartmentsCubit>().getDepartments(),
@@ -72,11 +91,13 @@ class _EmployeeFormSection extends StatelessWidget {
                         controller.setSelectedDepartment(value);
                         controller.clearSelectedManager();
                         if (value != null) {
+                          context.read<DepartmentManagersCubit>().getManagers(
+                            value.id,
+                          );
+                        } else {
                           context
                               .read<DepartmentManagersCubit>()
-                              .getManagers(value.id);
-                        } else {
-                          context.read<DepartmentManagersCubit>().resetManagers();
+                              .resetManagers();
                         }
                       },
                       validator: controller.validateDepartment,
@@ -98,8 +119,9 @@ class _EmployeeFormSection extends StatelessWidget {
                             value: selectedManager,
                             showSearchBox: false,
                             readonly: true,
-                            itemAsString: (item) =>
-                                item.managerName.isNotEmpty ? item.managerName : item.name,
+                            itemAsString: (item) => item.managerName.isNotEmpty
+                                ? item.managerName
+                                : item.name,
                             onChanged: controller.setSelectedManager,
                             validator: controller.validateManager,
                             label: LocaleKeys.directManager,
@@ -109,7 +131,10 @@ class _EmployeeFormSection extends StatelessWidget {
                       );
                     }
 
-                    return AsyncBlocBuilder<DepartmentManagersCubit, List<DepartmentEntity>>(
+                    return AsyncBlocBuilder<
+                      DepartmentManagersCubit,
+                      List<DepartmentEntity>
+                    >(
                       loadingBuilder: (_) {
                         return ValueListenableBuilder<DepartmentEntity?>(
                           valueListenable: controller.selectedManager,
@@ -120,10 +145,14 @@ class _EmployeeFormSection extends StatelessWidget {
                               showSearchBox: false,
                               readonly: true,
                               itemAsString: (item) =>
-                                  item.managerName.isNotEmpty ? item.managerName : item.name,
+                                  item.managerName.isNotEmpty
+                                  ? item.managerName
+                                  : item.name,
                               onChanged: controller.setSelectedManager,
-                              validator: (value) =>
-                                  Validators.validateDropDown(value, fieldTitle: LocaleKeys.directManager),
+                              validator: (value) => Validators.validateDropDown(
+                                value,
+                                fieldTitle: LocaleKeys.directManager,
+                              ),
                               label: LocaleKeys.directManager,
                               hint: LocaleKeys.loadingManagers,
                             );
@@ -141,10 +170,15 @@ class _EmployeeFormSection extends StatelessWidget {
                                 showSearchBox: false,
                                 readonly: true,
                                 itemAsString: (item) =>
-                                    item.managerName.isNotEmpty ? item.managerName : item.name,
+                                    item.managerName.isNotEmpty
+                                    ? item.managerName
+                                    : item.name,
                                 onChanged: controller.setSelectedManager,
                                 validator: (value) =>
-                                    Validators.validateDropDown(value, fieldTitle: LocaleKeys.directManager),
+                                    Validators.validateDropDown(
+                                      value,
+                                      fieldTitle: LocaleKeys.directManager,
+                                    ),
                                 label: LocaleKeys.directManager,
                                 hint: LocaleKeys.noManagers,
                               );
@@ -155,18 +189,22 @@ class _EmployeeFormSection extends StatelessWidget {
                         return ValueListenableBuilder<DepartmentEntity?>(
                           valueListenable: controller.selectedManager,
                           builder: (context, selectedManager, _) {
-                              return AppDropdown<DepartmentEntity>(
-                                items: managers,
-                                value: selectedManager,
-                                showSearchBox: false,
-                                itemAsString: (item) =>
-                                    item.managerName.isNotEmpty ? item.managerName : item.name,
-                                onChanged: controller.setSelectedManager,
-                                validator: (value) =>
-                                    Validators.validateDropDown(value, fieldTitle: LocaleKeys.directManager),
-                                label: LocaleKeys.directManager,
-                                hint: LocaleKeys.selectDirectManager,
-                              );
+                            return AppDropdown<DepartmentEntity>(
+                              items: managers,
+                              value: selectedManager,
+                              showSearchBox: false,
+                              itemAsString: (item) =>
+                                  item.managerName.isNotEmpty
+                                  ? item.managerName
+                                  : item.name,
+                              onChanged: controller.setSelectedManager,
+                              validator: (value) => Validators.validateDropDown(
+                                value,
+                                fieldTitle: LocaleKeys.directManager,
+                              ),
+                              label: LocaleKeys.directManager,
+                              hint: LocaleKeys.selectDirectManager,
+                            );
                           },
                         );
                       },

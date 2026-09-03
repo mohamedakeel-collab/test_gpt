@@ -88,6 +88,29 @@ class _LoginDataSection extends StatelessWidget {
 
           style: const TextStyle().subLabelColor.s10.medium,
         ),
+        5.szH,
+        Text(
+          LocaleKeys.permissions,
+
+          style: const TextStyle().setMainTextColor.s14.medium,
+        ),
+        5.szH,
+        DefaultTextField(
+          title: '0',
+          controller: controller.initialPerissionsController,
+          validator: (v) => Validators.validateEmpty(
+            v,
+            fieldTitle: LocaleKeys.titleInitialPerissions,
+          ),
+          inputType: TextInputType.number,
+          prefixIcon: const Icon(Icons.calendar_today_outlined),
+        ),
+        5.szH,
+        Text(
+          LocaleKeys.titleInitialPerissions,
+
+          style: const TextStyle().subLabelColor.s10.medium,
+        ),
       ],
     );
   }

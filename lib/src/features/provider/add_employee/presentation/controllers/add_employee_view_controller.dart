@@ -10,9 +10,12 @@ class AddEmployeeViewController {
   final TextEditingController fullNameController = TextEditingController();
   final TextEditingController jobTitleController = TextEditingController();
   final TextEditingController mobileNumberController = TextEditingController();
+  final TextEditingController roleController = TextEditingController(text: LocaleKeys.employee);
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController initialLeaveBalanceController =
+      TextEditingController();
+  final TextEditingController initialPerissionsController =
       TextEditingController();
 
   final ValueNotifier<DepartmentEntity?> selectedDepartment =
@@ -49,7 +52,8 @@ class AddEmployeeViewController {
           .toString()
           .split('.')
           .first,
-      permissionHours: 4,
+      permissionHours:
+          int.tryParse(initialPerissionsController.text.trim()) ?? 0,
       role: 'employee',
     );
   }

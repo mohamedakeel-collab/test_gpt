@@ -553,6 +553,9 @@ abstract class LocaleKeys {
   static const String _sharing = 'sharing';
   static String get sharing => _sharing.tr();
 
+  static const String _titleInitialPerissions = 'title_initial_perissions';
+  static String get titleInitialPerissions => _titleInitialPerissions.tr();
+
   static const String _titleInitialLeaveBalance = 'title_initial_leave_balance';
   static String get titleInitialLeaveBalance => _titleInitialLeaveBalance.tr();
 
