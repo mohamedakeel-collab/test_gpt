@@ -46,16 +46,15 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: _HomeBody(controller: _vc),
         floatingActionButton: FloatingActionButton(
+          backgroundColor: AppColors.primary,
+          elevation: 4,
           onPressed: () async {
             final result = await Go.to(const NewRequestScreen());
-
-            print('-----------------------------------');
-            print(result);
-
             if (result == true && mounted) {
               _cubit.fetchHome();
             }
           },
+          child: Icon(Icons.add, color: Color(0xFF587300), size: 28.sp),
         ),
       ),
     );

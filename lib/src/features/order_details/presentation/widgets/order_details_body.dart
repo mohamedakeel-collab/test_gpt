@@ -10,8 +10,44 @@ class _OrderDetailsBody extends StatelessWidget {
     return AsyncBlocBuilder<OrderDetailsCubit, LeaveRequestDetailsEntity>(
       onRetry: () =>
           context.read<OrderDetailsCubit>().getDetails(controller.requestId),
+
+      loadingBuilder: (_) {
+        return SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+
+          padding: EdgeInsetsDirectional.only(
+            start: AppPadding.pH16,
+            end: AppPadding.pH16,
+            top: AppPadding.pH16,
+            bottom: AppPadding.pH16,
+          ),
+
+          child: Column(
+            children: [
+              const _RequestEmployeeSkeleton(),
+
+              12.szH,
+
+              const _RequestBalanceSkeleton(),
+
+              12.szH,
+
+              const _RequestInfoSkeleton(),
+
+              12.szH,
+
+              const _RequestAttachmentSkeleton(),
+
+              12.szH,
+
+              const _RequestNotesSkeleton(),
+            ],
+          ),
+        );
+      },
+
       builder: (context, details) {
-        return  RefreshIndicator(
+        return RefreshIndicator(
           onRefresh: () => context.read<OrderDetailsCubit>().getDetails(
             controller.requestId,
           ),

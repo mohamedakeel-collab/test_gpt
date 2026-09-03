@@ -9,6 +9,31 @@ class _HomeBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return AsyncBlocBuilder<HomeCubit, HomeEntity>(
       onRetry: () => context.read<HomeCubit>().fetchHome(),
+
+      loadingBuilder: (_) {
+        return SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+
+            children: [
+              16.szH,
+
+              const _HomeHeaderSkeleton(),
+
+              16.szH,
+
+              const _BalanceCardSkeleton(),
+
+              16.szH,
+
+              const _RecentRequestsSkeleton(),
+            ],
+          ).paddingOnly(bottom: AppPadding.pH10),
+        );
+      },
+
       builder: (context, home) {
         return RefreshIndicator(
           onRefresh: () => context.read<HomeCubit>().fetchHome(),

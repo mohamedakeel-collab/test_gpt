@@ -101,6 +101,39 @@ class _MyTeamBodyState extends State<_MyTeamBody> {
         Expanded(
           child: AsyncBlocBuilder<MyTeamCubit, List<LeaveRequestEntity>>(
             onRetry: _refresh,
+
+            loadingBuilder: (_) {
+              return ListView(
+                physics: const AlwaysScrollableScrollPhysics(),
+
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppPadding.pH16,
+                  vertical: AppPadding.pH16,
+                ),
+
+                children: [
+                  16.szH,
+
+                  const _MyTeamHeaderSkeleton(),
+
+                  12.szH,
+
+                  const _TeamFilterTabsSkeleton(),
+
+                  16.szH,
+
+                  ...List.generate(
+                    6,
+                    (_) => Padding(
+                      padding: EdgeInsets.only(bottom: AppPadding.pH12),
+
+                      child: const _TeamRequestCardSkeleton(),
+                    ),
+                  ),
+                ],
+              );
+            },
+
             builder: (context, requests) {
               final isLoadingMore = context.read<MyTeamCubit>().isLoadingMore;
 

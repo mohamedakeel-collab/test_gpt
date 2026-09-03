@@ -41,3 +41,6 @@ part '../widgets/my_team_body.dart';
 part '../widgets/team_filter_tabs.dart';
 part '../widgets/team_request_card.dart';
 part '../widgets/team_status_badge.dart';
+part '../widgets/pagination/my_team_header_skeleton.dart';
+part '../widgets/pagination/team_filter_tabs_skeleton.dart';
+part '../widgets/pagination/team_request_card_skeleton.dart';

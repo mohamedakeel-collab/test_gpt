@@ -9,10 +9,10 @@ class MainTapScreen extends StatefulWidget {
 
 class _MainTapScreenState extends State<MainTapScreen> {
   int _selectedIndex = 0;
-
   int _ordersRefreshToken = 0;
   int _employeesRefreshToken = 0;
   int _requestsRefreshToken = 0;
+  int _myTeamRefreshToken = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -96,6 +96,7 @@ class _MainTapScreenState extends State<MainTapScreen> {
                     index: 1,
                     child: MyTeamScreen(
                       key: ValueKey('my-team-${locale.languageCode}'),
+                      refreshToken: _myTeamRefreshToken,
                     ),
                   ),
 
@@ -126,7 +127,6 @@ class _MainTapScreenState extends State<MainTapScreen> {
                       refreshToken: _ordersRefreshToken,
                     ),
                   ),
-
                   _buildTab(index: 2, child: const ProfileScreen()),
                 ]
         : [
@@ -163,19 +163,29 @@ class _MainTapScreenState extends State<MainTapScreen> {
 
         onTabChange: (index) {
           setState(() {
+
             if (isUser && index == ordersIndex) {
               _ordersRefreshToken++;
             }
+
+
+            if (isUser && isManager && index == 1) {
+              _myTeamRefreshToken++;
+            }
+
 
             if (!isUser && index == 0) {
               _employeesRefreshToken++;
             }
 
+
             if (!isUser && index == 1) {
               _requestsRefreshToken++;
             }
 
+
             _selectedIndex = index;
+
           });
         },
       ),

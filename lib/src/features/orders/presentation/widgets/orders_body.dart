@@ -72,6 +72,39 @@ class _OrdersBodyState extends State<_OrdersBody> {
         Expanded(
           child: AsyncBlocBuilder<OrdersCubit, List<LeaveRequestEntity>>(
             onRetry: _refresh,
+
+            loadingBuilder: (_) {
+              return ListView(
+                physics: const AlwaysScrollableScrollPhysics(),
+
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppPadding.pH16,
+                  vertical: AppPadding.pH16,
+                ),
+
+                children: [
+                  14.szH,
+
+                  const _OrdersHeaderSkeleton(),
+
+                  16.szH,
+
+                  const _OrdersTabsSkeleton(),
+
+                  16.szH,
+
+                  ...List.generate(
+                    6,
+                    (_) => Padding(
+                      padding: EdgeInsets.only(bottom: AppPadding.pH12),
+
+                      child: const _OrderCardSkeleton(),
+                    ),
+                  ),
+                ],
+              );
+            },
+
             builder: (context, orders) {
               final isLoadingMore = context.read<OrdersCubit>().isLoadingMore;
 

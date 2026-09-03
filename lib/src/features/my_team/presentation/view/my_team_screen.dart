@@ -1,8 +1,12 @@
 part of '../imports/my_team_imports.dart';
-
 class MyTeamScreen extends StatefulWidget {
-  const MyTeamScreen({super.key});
+  const MyTeamScreen({
+    super.key,
+    this.refreshToken = 0,
+  });
 
+
+  final int refreshToken;
   @override
   State<MyTeamScreen> createState() => _MyTeamScreenState();
 }
@@ -31,6 +35,21 @@ class _MyTeamScreenState extends State<MyTeamScreen> {
       );
   }
 
+  @override
+  void didUpdateWidget(covariant MyTeamScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+
+    if (widget.refreshToken != oldWidget.refreshToken) {
+
+      _cubit.getTeamRequests(
+        perPage: 10,
+        status: _controller.selectedStatusFilter,
+      );
+
+    }
+  }
+  
   @override
   void dispose() {
     _controller.dispose();

@@ -31,3 +31,5 @@ part '../widgets/attendance_card.dart';
 part '../widgets/attendance_history_section.dart';
 part '../widgets/remote_work_body.dart';
 part '../widgets/remote_timer_card.dart';
+part '../widgets/pagination/remote_timer_skeleton.dart';
+part '../widgets/pagination/attendance_card_skeleton.dart';

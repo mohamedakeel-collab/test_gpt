@@ -38,3 +38,8 @@ part '../widgets/request_info_card.dart';
 part '../widgets/request_notes_bottom_sheet.dart';
 part '../widgets/request_notes_card.dart';
 part '../widgets/attachment_preview.dart';
+part '../widgets/pagination/request_employee_skeleton.dart';
+part '../widgets/pagination/request_balance_skeleton.dart';
+part '../widgets/pagination/request_info_skeleton.dart';
+part '../widgets/pagination/request_attachment_skeleton.dart';
+part '../widgets/pagination/request_notes_skeleton.dart';

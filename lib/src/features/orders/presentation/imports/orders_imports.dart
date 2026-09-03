@@ -66,3 +66,6 @@ part '../widgets/orders_tabs.dart';
 part '../widgets/order_card.dart';
 part '../widgets/order_status_badge.dart';
 part '../widgets/delete_request_dialog.dart';
+part '../widgets/pagination/order_card_skeleton.dart';
+part '../widgets/pagination/orders_header_skeleton.dart';
+part '../widgets/pagination/orders_tabs_skeleton.dart';
