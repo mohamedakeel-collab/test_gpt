@@ -13,6 +13,7 @@ class _MainTapScreenState extends State<MainTapScreen> {
   int _employeesRefreshToken = 0;
   int _requestsRefreshToken = 0;
   int _myTeamRefreshToken = 0;
+  int _profileRefreshToken = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +110,15 @@ class _MainTapScreenState extends State<MainTapScreen> {
                     ),
                   ),
 
-                  _buildTab(index: 3, child: const ProfileScreen()),
+                  _buildTab(
+                    index: 3,
+                    child: ProfileScreen(
+                      key: ValueKey(
+                        'profile-${locale.languageCode}-$_profileRefreshToken',
+                      ),
+                      refreshToken: _profileRefreshToken,
+                    ),
+                  ),
                 ]
               : [
                   _buildTab(
@@ -127,7 +136,15 @@ class _MainTapScreenState extends State<MainTapScreen> {
                       refreshToken: _ordersRefreshToken,
                     ),
                   ),
-                  _buildTab(index: 2, child: const ProfileScreen()),
+                  _buildTab(
+                    index: 2,
+                    child:ProfileScreen(
+                      key: ValueKey(
+                        'profile-${locale.languageCode}-$_profileRefreshToken',
+                      ),
+                      refreshToken: _profileRefreshToken,
+                    ),
+                  ),
                 ]
         : [
             _buildTab(
@@ -148,7 +165,15 @@ class _MainTapScreenState extends State<MainTapScreen> {
               ),
             ),
 
-            _buildTab(index: 2, child: const ProfileScreen()),
+            _buildTab(
+              index: 2,
+              child: ProfileScreen(
+                key: ValueKey(
+                  'profile-${locale.languageCode}-$_profileRefreshToken',
+                ),
+                refreshToken: _profileRefreshToken,
+              ),
+            ),
           ];
 
     return Scaffold(
@@ -181,6 +206,14 @@ class _MainTapScreenState extends State<MainTapScreen> {
 
             if (!isUser && index == 1) {
               _requestsRefreshToken++;
+            }
+
+
+            if (index == tabs.length - 1 &&
+                _selectedIndex != index) {
+
+              _profileRefreshToken++;
+
             }
 
 

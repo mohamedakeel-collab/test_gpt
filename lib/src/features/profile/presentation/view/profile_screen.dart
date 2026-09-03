@@ -1,7 +1,9 @@
 part of '../imports/profile_imports.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+  const ProfileScreen({super.key, this.refreshToken = 0});
+
+  final int refreshToken;
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -32,8 +34,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void didUpdateWidget(covariant ProfileScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
 
+    if (widget.refreshToken != oldWidget.refreshToken) {
+      _cubit.getProfile();
+    }
+  }
+  @override
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider<ProfileCubit>.value(value: _cubit),
