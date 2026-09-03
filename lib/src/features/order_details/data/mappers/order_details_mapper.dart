@@ -39,6 +39,7 @@ extension EmployeeDetailsModelMapper on EmployeeDetailsModel {
   EmployeeDetailsEntity toEntity() => EmployeeDetailsEntity(
     id: id,
     fullName: fullName,
+    remainingLeaveBalance: remainingLeaveBalance,
     phone: phone,
     position: position,
     leaveBalance: leaveBalance,
@@ -52,6 +53,7 @@ extension ReviewerDetailsModelMapper on ReviewerDetailsModel {
     id: id,
     fullName: fullName,
     phone: phone,
+    remainingLeaveBalance: remainingLeaveBalance,
     position: position,
     leaveBalance: leaveBalance,
     permissionHours: permissionHours,

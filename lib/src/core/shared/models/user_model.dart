@@ -2,7 +2,6 @@ import '../../../features/login/data/models/department_model.dart';
 import '../../../features/login/data/models/team_model.dart';
 
 class UserModel {
-
   final String id;
 
   final String image;
@@ -25,12 +24,13 @@ class UserModel {
 
   final int remainingLeaveBalance;
 
+  final int leaveBalance;
+
   final int permissionHours;
 
   final bool allowNotify;
 
   final String? token;
-
 
   UserModel({
     required this.id,
@@ -44,17 +44,16 @@ class UserModel {
     required this.department,
     required this.team,
     required this.remainingLeaveBalance,
+    required this.leaveBalance,
     required this.permissionHours,
     required this.allowNotify,
     required this.token,
   });
-  factory UserModel.fromJson(Map<String, dynamic> json) {
-    final employee =
-    json['employee'] as Map<String, dynamic>?;
 
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    final employee = json['employee'] as Map<String, dynamic>?;
 
     return UserModel(
-
       id: (json['id'] ?? '').toString(),
 
       image: (json['image'] ?? '').toString(),
@@ -63,105 +62,71 @@ class UserModel {
 
       role: (json['role'] ?? '').toString(),
 
+      fullName: (employee?['full_name'] ?? json['full_name'] ?? '').toString(),
 
-      fullName:
-      (employee?['full_name'] ??
-          json['full_name'] ??
-          '')
+      phoneNumber: (employee?['phone'] ?? json['phone_number'] ?? '')
           .toString(),
 
+      position: (employee?['position'] ?? json['position'] ?? '').toString(),
 
-      phoneNumber:
-      (employee?['phone'] ??
-          json['phone_number'] ??
-          '')
-          .toString(),
+      userType: _mapRole(json['role']),
 
-
-      position:
-      (employee?['position'] ?? '')
-          .toString(),
-
-
-      userType:
-      _mapRole(json['role']),
-
-
-      department:
-      employee?['department'] != null
+      department: employee?['department'] != null
           ? DepartmentModel.fromJson(
-        employee!['department']
-        as Map<String, dynamic>,
-          json['lang']
-      )
+              employee?['department'] as Map<String, dynamic>,
+              json['lang'],
+            )
+          : json['department'] != null
+          ? DepartmentModel.fromJson(
+              json['department'] as Map<String, dynamic>,
+              json['lang'],
+            )
           : null,
 
-
-      team:
-      employee?['team'] != null
-          ? TeamModel.fromJson(
-        employee!['team']
-        as Map<String, dynamic>,
-      )
+      team: employee?['team'] != null
+          ? TeamModel.fromJson(employee?['team'] as Map<String, dynamic>)
+          : json['team'] != null
+          ? TeamModel.fromJson(json['team'] as Map<String, dynamic>)
           : null,
 
-
-      remainingLeaveBalance:
-      _toInt(
-        employee?['remaining_leave_balance'],
+      remainingLeaveBalance: _toInt(
+        employee?['remaining_leave_balance'] ?? json['remaining_leave_balance'],
       ),
 
+      leaveBalance: _toInt(employee?['leave_balance'] ?? json['leave_balance']),
 
-      permissionHours:
-      _toInt(
-        employee?['permission_hours'],
+      permissionHours: _toInt(
+        employee?['permission_hours'] ?? json['permission_hours'],
       ),
 
+      allowNotify: json['allow_notify'] ?? false,
 
-      allowNotify: false,
-
-
-      token:
-      (json['token'] ?? json['access_token'])
-          ?.toString(),
-
+      token: (json['token'] ?? json['access_token'])?.toString(),
     );
   }
-  factory UserModel.initial() => UserModel(
 
-    id: '',
+  factory UserModel.initial() {
+    return UserModel(
+      id: '',
+      image: '',
+      fullName: '',
+      phoneNumber: '',
+      email: '',
+      role: '',
+      userType: 0,
+      position: '',
+      department: null,
+      team: null,
+      remainingLeaveBalance: 0,
+      leaveBalance: 0,
+      permissionHours: 0,
+      allowNotify: false,
+      token: null,
+    );
+  }
 
-    image: '',
-
-    fullName: '',
-
-    phoneNumber: '',
-
-    email: '',
-
-    role: '',
-
-    userType: 0,
-
-    position: '',
-
-    department: null,
-
-    team: null,
-
-    remainingLeaveBalance: 0,
-
-    permissionHours: 0,
-
-    allowNotify: false,
-
-    token: null,
-
-  );
   Map<String, dynamic> toJson() {
-
     return {
-
       'id': id,
 
       'image': image,
@@ -178,45 +143,36 @@ class UserModel {
 
       'position': position,
 
-
       'department': department?.toJson(),
-
 
       'team': team?.toJson(),
 
+      'remaining_leave_balance': remainingLeaveBalance,
 
-      'remaining_leave_balance':
-      remainingLeaveBalance,
+      'leave_balance': leaveBalance,
 
+      'permission_hours': permissionHours,
 
-      'permission_hours':
-      permissionHours,
+      'allow_notify': allowNotify,
 
-
-      'allow_notify':
-      allowNotify,
-
-
+      'token': token,
     };
   }
+
   static int _toInt(dynamic value) {
-    if (value is int) return value;
+    if (value is int) {
+      return value;
+    }
 
     if (value is num) {
       return value.toInt();
     }
 
-    return int.tryParse(
-      value?.toString() ?? '',
-    ) ??
-        0;
+    return int.tryParse(value?.toString() ?? '') ?? 0;
   }
 
-
   static int _mapRole(dynamic role) {
-
-    switch(role?.toString().toLowerCase()) {
-
+    switch (role?.toString().toLowerCase()) {
       case 'manager':
         return 2;
 

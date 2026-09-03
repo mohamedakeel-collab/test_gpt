@@ -7,6 +7,7 @@ class EmployeeDetailsModel {
     required this.phone,
     required this.position,
     required this.leaveBalance,
+    required this.remainingLeaveBalance,
     required this.permissionHours,
     this.image,
   });
@@ -16,6 +17,7 @@ class EmployeeDetailsModel {
   final String phone;
   final String position;
   final int leaveBalance;
+  final int remainingLeaveBalance;
   final int permissionHours;
   final String? image;
 
@@ -25,6 +27,7 @@ class EmployeeDetailsModel {
         fullName: json.getString('full_name'),
         phone: json.getString('phone'),
         position: json.getString('position'),
+        remainingLeaveBalance: json.getInt('remaining_leave_balance'),
         leaveBalance: json.getInt('leave_balance'),
         permissionHours: json.getInt('permission_hours'),
         image: json.getStringOrNull('image') ?? json.getStringOrNull('avatar'),

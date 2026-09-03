@@ -13,6 +13,7 @@
   "failure_unauthorized": "Your session has expired, please sign in again",
   "failure_unknown": "An unexpected error occurred",
   "failure_validation": "The submitted data is invalid",
+  "balance_validation": "Your balance is insufficient to request",
   "app_your_session_is_expired": "Your session has expired. Please login again",
   "blocked": "Your account has been blocked by the administration",
   "data_updating_now_come_later": "Data is currently being updated, please come back later",

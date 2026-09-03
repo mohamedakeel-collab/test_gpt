@@ -6,6 +6,7 @@ class ReviewerDetailsModel extends EmployeeDetailsModel {
     required super.fullName,
     required super.phone,
     required super.position,
+    required super.remainingLeaveBalance,
     required super.leaveBalance,
     required super.permissionHours,
     super.image,
@@ -16,6 +17,7 @@ class ReviewerDetailsModel extends EmployeeDetailsModel {
     return ReviewerDetailsModel(
       id: employee.id,
       fullName: employee.fullName,
+      remainingLeaveBalance: employee.remainingLeaveBalance,
       phone: employee.phone,
       position: employee.position,
       leaveBalance: employee.leaveBalance,

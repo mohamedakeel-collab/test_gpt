@@ -41,7 +41,8 @@ class _NewRequestBodyState extends State<_NewRequestBody> {
                   children: [
                     _RequestTypeSelector(
                       selectedType: _vc.selectedRequestType,
-                      isEdit: widget.mode == RequestMode.edit ||
+                      isEdit:
+                          widget.mode == RequestMode.edit ||
                           widget.mode == RequestMode.editProvider,
                       leaveType: widget.request?.leaveType,
                     ),
@@ -108,7 +109,24 @@ class _NewRequestBodyState extends State<_NewRequestBody> {
   }
 
   Future<void> _submit() async {
+    final user = context.read<UserCubit>().user;
+
+    final balance = _vc.selectedRequestType.value == 1
+        ? user.remainingLeaveBalance
+        : user.permissionHours;
+
+    if (balance <= 0) {
+      MessageUtils.showSnackBar(
+        context: context,
+        baseStatus: BaseStatus.error,
+        message: LocaleKeys.balanceValidation,
+      );
+
+      return;
+    }
+
     final cubit = context.read<NewRequestCubit>();
+
     await _vc.submit(
       context,
       cubit,

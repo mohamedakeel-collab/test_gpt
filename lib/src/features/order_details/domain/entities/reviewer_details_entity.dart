@@ -6,6 +6,7 @@ class ReviewerDetailsEntity extends EmployeeDetailsEntity {
     required super.fullName,
     required super.phone,
     required super.position,
+    required super.remainingLeaveBalance,
     required super.leaveBalance,
     required super.permissionHours,
     super.image,
@@ -18,5 +19,6 @@ class ReviewerDetailsEntity extends EmployeeDetailsEntity {
     position: '',
     leaveBalance: 0,
     permissionHours: 0,
+    remainingLeaveBalance: 0,
   );
 }

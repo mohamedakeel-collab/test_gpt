@@ -13,6 +13,7 @@
   "failure_unauthorized #$ Your session has expired, please sign in again": "انتهت جلستك، يرجى تسجيل الدخول",
   "failure_unknown #$ An unexpected error occurred": "حدث خطأ غير متوقع",
   "failure_validation #$ The submitted data is invalid": "البيانات المرسلة غير صحيحة",
+  "balance_validation #$ Your balance is insufficient to request": "رصيدك لا يسمح لطلب",
 
   "app_your_session_is_expired #$ Your session has expired. Please login again": "انتهت صلاحية الجلسة. الرجاء تسجيل الدخول مرة أخرى",
   "blocked #$ Your account has been blocked by the administration": "تم حظر حسابك من قبل الادارة",

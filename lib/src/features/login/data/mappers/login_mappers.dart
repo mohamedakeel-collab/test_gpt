@@ -57,6 +57,7 @@ extension LoginEntityMapper on LoginEntity {
   UserModel toUserModel() {
     return UserModel(
       id: id.toString(),
+
       image: image,
 
       fullName: employee?.fullName ?? '',
@@ -73,29 +74,35 @@ extension LoginEntityMapper on LoginEntity {
 
       department: employee?.department != null
           ? DepartmentModel(
-              id: employee!.department!.id,
-              name: employee!.department!.name,
-              managerId: employee!.department!.managerId,
-            )
+        id: employee!.department!.id,
+        name: employee!.department!.name,
+        managerId: employee!.department!.managerId,
+      )
           : null,
 
       team: employee?.team != null
           ? TeamModel(
-              id: employee!.team!.id,
-              teamName: employee!.team!.teamName,
-              leadId: employee!.team!.leadId,
-            )
+        id: employee!.team!.id,
+        teamName: employee!.team!.teamName,
+        leadId: employee!.team!.leadId,
+      )
           : null,
 
-      remainingLeaveBalance: employee?.remainingLeaveBalance ?? 0,
+      remainingLeaveBalance:
+      employee?.remainingLeaveBalance ?? 0,
 
-      permissionHours: employee?.permissionHours ?? 0,
+      leaveBalance:
+      employee?.leaveBalance ?? 0,
+
+      permissionHours:
+      employee?.permissionHours ?? 0,
 
       allowNotify: false,
 
       token: token,
     );
   }
+
 
   int _mapRole(String role) {
     switch (role.toLowerCase()) {

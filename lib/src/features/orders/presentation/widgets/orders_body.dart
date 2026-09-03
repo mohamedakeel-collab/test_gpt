@@ -152,12 +152,7 @@ class _OrdersBodyState extends State<_OrdersBody> {
                       order: orders[i],
                       onTap: () => Go.to(OrderDetailsScreen(id: orders[i].id)),
                       onDelete: () => _confirmDelete(context, orders[i].id),
-                      onEdit: () => Go.to(
-                        NewRequestScreen(
-                          mode: RequestMode.edit,
-                          request: orders[i],
-                        ),
-                      ),
+                      onEdit: () => _openRequestForEdit(orders[i]),
                     );
                   },
                 ),
@@ -167,6 +162,16 @@ class _OrdersBodyState extends State<_OrdersBody> {
         ),
       ],
     );
+  }
+
+  Future<void> _openRequestForEdit(LeaveRequestEntity request) async {
+    final result = await Go.to(
+      NewRequestScreen(mode: RequestMode.edit, request: request),
+    );
+
+    if (result == true && mounted) {
+      await _refresh();
+    }
   }
 
   Future<void> _confirmDelete(BuildContext context, int requestId) async {

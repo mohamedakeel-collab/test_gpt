@@ -27,6 +27,7 @@ class _LanguageSelectionSheetState extends State<LanguageSelectionSheet> {
             await userCubit.updateUser(
               UserModel(
                 id: updatedUser.id,
+                leaveBalance:updatedUser.leaveBalance,
                 image: updatedUser.image,
                 fullName: updatedUser.fullName,
                 phoneNumber: updatedUser.phoneNumber,

@@ -43,6 +43,9 @@ abstract class LocaleKeys {
   static const String _failureValidation = 'failure_validation';
   static String get failureValidation => _failureValidation.tr();
 
+  static const String _balanceValidation = 'balance_validation';
+  static String get balanceValidation => _balanceValidation.tr();
+
   static const String _appYourSessionIsExpired = 'app_your_session_is_expired';
   static String get appYourSessionIsExpired => _appYourSessionIsExpired.tr();
 

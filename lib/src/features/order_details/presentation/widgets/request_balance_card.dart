@@ -19,7 +19,7 @@ class RequestBalanceCard extends StatelessWidget {
           _BalanceRow(
             icon: AppAssets.svg.baseSvg.vacationBalance.path,
             title: LocaleKeys.vacationBalance,
-            value: '${employee.leaveBalance} ${LocaleKeys.day}',
+            value: '${employee.remainingLeaveBalance} ${LocaleKeys.day}',
           ),
           Divider(color: AppColors.border),
           _BalanceRow(

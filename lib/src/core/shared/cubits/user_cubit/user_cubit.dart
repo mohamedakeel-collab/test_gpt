@@ -74,6 +74,8 @@ class UserCubit extends Cubit<UserState> with UserUtils {
     final userJson = await SecureStorage.read(_userKey);
 
     if (!_tokenStorage.hasAccessToken || userJson == null) return false;
+    print('LOCAL USER');
+    print(userJson);
 
     try {
       final user = UserModel.fromJson(

@@ -30,6 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return BlocProvider<HomeCubit>.value(
       value: _cubit,
       child: Scaffold(
+        backgroundColor: AppColors.scaffoldBackground,
         appBar: CustomAppBar(
           actions: [
             InkWell(

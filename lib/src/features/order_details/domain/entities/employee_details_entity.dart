@@ -8,6 +8,7 @@ class EmployeeDetailsEntity extends Equatable {
     required this.position,
     required this.leaveBalance,
     required this.permissionHours,
+    required this.remainingLeaveBalance,
     this.image,
   });
 
@@ -17,6 +18,7 @@ class EmployeeDetailsEntity extends Equatable {
   final String position;
   final int leaveBalance;
   final int permissionHours;
+  final int remainingLeaveBalance;
   final String? image;
 
   factory EmployeeDetailsEntity.initial() => const EmployeeDetailsEntity(
@@ -25,6 +27,7 @@ class EmployeeDetailsEntity extends Equatable {
     phone: '',
     position: '',
     leaveBalance: 0,
+    remainingLeaveBalance: 0,
     permissionHours: 0,
   );
 
@@ -35,6 +38,7 @@ class EmployeeDetailsEntity extends Equatable {
     phone,
     position,
     leaveBalance,
+    remainingLeaveBalance,
     permissionHours,
     image,
   ];

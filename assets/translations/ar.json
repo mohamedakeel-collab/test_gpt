@@ -13,6 +13,7 @@
   "failure_unauthorized": "انتهت جلستك، يرجى تسجيل الدخول",
   "failure_unknown": "حدث خطأ غير متوقع",
   "failure_validation": "البيانات المرسلة غير صحيحة",
+  "balance_validation": "رصيدك لا يسمح لطلب",
   "app_your_session_is_expired": "انتهت صلاحية الجلسة. الرجاء تسجيل الدخول مرة أخرى",
   "blocked": "تم حظر حسابك من قبل الادارة",
   "data_updating_now_come_later": "جاري تحديث البيانات في الوقت الحالي، الرجاء العودة في وقت لاحق",
