@@ -1,9 +1,14 @@
 part of '../imports/employee_details_imports.dart';
 
 class _EmployeeDetailsHeaderCard extends StatelessWidget {
-  const _EmployeeDetailsHeaderCard({required this.employee});
+  const _EmployeeDetailsHeaderCard({
+    required this.employee,
+    required this.onEmployeeUpdated,
+  });
 
   final EmployeeDetailsEntity employee;
+
+  final VoidCallback onEmployeeUpdated;
 
   @override
   Widget build(BuildContext context) {
@@ -96,9 +101,11 @@ class _EmployeeDetailsHeaderCard extends StatelessWidget {
                   );
 
                   if (result == true && context.mounted) {
-                    context
-                        .read<EmployeeDetailsCubit>()
-                        .getEmployeeDetails(employee.id);
+                    onEmployeeUpdated();
+
+                    context.read<EmployeeDetailsCubit>().getEmployeeDetails(
+                      employee.id,
+                    );
                   }
                 },
               ),

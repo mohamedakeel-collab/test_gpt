@@ -1,7 +1,9 @@
 part of '../imports/employees_imports.dart';
 
 class EmployeesScreen extends StatefulWidget {
-  const EmployeesScreen({super.key});
+  const EmployeesScreen({super.key, this.refreshToken = 0});
+
+  final int refreshToken;
 
   @override
   State<EmployeesScreen> createState() => _EmployeesScreenState();
@@ -22,6 +24,15 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
         _cubit.getEmployees(perPage: 15, search: search);
       },
     );
+  }
+
+  @override
+  void didUpdateWidget(covariant EmployeesScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.refreshToken != oldWidget.refreshToken) {
+      _cubit.getEmployees(perPage: 15, search: _controller.searchQuery.value);
+    }
   }
 
   @override
@@ -52,8 +63,12 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
         ),
         body: _EmployeesBody(controller: _controller),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Go.to(AddEmployeeScreen());
+          onPressed: () async {
+            final result = await Go.to(const AddEmployeeScreen());
+
+            if (result == true && mounted) {
+              _cubit.getEmployees(perPage: 15);
+            }
           },
           backgroundColor: AppColors.primary,
           elevation: 4,

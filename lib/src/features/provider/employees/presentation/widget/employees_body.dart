@@ -16,8 +16,7 @@ class _EmployeesBodyState extends State<_EmployeesBody> {
   void initState() {
     super.initState();
 
-    _scrollController = ScrollController()
-      ..addListener(_onScroll);
+    _scrollController = ScrollController()..addListener(_onScroll);
   }
 
   void _onScroll() {
@@ -44,10 +43,7 @@ class _EmployeesBodyState extends State<_EmployeesBody> {
   @override
   Widget build(BuildContext context) {
     return AsyncBlocBuilder<EmployeesCubit, List<EmployeeEntity>>(
-      onRetry: () =>
-          context.read<EmployeesCubit>().getEmployees(
-            perPage: 15,
-          ),
+      onRetry: () => context.read<EmployeesCubit>().getEmployees(perPage: 15),
 
       loadingBuilder: (_) {
         return ListView(
@@ -59,8 +55,6 @@ class _EmployeesBodyState extends State<_EmployeesBody> {
           ),
 
           children: [
-
-
             16.szH,
 
             const _EmployeesSummaryCardSkeleton(),
@@ -73,38 +67,28 @@ class _EmployeesBodyState extends State<_EmployeesBody> {
 
             ...List.generate(
               6,
-                  (_) =>
-                  Padding(
-                    padding: EdgeInsets.only(
-                      bottom: AppPadding.pH12,
-                    ),
+              (_) => Padding(
+                padding: EdgeInsets.only(bottom: AppPadding.pH12),
 
-                    child: const _EmployeeCardSkeleton(),
-                  ),
+                child: const _EmployeeCardSkeleton(),
+              ),
             ),
-
           ],
         );
       },
 
-
       builder: (context, employees) {
-        final filteredEmployees = widget.controller.filterEmployees(
-          employees,
-        );
+        final filteredEmployees = widget.controller.filterEmployees(employees);
 
-        final pendingCount = widget.controller.pendingCount(
-          filteredEmployees,
-        );
+        final pendingCount = widget.controller.pendingCount(filteredEmployees);
 
         final cubit = context.read<EmployeesCubit>();
 
         return RefreshIndicator(
-          onRefresh: () =>
-              cubit.getEmployees(
-                perPage: 15,
-                search: widget.controller.searchQuery.value,
-              ),
+          onRefresh: () => cubit.getEmployees(
+            perPage: 15,
+            search: widget.controller.searchQuery.value,
+          ),
 
           child: ListView(
             controller: _scrollController,
@@ -150,14 +134,22 @@ class _EmployeesBodyState extends State<_EmployeesBody> {
                 ).paddingSymmetric(horizontal: AppPadding.pH16)
               else
                 ...filteredEmployees.map(
-                      (employee) =>
+                  (employee) =>
                       _EmployeeCard(
                         employee: employee,
 
                         controller: widget.controller,
 
-                        onTap: () {
-                          Go.to(EmployeesDetailsScreen(id: employee.id));
+                        onTap: () async {
+                          final result = await Go.to(
+                            EmployeesDetailsScreen(id: employee.id),
+                          );
+
+                          if (result == true && mounted) {
+                            context.read<EmployeesCubit>().getEmployees(
+                              perPage: 15,
+                            );
+                          }
                         },
                       ).paddingOnly(
                         left: AppPadding.pH16,

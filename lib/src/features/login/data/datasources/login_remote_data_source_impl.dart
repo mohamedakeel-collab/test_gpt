@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 
+import '../../../../config/language/languages.dart';
 import '../../../../core/network/api_endpoints.dart';
 import '../../../../core/network/base/base_remote_source.dart';
 import '../../../../core/network/error/failures.dart';
@@ -36,7 +37,7 @@ class LoginRemoteDataSourceImpl extends BaseRemoteSource
       endpoint: ApiEndpoints.login,
       skipAuth: true,
       // `login` is "email or phone" — sent verbatim in the backend key.
-      body: {'login': login, 'password': password},
+      body: {'login': login, 'password': password, 'lang':  Languages.currentLanguage.languageCode},
       fromJson: _parseLogin,
     );
   }

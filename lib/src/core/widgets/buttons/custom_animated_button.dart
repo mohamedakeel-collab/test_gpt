@@ -156,7 +156,9 @@ class CustomButtonState extends State<CustomAnimatedButton>
       startLoading();
       await widget.onTap();
     } finally {
-      stopLoading();
+      if (mounted) {
+        stopLoading();
+      }
     }
   }
 

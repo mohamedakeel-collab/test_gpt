@@ -1,7 +1,9 @@
 part of '../imports/requests_imports.dart';
 
 class RequestsScreen extends StatefulWidget {
-  const RequestsScreen({super.key});
+  const RequestsScreen({super.key, this.refreshToken = 0});
+
+  final int refreshToken;
 
   @override
   State<RequestsScreen> createState() => _RequestsScreenState();
@@ -28,6 +30,18 @@ class _RequestsScreenState extends State<RequestsScreen> {
       perPage: 10,
       leaveType: _controller.selectedLeaveType,
     );
+  }
+
+  @override
+  void didUpdateWidget(covariant RequestsScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.refreshToken != oldWidget.refreshToken) {
+      _cubit.getTeamRequests(
+        perPage: 10,
+        leaveType: _controller.selectedLeaveType,
+      );
+    }
   }
 
   @override

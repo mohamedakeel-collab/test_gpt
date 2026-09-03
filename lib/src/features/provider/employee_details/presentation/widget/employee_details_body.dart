@@ -4,10 +4,14 @@ class _EmployeeDetailsBody extends StatefulWidget {
   const _EmployeeDetailsBody({
     required this.controller,
     required this.employeeId,
+    required this.onEmployeeUpdated,
   });
 
   final EmployeeDetailsViewController controller;
+
   final int employeeId;
+
+  final VoidCallback onEmployeeUpdated;
 
   @override
   State<_EmployeeDetailsBody> createState() => _EmployeeDetailsBodyState();
@@ -65,7 +69,11 @@ class _EmployeeDetailsBodyState extends State<_EmployeeDetailsBody> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               16.szH,
-              _EmployeeDetailsHeaderCard(employee: employee),
+              _EmployeeDetailsHeaderCard(
+                employee: employee,
+
+                onEmployeeUpdated: widget.onEmployeeUpdated,
+              ),
               16.szH,
               Row(
                 children: [

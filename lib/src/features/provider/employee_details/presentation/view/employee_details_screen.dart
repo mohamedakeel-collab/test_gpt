@@ -11,19 +11,26 @@ class EmployeesDetailsScreen extends StatefulWidget {
 
 class _EmployeesDetailsScreenState extends State<EmployeesDetailsScreen> {
   late final EmployeeDetailsCubit _cubit;
+
   late final EmployeeDetailsViewController _controller;
+
+  bool _updated = false;
 
   @override
   void initState() {
     super.initState();
+
     _cubit = injector<EmployeeDetailsCubit>()..getEmployeeDetails(widget.id);
+
     _controller = EmployeeDetailsViewController();
   }
 
   @override
   void dispose() {
     _controller.dispose();
+
     _cubit.close();
+
     super.dispose();
   }
 
@@ -31,15 +38,26 @@ class _EmployeesDetailsScreenState extends State<EmployeesDetailsScreen> {
   Widget build(BuildContext context) {
     return BlocProvider<EmployeeDetailsCubit>.value(
       value: _cubit,
+
       child: Scaffold(
         appBar: CustomAppBar(
           title: LocaleKeys.employeeDetails,
+
           showArrow: true,
-          onTap: Go.back,
+
+          onTap: () {
+            Go.back(_updated);
+          },
         ),
+
         body: _EmployeeDetailsBody(
           controller: _controller,
+
           employeeId: widget.id,
+
+          onEmployeeUpdated: () {
+            _updated = true;
+          },
         ),
       ),
     );
