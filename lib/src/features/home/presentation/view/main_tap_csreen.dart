@@ -9,175 +9,108 @@ class MainTapScreen extends StatefulWidget {
 
 class _MainTapScreenState extends State<MainTapScreen> {
   int _selectedIndex = 0;
+
   int _ordersRefreshToken = 0;
   int _employeesRefreshToken = 0;
   int _requestsRefreshToken = 0;
   int _myTeamRefreshToken = 0;
   int _profileRefreshToken = 0;
 
-  @override
-  Widget build(BuildContext context) {
-    final locale = context.locale;
+  late List<Widget?> _screens;
 
+  bool _initialized = false;
+
+  String? _currentLanguage;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _screens = [];
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final language = context.locale.languageCode;
+
+    if (_currentLanguage != language) {
+      _currentLanguage = language;
+
+      if (!_initialized) {
+        _initialized = true;
+
+        _initializeScreens();
+      } else {
+        _refreshScreensForLanguage();
+      }
+    }
+  }
+
+  void _initializeScreens() {
     final user = context.read<UserCubit>().user;
 
     final isUser = F.appFlavor == Flavor.user;
 
     final isManager = isUser && user.role == 'manager';
 
-    final ordersIndex = isManager ? 2 : 1;
+    final length = isUser ? (isManager ? 4 : 3) : 3;
 
-    final tabs = isUser
-        ? isManager
-              ? [
-                  NavigationBarEntity(
-                    icon: AppAssets.svg.baseSvg.home.path,
-                    text: LocaleKeys.home,
-                  ),
+    _screens = List.generate(length, (_) => null);
 
-                  NavigationBarEntity(
-                    icon: AppAssets.svg.baseSvg.myTeam.path,
-                    text: LocaleKeys.myTeam,
-                  ),
+    // create first tab immediately
 
-                  NavigationBarEntity(
-                    icon: AppAssets.svg.baseSvg.order.path,
-                    text: LocaleKeys.orders,
-                  ),
+    _screens[0] = _createScreen(index: 0, isUser: isUser, isManager: isManager);
 
-                  NavigationBarEntity(
-                    icon: AppAssets.svg.baseSvg.person.path,
-                    text: LocaleKeys.homeProfile,
-                  ),
-                ]
-              : [
-                  NavigationBarEntity(
-                    icon: AppAssets.svg.baseSvg.home.path,
-                    text: LocaleKeys.home,
-                  ),
+    setState(() {});
+  }
 
-                  NavigationBarEntity(
-                    icon: AppAssets.svg.baseSvg.order.path,
-                    text: LocaleKeys.orders,
-                  ),
+  void _refreshScreensForLanguage() {
+    final user = context.read<UserCubit>().user;
 
-                  NavigationBarEntity(
-                    icon: AppAssets.svg.baseSvg.person.path,
-                    text: LocaleKeys.homeProfile,
-                  ),
-                ]
-        : [
-            NavigationBarEntity(
-              icon: AppAssets.svg.baseSvg.employees.path,
-              text: LocaleKeys.employees,
-            ),
+    final isUser = F.appFlavor == Flavor.user;
 
-            NavigationBarEntity(
-              icon: AppAssets.svg.baseSvg.order.path,
-              text: LocaleKeys.requests,
-            ),
+    final isManager = isUser && user.role == 'manager';
 
-            NavigationBarEntity(
-              icon: AppAssets.svg.baseSvg.person.path,
-              text: LocaleKeys.homeProfile,
-            ),
-          ];
+    final length = isUser ? (isManager ? 4 : 3) : 3;
 
-    final screens = isUser
-        ? isManager
-              ? [
-                  _buildTab(
-                    index: 0,
-                    child: HomeScreen(
-                      key: ValueKey('home-${locale.languageCode}'),
-                    ),
-                  ),
+    setState(() {
+      _screens = List.generate(length, (_) => null);
 
-                  _buildTab(
-                    index: 1,
-                    child: MyTeamScreen(
-                      key: ValueKey('my-team-${locale.languageCode}'),
-                      refreshToken: _myTeamRefreshToken,
-                    ),
-                  ),
+      // recreate current screen only
 
-                  _buildTab(
-                    index: 2,
-                    child: OrdersScreen(
-                      key: ValueKey('orders-${locale.languageCode}'),
+      _screens[_selectedIndex] = _createScreen(
+        index: _selectedIndex,
+        isUser: isUser,
+        isManager: isManager,
+      );
+    });
+  }
 
-                      refreshToken: _ordersRefreshToken,
-                    ),
-                  ),
+  @override
+  Widget build(BuildContext context) {
+    final user = context.read<UserCubit>().user;
 
-                  _buildTab(
-                    index: 3,
-                    child: ProfileScreen(
-                      key: ValueKey(
-                        'profile-${locale.languageCode}-$_profileRefreshToken',
-                      ),
-                      refreshToken: _profileRefreshToken,
-                    ),
-                  ),
-                ]
-              : [
-                  _buildTab(
-                    index: 0,
-                    child: HomeScreen(
-                      key: ValueKey('home-${locale.languageCode}'),
-                    ),
-                  ),
+    final isUser = F.appFlavor == Flavor.user;
 
-                  _buildTab(
-                    index: 1,
-                    child: OrdersScreen(
-                      key: ValueKey('orders-${locale.languageCode}'),
+    final isManager = isUser && user.role == 'manager';
 
-                      refreshToken: _ordersRefreshToken,
-                    ),
-                  ),
-                  _buildTab(
-                    index: 2,
-                    child:ProfileScreen(
-                      key: ValueKey(
-                        'profile-${locale.languageCode}-$_profileRefreshToken',
-                      ),
-                      refreshToken: _profileRefreshToken,
-                    ),
-                  ),
-                ]
-        : [
-            _buildTab(
-              index: 0,
-              child: EmployeesScreen(
-                key: ValueKey('employees-${locale.languageCode}'),
+    final tabs = _buildTabs(isUser: isUser, isManager: isManager);
 
-                refreshToken: _employeesRefreshToken,
-              ),
-            ),
-
-            _buildTab(
-              index: 1,
-              child: RequestsScreen(
-                key: ValueKey('requests-${locale.languageCode}'),
-
-                refreshToken: _requestsRefreshToken,
-              ),
-            ),
-
-            _buildTab(
-              index: 2,
-              child: ProfileScreen(
-                key: ValueKey(
-                  'profile-${locale.languageCode}-$_profileRefreshToken',
-                ),
-                refreshToken: _profileRefreshToken,
-              ),
-            ),
-          ];
+    if (_screens.isEmpty) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
 
     return Scaffold(
-      body: IndexedStack(index: _selectedIndex, children: screens),
+      backgroundColor: AppColors.scaffoldBackground,
+      body: IndexedStack(
+        index: _selectedIndex,
+
+        children: [
+          for (final screen in _screens) screen ?? const SizedBox.shrink(),
+        ],
+      ),
 
       bottomNavigationBar: AppBottomNavigationBar(
         tabs: tabs,
@@ -188,48 +121,159 @@ class _MainTapScreenState extends State<MainTapScreen> {
 
         onTabChange: (index) {
           setState(() {
+            if (_screens[index] == null) {
+              _screens[index] = _createScreen(
+                index: index,
 
-            if (isUser && index == ordersIndex) {
-              _ordersRefreshToken++;
+                isUser: isUser,
+
+                isManager: isManager,
+              );
             }
-
-
-            if (isUser && isManager && index == 1) {
-              _myTeamRefreshToken++;
-            }
-
-
-            if (!isUser && index == 0) {
-              _employeesRefreshToken++;
-            }
-
-
-            if (!isUser && index == 1) {
-              _requestsRefreshToken++;
-            }
-
-
-            if (index == tabs.length - 1 &&
-                _selectedIndex != index) {
-
-              _profileRefreshToken++;
-
-            }
-
 
             _selectedIndex = index;
-
           });
         },
       ),
     );
   }
 
-  Widget _buildTab({required int index, required Widget child}) {
-    return Offstage(
-      offstage: _selectedIndex != index,
+  List<NavigationBarEntity> _buildTabs({
+    required bool isUser,
+    required bool isManager,
+  }) {
+    if (isUser) {
+      if (isManager) {
+        return [
+          NavigationBarEntity(
+            icon: AppAssets.svg.baseSvg.home.path,
+            text: LocaleKeys.home,
+          ),
 
-      child: TickerMode(enabled: _selectedIndex == index, child: child),
-    );
+          NavigationBarEntity(
+            icon: AppAssets.svg.baseSvg.myTeam.path,
+            text: LocaleKeys.myTeam,
+          ),
+
+          NavigationBarEntity(
+            icon: AppAssets.svg.baseSvg.order.path,
+            text: LocaleKeys.orders,
+          ),
+
+          NavigationBarEntity(
+            icon: AppAssets.svg.baseSvg.person.path,
+            text: LocaleKeys.homeProfile,
+          ),
+        ];
+      }
+
+      return [
+        NavigationBarEntity(
+          icon: AppAssets.svg.baseSvg.home.path,
+          text: LocaleKeys.home,
+        ),
+
+        NavigationBarEntity(
+          icon: AppAssets.svg.baseSvg.order.path,
+          text: LocaleKeys.orders,
+        ),
+
+        NavigationBarEntity(
+          icon: AppAssets.svg.baseSvg.person.path,
+          text: LocaleKeys.homeProfile,
+        ),
+      ];
+    }
+
+    return [
+      NavigationBarEntity(
+        icon: AppAssets.svg.baseSvg.employees.path,
+        text: LocaleKeys.employees,
+      ),
+
+      NavigationBarEntity(
+        icon: AppAssets.svg.baseSvg.order.path,
+        text: LocaleKeys.requests,
+      ),
+
+      NavigationBarEntity(
+        icon: AppAssets.svg.baseSvg.person.path,
+        text: LocaleKeys.homeProfile,
+      ),
+    ];
+  }
+
+  Widget _createScreen({
+    required int index,
+    required bool isUser,
+    required bool isManager,
+  }) {
+    final language = context.locale.languageCode;
+
+    if (isUser) {
+      if (isManager) {
+        switch (index) {
+          case 0:
+            return HomeScreen(key: ValueKey('home-$language'));
+
+          case 1:
+            return MyTeamScreen(
+              key: ValueKey('team-$language'),
+              refreshToken: _myTeamRefreshToken,
+            );
+
+          case 2:
+            return OrdersScreen(
+              key: ValueKey('orders-$language'),
+              refreshToken: _ordersRefreshToken,
+            );
+
+          case 3:
+            return ProfileScreen(
+              key: ValueKey('profile-$language'),
+              refreshToken: _profileRefreshToken,
+            );
+        }
+      } else {
+        switch (index) {
+          case 0:
+            return HomeScreen(key: ValueKey('home-$language'));
+
+          case 1:
+            return OrdersScreen(
+              key: ValueKey('orders-$language'),
+              refreshToken: _ordersRefreshToken,
+            );
+
+          case 2:
+            return ProfileScreen(
+              key: ValueKey('profile-$language'),
+              refreshToken: _profileRefreshToken,
+            );
+        }
+      }
+    } else {
+      switch (index) {
+        case 0:
+          return EmployeesScreen(
+            key: ValueKey('employees-$language'),
+            refreshToken: _employeesRefreshToken,
+          );
+
+        case 1:
+          return RequestsScreen(
+            key: ValueKey('requests-$language'),
+            refreshToken: _requestsRefreshToken,
+          );
+
+        case 2:
+          return ProfileScreen(
+            key: ValueKey('profile-$language'),
+            refreshToken: _profileRefreshToken,
+          );
+      }
+    }
+
+    return const SizedBox.shrink();
   }
 }

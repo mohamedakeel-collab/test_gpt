@@ -16,9 +16,9 @@ class LocaleInterceptor extends Interceptor {
     RequestInterceptorHandler handler,
   ) {
     // Don't overwrite a header the caller explicitly set per-request.
-    if (options.headers['Accept-Language'] == null) {
+    if (options.headers['lang'] == null) {
       try {
-        options.headers['Accept-Language'] =
+        options.headers['lang'] =
             Languages.currentLanguage.languageCode;
       } catch (_) {
         // Navigator/context not ready yet — leave the header off.

@@ -16,46 +16,107 @@ class _LanguageSelectionSheetState extends State<LanguageSelectionSheet> {
       listenWhen: (previous, current) =>
           previous.runtimeType != current.runtimeType,
       listener: (context, state) async {
+
         switch (state) {
+
           case AsyncSuccess<LoginEntity>(:final data):
+
+            if (!mounted) return;
+
+
+            // Close sheet first
+            Navigator.of(context).pop();
+
+
+
+            // Change locale after closing sheet
             await Languages.setLocale(_selected);
 
-            if (!context.mounted) return;
-            final userCubit = context.read<UserCubit>();
-            final currentUser = userCubit.user;
-            final updatedUser = data.toUserModel();
-            await userCubit.updateUser(
-              UserModel(
-                id: updatedUser.id,
-                leaveBalance:updatedUser.leaveBalance,
-                image: updatedUser.image,
-                fullName: updatedUser.fullName,
-                phoneNumber: updatedUser.phoneNumber,
-                email: updatedUser.email,
-                role: updatedUser.role,
-                userType: updatedUser.userType,
-                position: updatedUser.position,
-                department: updatedUser.department,
-                team: updatedUser.team,
-                remainingLeaveBalance: updatedUser.remainingLeaveBalance,
-                permissionHours: updatedUser.permissionHours,
-                allowNotify: updatedUser.allowNotify,
-                token: currentUser.token,
-              ),
-            );
-            if (!context.mounted) return;
 
-            if (context.mounted) {
-              Navigator.of(context).pop();
-            }
+
+            if (!mounted) return;
+
+
+
+            final userCubit =
+            context.read<UserCubit>();
+
+
+            final currentUser =
+                userCubit.user;
+
+
+            final updatedUser =
+            data.toUserModel();
+
+
+
+            await userCubit.updateUser(
+
+              UserModel(
+
+                id: updatedUser.id,
+
+                leaveBalance: updatedUser.leaveBalance,
+
+                image: updatedUser.image,
+
+                fullName: updatedUser.fullName,
+
+                phoneNumber: updatedUser.phoneNumber,
+
+                email: updatedUser.email,
+
+                role: updatedUser.role,
+
+                userType: updatedUser.userType,
+
+                position: updatedUser.position,
+
+                department: updatedUser.department,
+
+                team: updatedUser.team,
+
+                remainingLeaveBalance:
+                updatedUser.remainingLeaveBalance,
+
+                permissionHours:
+                updatedUser.permissionHours,
+
+                allowNotify:
+                updatedUser.allowNotify,
+
+                token: currentUser.token,
+
+              ),
+
+            );
+
+
+            break;
+
+
+
           case AsyncFailure<LoginEntity>(:final failure):
+
             if (failure is! CancelledFailure) {
+
               MessageUtils.showSnackBar(
+
                 context: context,
+
                 baseStatus: BaseStatus.error,
+
                 message: failure.userMessage,
+
               );
+
             }
+
+            break;
+
+
+
           default:
             break;
         }

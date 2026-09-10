@@ -7,12 +7,15 @@ class _LoginFooter extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        final languageCubit = context.read<LanguageCubit>();
+
         showModalBottomSheet<Languages>(
           context: context,
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
+
           builder: (_) => BlocProvider.value(
-            value: context.read<LanguageCubit>(),
+            value: languageCubit,
             child: const LanguageSelectionSheet(),
           ),
         );

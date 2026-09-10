@@ -114,8 +114,16 @@ class _EmployeeDetailsBodyState extends State<_EmployeeDetailsBody> {
                   padding: EdgeInsets.only(bottom: AppPadding.pH12),
 
                   child: RequestCard(
-                    onTap: () {
-                      Go.to(RequestDetailsScreen(id: request.id));
+                    onTap: () async {
+                      final result = await Go.to(
+                        RequestDetailsScreen(id: request.id),
+                      );
+
+                      if (result == true && context.mounted) {
+                        context.read<EmployeeDetailsCubit>().getEmployeeDetails(
+                          widget.employeeId,
+                        );
+                      }
                     },
                     request: request,
                     controller: widget.controller,

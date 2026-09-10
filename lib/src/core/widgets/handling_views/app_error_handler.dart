@@ -24,8 +24,9 @@ class AppErrorHandler extends StatelessWidget {
     final showRetry = failure.retryable && onRetry != null;
 
     if (compact) {
-      return Row(
+      return Center(child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Icon(icon, size: 18, color: Colors.redAccent),
           const SizedBox(width: 8),
@@ -38,13 +39,14 @@ class AppErrorHandler extends StatelessWidget {
             ),
           ],
         ],
-      );
+      ),);
     }
 
-    return Padding(
+    return Center(child: Padding(
       padding: const EdgeInsets.all(24),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Icon(icon, size: 56, color: Colors.redAccent),
           const SizedBox(height: 12),
@@ -62,7 +64,7 @@ class AppErrorHandler extends StatelessWidget {
           ],
         ],
       ),
-    );
+    ),);
   }
 
   static IconData _iconFor(Failure f) => switch (f) {

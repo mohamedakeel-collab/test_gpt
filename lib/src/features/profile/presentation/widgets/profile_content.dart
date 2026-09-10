@@ -9,6 +9,7 @@ class _ProfileContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final employee = profile.employee ?? EmployeeEntity.initial();
+
     return Container(
       padding: EdgeInsets.all(AppPadding.pH16),
       margin: EdgeInsets.symmetric(horizontal: AppPadding.pH16),
@@ -16,6 +17,7 @@ class _ProfileContent extends StatelessWidget {
         color: AppColors.white,
         borderRadius: BorderRadius.circular(AppCircular.r20),
       ),
+
       child: Column(
         children: [
           _ProfileInfoItem(
@@ -23,31 +25,41 @@ class _ProfileContent extends StatelessWidget {
             value: employee.phone,
             icon: AppAssets.svg.baseSvg.phone.path,
           ),
+
           12.szH,
+
           _ProfileInfoItem(
             title: LocaleKeys.email,
             value: profile.email,
             icon: AppAssets.svg.baseSvg.email.path,
           ),
+
           12.szH,
+
           _ProfileInfoItem(
             title: LocaleKeys.role,
             value: profile.role,
             icon: AppAssets.svg.baseSvg.role.path,
           ),
+
           12.szH,
+
           _ProfileInfoItem(
             title: LocaleKeys.department,
             value: employee.department?.name ?? '',
             icon: AppAssets.svg.baseSvg.department.path,
           ),
+
           12.szH,
+
           _ProfileInfoItem(
             title: LocaleKeys.team,
             value: employee.team?.teamName ?? '',
             icon: AppAssets.svg.baseSvg.teamP.path,
           ),
+
           16.szH,
+
           Row(
             children: [
               Expanded(
@@ -58,7 +70,9 @@ class _ProfileContent extends StatelessWidget {
                   isPermission: false,
                 ),
               ),
+
               12.szW,
+
               Expanded(
                 child: _ProfileBalanceCard(
                   title: LocaleKeys.permissionHours,
@@ -69,33 +83,66 @@ class _ProfileContent extends StatelessWidget {
               ),
             ],
           ),
+
           20.szH,
-          _ProfileMenuItem(
+
+          /*
+       _ProfileMenuItem(
+
             title: context.locale.languageCode == 'ar'
                 ? LocaleKeys.arabic
                 : LocaleKeys.english,
+
             icon: AppAssets.svg.baseSvg.lang.path,
-            onTap: (){
+
+
+            onTap: () {
+
+              final languageCubit =
+              context.read<LanguageCubit>();
+
+
               showModalBottomSheet<Languages>(
+
                 context: context,
+
                 isScrollControlled: true,
+
                 backgroundColor: Colors.transparent,
-                builder: (_) => BlocProvider.value(
-                  value: context.read<LanguageCubit>(),
-                  child: const LanguageSelectionSheet(),
-                ),
+
+
+                builder: (_) {
+
+                  return BlocProvider.value(
+
+                    value: languageCubit,
+
+                    child: const LanguageSelectionSheet(),
+
+                  );
+
+                },
+
               );
+
             },
+
           ),
+
+*/
           if (F.appFlavor == Flavor.user)
             _ProfileMenuItem(
               onTap: () {
                 Go.to(const RemoteWorkScreen());
               },
+
               title: LocaleKeys.remoteWork,
+
               icon: AppAssets.svg.baseSvg.remote.path,
             ),
+
           20.szH,
+
           const _LogoutButton(),
         ],
       ),
@@ -108,6 +155,8 @@ class _LogoutButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.locale;
+
     final state = context.watch<LogoutCubit>().state;
     final isLoggingOut = state is AsyncLoading<String>;
     return GestureDetector(

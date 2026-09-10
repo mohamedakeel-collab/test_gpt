@@ -30,12 +30,22 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
       value: _cubit,
       child: Scaffold(
         backgroundColor: AppColors.scaffoldBackground,
-        appBar: CustomAppBar(
-          title: LocaleKeys.requestDetails,
-          showArrow: true,
-        ),
+        appBar: CustomAppBar(title: LocaleKeys.requestDetails, showArrow: true),
         body: _RequestDetailsBody(requestId: widget.id),
-        bottomNavigationBar: const _RequestActionButtons(),
+        bottomNavigationBar:
+            BlocBuilder<RequestDetailsCubit, AsyncState<LeaveRequestEntity>>(
+              builder: (context, state) {
+                if (state is AsyncSuccess<LeaveRequestEntity>) {
+                  final request = state.data;
+
+                  if (request.status == 'pending') {
+                    return const _RequestActionButtons();
+                  }
+                }
+
+                return const SizedBox.shrink();
+              },
+            ),
       ),
     );
   }

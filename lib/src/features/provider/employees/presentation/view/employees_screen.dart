@@ -47,6 +47,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
     return BlocProvider<EmployeesCubit>.value(
       value: _cubit,
       child: Scaffold(
+        backgroundColor: AppColors.scaffoldBackground,
         appBar: CustomAppBar(
           actions: [
             InkWell(

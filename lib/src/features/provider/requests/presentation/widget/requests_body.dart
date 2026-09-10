@@ -60,6 +60,17 @@ class _RequestsBodyState extends State<_RequestsBody> {
     );
   }
 
+  Future<void> _openRequestDetails(
+    BuildContext context,
+    LeaveRequestEntity request,
+  ) async {
+    final result = await Go.to(RequestDetailsScreen(id: request.id));
+
+    if (result == true && context.mounted) {
+      await _refresh();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -88,6 +99,7 @@ class _RequestsBodyState extends State<_RequestsBody> {
 
                   ...List.generate(
                     6,
+
                     (_) => Padding(
                       padding: EdgeInsets.only(bottom: AppPadding.pH12),
 
@@ -159,8 +171,8 @@ class _RequestsBodyState extends State<_RequestsBody> {
 
                       controller: widget.controller,
 
-                      onTap: () {
-                        Go.to(RequestDetailsScreen(id: requests[index].id));
+                      onTap: () async {
+                        await _openRequestDetails(context, requests[index]);
                       },
                     );
                   },

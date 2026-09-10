@@ -9,8 +9,8 @@ class _BalanceInfoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = context.read<UserCubit>().user;
     final remainingLeaveBalance = selectedType.value == 1
-        ? context.read<UserCubit>().user.remainingLeaveBalance
-        : context.read<UserCubit>().user.permissionHours;
+        ? user.remainingLeaveBalance
+        : user.permissionHours;
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: AppPadding.pH16,
