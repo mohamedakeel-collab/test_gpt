@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../config/res/config_imports.dart';
 import '../../features/home/presentation/imports/home_imports.dart';
 import '../../features/login/presentation/imports/login_imports.dart';
 import 'named_routes.dart';
@@ -34,6 +35,7 @@ class RouterGenerator {
   static Route<dynamic> undefineRoute() {
     return MaterialPageRoute(
       builder: (_) => const Scaffold(
+        backgroundColor: AppColors.scaffoldBackground,
         body: Center(child: Text('No route exists here!')),
       ),
     );

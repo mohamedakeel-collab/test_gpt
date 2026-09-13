@@ -99,7 +99,9 @@ class _MainTapScreenState extends State<MainTapScreen> {
     final tabs = _buildTabs(isUser: isUser, isManager: isManager);
 
     if (_screens.isEmpty) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const Scaffold(
+          backgroundColor: AppColors.scaffoldBackground,
+          body: Center(child: CircularProgressIndicator()));
     }
 
     return Scaffold(

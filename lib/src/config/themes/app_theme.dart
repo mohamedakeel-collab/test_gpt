@@ -7,6 +7,7 @@ class AppTheme {
     return ThemeData(
       primarySwatch: AppColors.primary.toMaterialColor(),
       primaryColor: AppColors.primary,
+
       useMaterial3: true,
       hoverColor: Colors.transparent,
       splashColor: Colors.transparent,

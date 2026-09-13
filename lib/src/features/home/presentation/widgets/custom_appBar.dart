@@ -11,7 +11,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       toolbarHeight: AppSize.sH60,
       automaticallyImplyLeading: false,
-      backgroundColor: AppColors.scaffoldBackground,
+      backgroundColor: AppColors.splashBackground,
       title: Row(
         children: [
           if (showArrow) ...[

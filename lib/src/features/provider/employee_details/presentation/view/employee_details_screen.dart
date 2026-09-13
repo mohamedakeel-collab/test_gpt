@@ -40,6 +40,7 @@ class _EmployeesDetailsScreenState extends State<EmployeesDetailsScreen> {
       value: _cubit,
 
       child: Scaffold(
+        backgroundColor: AppColors.scaffoldBackground,
         appBar: CustomAppBar(
           title: LocaleKeys.employeeDetails,
 
