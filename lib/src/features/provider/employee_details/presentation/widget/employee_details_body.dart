@@ -120,7 +120,7 @@ class _EmployeeDetailsBodyState extends State<_EmployeeDetailsBody> {
                       );
 
                       if (result == true && context.mounted) {
-                        context.read<EmployeeDetailsCubit>().getEmployeeDetails(
+                        context.read<EmployeeDetailsCubit>().refreshEmployeeDetails(
                           widget.employeeId,
                         );
                       }

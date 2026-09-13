@@ -83,8 +83,7 @@ class _RequestActionButtons extends StatelessWidget {
               ? LocaleKeys.requestApprovedSuccessfully
               : LocaleKeys.requestRejectedSuccessfully,
         );
-
-        Go.back( true);
+        Go.back(true);
       case AsyncFailure<LeaveRequestEntity>(:final failure):
         if (failure is! CancelledFailure) {
           MessageUtils.showSnackBar(

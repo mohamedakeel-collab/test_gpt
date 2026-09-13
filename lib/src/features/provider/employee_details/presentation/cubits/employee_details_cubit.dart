@@ -9,4 +9,10 @@ class EmployeeDetailsCubit extends AsyncCubit<EmployeeDetailsEntity> {
   Future<void> getEmployeeDetails(int id) {
     return execute(() => _useCase(id));
   }
+
+  Future<void> refreshEmployeeDetails(int id) {
+    clearData();
+
+    return getEmployeeDetails(id);
+  }
 }

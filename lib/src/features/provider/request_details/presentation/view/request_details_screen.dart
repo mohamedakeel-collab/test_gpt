@@ -30,7 +30,13 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
       value: _cubit,
       child: Scaffold(
         backgroundColor: AppColors.scaffoldBackground,
-        appBar: CustomAppBar(title: LocaleKeys.requestDetails, showArrow: true),
+        appBar: CustomAppBar(
+          title: LocaleKeys.requestDetails,
+          showArrow: true,
+          onTap: () {
+            Go.back(true);
+          },
+        ),
         body: _RequestDetailsBody(requestId: widget.id),
         bottomNavigationBar:
             BlocBuilder<RequestDetailsCubit, AsyncState<LeaveRequestEntity>>(

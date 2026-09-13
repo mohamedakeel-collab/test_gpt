@@ -20,4 +20,5 @@ class RequestDetailsCubit extends AsyncCubit<LeaveRequestEntity> {
       (updatedRequest) => setData(updatedRequest),
     );
   }
+
 }
