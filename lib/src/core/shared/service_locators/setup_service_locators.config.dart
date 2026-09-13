@@ -269,8 +269,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i1009.LoginRemoteDataSource>(
       () => _i670.LoginRemoteDataSourceImpl(),
     );
-    gh.lazySingleton<_i996.UserCubit>(
-      () => _i996.UserCubit(gh<_i235.TokenStorage>()),
+    gh.factory<_i996.UserCubit>(
+          () => _i996.UserCubit(
+        gh<_i235.TokenStorage>(),
+        gh<_i493.GetProfileUseCase>(),
+      ),
     );
     gh.lazySingleton<_i705.EmployeesRepository>(
       () =>
@@ -484,7 +487,10 @@ extension GetItInjectableX on _i174.GetIt {
       ),
     );
     gh.factory<_i41.ProfileCubit>(
-      () => _i41.ProfileCubit(gh<_i493.GetProfileUseCase>()),
+          () => _i41.ProfileCubit(
+        gh<_i493.GetProfileUseCase>(),
+        gh<_i996.UserCubit>(),
+      ),
     );
     gh.factory<_i41.LanguageCubit>(
       () => _i41.LanguageCubit(gh<_i247.SetLanguageUseCase>()),

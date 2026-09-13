@@ -2,22 +2,40 @@ part of '../imports/profile_imports.dart';
 
 @injectable
 class ProfileCubit extends AsyncCubit<LoginEntity> {
-  ProfileCubit(this._getProfile);
+  ProfileCubit(
+      this._getProfile,
+      this._userCubit,
+      );
 
   final GetProfileUseCase _getProfile;
+  final UserCubit _userCubit;
+
 
   Future<void> getProfile() async {
-    emit(AsyncLoading<LoginEntity>(previous: lastData));
+    emit(
+      AsyncLoading<LoginEntity>(
+        previous: lastData,
+      ),
+    );
 
     final result = await _getProfile();
 
-    result.fold(
-      (failure) {
-        emit(AsyncFailure<LoginEntity>(failure, previous: lastData));
+    await result.fold(
+          (failure) async {
+        emit(
+          AsyncFailure<LoginEntity>(
+            failure,
+            previous: lastData,
+          ),
+        );
       },
 
-      (profile) {
+          (profile) async {
         setData(profile);
+
+        await _userCubit.updateUser(
+          profile.toUserModel(),
+        );
       },
     );
   }

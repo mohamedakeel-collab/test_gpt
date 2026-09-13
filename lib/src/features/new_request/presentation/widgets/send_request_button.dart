@@ -1,17 +1,18 @@
 part of '../imports/new_request_imports.dart';
 
 class _SendRequestButton extends StatelessWidget {
-  const _SendRequestButton({required this.mode, this.onSubmit});
+  const _SendRequestButton({required this.mode, this.onSubmit, this.onSuccess});
 
   final RequestMode mode;
   final Future<void> Function()? onSubmit;
+  final Future<void> Function()? onSuccess;
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<NewRequestCubit, AsyncState<NewRequestResultEntity>>(
       listenWhen: (previous, current) =>
           previous.runtimeType != current.runtimeType,
-      listener: (context, state) {
+      listener: (context, state) async {
         switch (state) {
           case AsyncSuccess<NewRequestResultEntity>():
             MessageUtils.showSnackBar(
@@ -21,6 +22,9 @@ class _SendRequestButton extends StatelessWidget {
                   ? LocaleKeys.requestSubmittedSuccessfully
                   : LocaleKeys.requestUpdatedSuccessfully,
             );
+
+            await onSuccess?.call();
+
             Go.back(true);
           case AsyncFailure<NewRequestResultEntity>(:final failure):
             if (failure is! CancelledFailure) {

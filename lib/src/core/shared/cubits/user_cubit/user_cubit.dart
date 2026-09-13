@@ -6,11 +6,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../config/res/config_imports.dart';
+import '../../../../features/login/data/mappers/login_mappers.dart';
+import '../../../../features/profile/domain/usecases/get_profile_use_case.dart';
 import '../../helpers/cache_service.dart';
 import '../../../network/auth/token_storage.dart';
 import '../../models/user_model.dart';
 
 part 'user_state.dart';
+
 part 'user_utils.dart';
 
 /// Owns the logged-in user object + the "is signed in" state.
@@ -25,13 +28,22 @@ part 'user_utils.dart';
 ///     uses [SecureStorage]).
 @lazySingleton
 class UserCubit extends Cubit<UserState> with UserUtils {
-  UserCubit(this._tokenStorage) : super(UserState.initial());
+  UserCubit(this._tokenStorage, this._getProfile) : super(UserState.initial());
 
   final TokenStorage _tokenStorage;
+  final GetProfileUseCase _getProfile;
 
   /// Static shortcut for places where DI access is awkward (e.g. global
   /// helpers). Prefer constructor injection in production code.
   static UserCubit get instance => injector<UserCubit>();
+
+  Future<void> refreshUser() async {
+    final result = await _getProfile();
+
+    result.fold((_) {}, (profile) async {
+      await updateUser(profile.toUserModel());
+    });
+  }
 
   // ── Public API ──────────────────────────────────────────────────
 
@@ -96,5 +108,6 @@ class UserCubit extends Cubit<UserState> with UserUtils {
   // ── Sugar ───────────────────────────────────────────────────────
 
   UserModel get user => state.userModel;
+
   bool get isUserLoggedIn => state.userStatus == UserStatus.loggedIn;
 }

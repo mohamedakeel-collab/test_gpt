@@ -14,6 +14,10 @@ class _NewRequestBody extends StatefulWidget {
 class _NewRequestBodyState extends State<_NewRequestBody> {
   NewRequestViewController get _vc => widget.controller;
 
+  Future<void> _refreshUser() async {
+    await context.read<UserCubit>().refreshUser();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -101,6 +105,7 @@ class _NewRequestBodyState extends State<_NewRequestBody> {
             _SendRequestButton(
               mode: widget.mode ?? RequestMode.add,
               onSubmit: _submit,
+              onSuccess: _refreshUser,
             ),
           ],
         );

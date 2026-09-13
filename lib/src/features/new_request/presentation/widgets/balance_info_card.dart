@@ -1,25 +1,34 @@
 part of '../imports/new_request_imports.dart';
 
 class _BalanceInfoCard extends StatelessWidget {
-  const _BalanceInfoCard({required this.selectedType});
+  const _BalanceInfoCard({
+    required this.selectedType,
+  });
 
   final ValueNotifier<int> selectedType;
 
   @override
   Widget build(BuildContext context) {
-    final user = context.read<UserCubit>().user;
+
+    final user = context.watch<UserCubit>().user;
+
+
     final remainingLeaveBalance = selectedType.value == 1
         ? user.remainingLeaveBalance
         : user.permissionHours;
+
+
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: AppPadding.pH16,
         vertical: AppPadding.pH14,
       ),
+
       decoration: BoxDecoration(
         color: AppColors.splashBackground,
         borderRadius: BorderRadius.circular(AppCircular.r15),
       ),
+
       child: Row(
         children: [
           Row(
@@ -27,28 +36,47 @@ class _BalanceInfoCard extends StatelessWidget {
               Container(
                 width: AppSize.sW28,
                 height: AppSize.sH28,
+
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.primary, width: 2),
+                  border: Border.all(
+                    color: AppColors.primary,
+                    width: 2,
+                  ),
                 ),
+
                 child: Center(
                   child: Text(
                     'i',
-                    style: const TextStyle().setPrimaryColor.s18.bold,
+                    style: const TextStyle()
+                        .setPrimaryColor
+                        .s18
+                        .bold,
                   ),
                 ),
               ),
+
               8.szW,
+
               Text(
                 LocaleKeys.remainingVacationBalance,
-                style: const TextStyle().setPrimaryColor.s18.semiBold,
+                style: const TextStyle()
+                    .setPrimaryColor
+                    .s18
+                    .semiBold,
               ),
             ],
           ),
+
           const Spacer(),
+
           Text(
             '$remainingLeaveBalance',
-            style: const TextStyle().setPrimaryColor.s18.bold,
+
+            style: const TextStyle()
+                .setPrimaryColor
+                .s18
+                .bold,
           ),
         ],
       ),

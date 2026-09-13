@@ -20,9 +20,17 @@ class _NewRequestScreenState extends State<NewRequestScreen> {
   late final NewRequestCubit _cubit;
   late final NewRequestViewController _vc;
 
+  Future<void> _refreshUser() async {
+    await context.read<UserCubit>().refreshUser();
+  }
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _refreshUser();
+    });
+
     _cubit = injector<NewRequestCubit>();
     _vc = NewRequestViewController();
   }
