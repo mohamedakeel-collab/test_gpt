@@ -9,6 +9,7 @@ part of '../imports/login_imports.dart';
 ///   2. [AsyncBlocBuilder] — renders logo / form / footer. The form stays put
 ///      on every state; only the submit button reflects loading (LoadingButton
 ///      owns its own spinner), so we keep the layout stable for the user.
+
 class _LoginBody extends StatelessWidget {
   const _LoginBody({required this.vc});
 
@@ -19,11 +20,13 @@ class _LoginBody extends StatelessWidget {
     return BlocListener<LoginCubit, AsyncState<LoginEntity>>(
       listenWhen: (previous, current) =>
           previous.runtimeType != current.runtimeType,
+
       listener: (context, state) {
         switch (state) {
           case AsyncSuccess<LoginEntity>():
-            // Token already saved inside LoginCubit.login — just enter the app.
-            Go.offAll(const MainTapScreen());
+              Go.offAll(const MainTapScreen());
+            break;
+
           case AsyncFailure<LoginEntity>(:final failure):
             if (failure is! CancelledFailure) {
               MessageUtils.showSnackBar(
@@ -32,14 +35,21 @@ class _LoginBody extends StatelessWidget {
                 message: failure.userMessage,
               );
             }
+
+            break;
+
           default:
             break;
         }
       },
+
       child: AsyncBlocBuilder<LoginCubit, LoginEntity>(
         loadingBuilder: (_) => _buildScreen(context),
+
         errorBuilder: (_, _) => _buildScreen(context),
+
         builder: (_, _) => _buildScreen(context),
+
         initialBuilder: (_) => _buildScreen(context),
       ),
     );
@@ -54,12 +64,13 @@ class _LoginBody extends StatelessWidget {
               MediaQuery.of(context).padding.top -
               MediaQuery.of(context).padding.bottom,
         ),
+
         child: IntrinsicHeight(
           child: Column(
             children: [
               const _LoginLogoSec(),
+
               Expanded(child: _LoginFormSec(vc: vc)),
-             // const _LoginFooter(),
             ],
           ),
         ),

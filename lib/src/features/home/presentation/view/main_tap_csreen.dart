@@ -90,18 +90,18 @@ class _MainTapScreenState extends State<MainTapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.read<UserCubit>().user;
+    final user = context.watch<UserCubit>().user;
 
     final isUser = F.appFlavor == Flavor.user;
 
     final isManager = isUser && user.role == 'manager';
 
     final tabs = _buildTabs(isUser: isUser, isManager: isManager);
-
     if (_screens.isEmpty) {
       return const Scaffold(
-          backgroundColor: AppColors.scaffoldBackground,
-          body: Center(child: CircularProgressIndicator()));
+        backgroundColor: AppColors.scaffoldBackground,
+        body: Center(child: CircularProgressIndicator()),
+      );
     }
 
     return Scaffold(

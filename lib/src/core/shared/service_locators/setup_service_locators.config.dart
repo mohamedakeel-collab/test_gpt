@@ -269,12 +269,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i1009.LoginRemoteDataSource>(
       () => _i670.LoginRemoteDataSourceImpl(),
     );
-    gh.factory<_i996.UserCubit>(
-          () => _i996.UserCubit(
-        gh<_i235.TokenStorage>(),
-        gh<_i493.GetProfileUseCase>(),
-      ),
-    );
     gh.lazySingleton<_i705.EmployeesRepository>(
       () =>
           _i660.EmployeesRepositoryImpl(gh<_i929.EmployeesRemoteDataSource>()),
@@ -446,13 +440,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i493.GetProfileUseCase>(
       () => _i493.GetProfileUseCase(gh<_i919.ProfileRepository>()),
     );
-    gh.factory<_i1051.LoginCubit>(
-      () => _i1051.LoginCubit(
-        gh<_i1051.LoginUseCase>(),
-        gh<_i235.TokenStorage>(),
-        gh<_i996.UserCubit>(),
-      ),
-    );
     gh.factory<_i342.DeleteRequestUseCase>(
       () => _i342.DeleteRequestUseCase(gh<_i287.OrdersRepository>()),
     );
@@ -477,23 +464,36 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i342.DeleteRequestUseCase>(),
       ),
     );
-    gh.factory<_i259.LogoutCubit>(
-      () => _i259.LogoutCubit(gh<_i528.LogoutUseCase>(), gh<_i996.UserCubit>()),
-    );
     gh.factory<_i969.RequestDetailsCubit>(
       () => _i969.RequestDetailsCubit(
         gh<_i353.GetRequestDetailsUseCase>(),
         gh<_i314.ReviewRequestUseCase>(),
       ),
     );
-    gh.factory<_i41.ProfileCubit>(
-          () => _i41.ProfileCubit(
+    gh.lazySingleton<_i996.UserCubit>(
+      () => _i996.UserCubit(
+        gh<_i235.TokenStorage>(),
         gh<_i493.GetProfileUseCase>(),
-        gh<_i996.UserCubit>(),
       ),
     );
     gh.factory<_i41.LanguageCubit>(
       () => _i41.LanguageCubit(gh<_i247.SetLanguageUseCase>()),
+    );
+    gh.factory<_i1051.LoginCubit>(
+      () => _i1051.LoginCubit(
+        gh<_i1051.LoginUseCase>(),
+        gh<_i235.TokenStorage>(),
+        gh<_i996.UserCubit>(),
+      ),
+    );
+    gh.factory<_i41.ProfileCubit>(
+      () => _i41.ProfileCubit(
+        gh<_i493.GetProfileUseCase>(),
+        gh<_i996.UserCubit>(),
+      ),
+    );
+    gh.factory<_i259.LogoutCubit>(
+      () => _i259.LogoutCubit(gh<_i528.LogoutUseCase>(), gh<_i996.UserCubit>()),
     );
     return this;
   }

@@ -79,6 +79,7 @@ class AppTheme {
       ),
       dialogTheme: const DialogThemeData(surfaceTintColor: Colors.transparent),
       appBarTheme: const AppBarTheme(
+        backgroundColor: AppColors.splashBackground,
         foregroundColor: AppColorsWithDarkMode.white,
       ),
       iconTheme: const IconThemeData(color: AppColorsWithDarkMode.white),
