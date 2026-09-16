@@ -262,6 +262,9 @@
   "notification_unread": "Unread",
   "no_team_requests": "No Team Requests",
   "no_notifications": "No notifications",
+  "leave_type": "Leave Type",
+  "select_leave_type": "Select the leave type",
+  "no_leave_types": "No leave types available",
   "am_period": "AM",
   "pm_period": "PM"
 }

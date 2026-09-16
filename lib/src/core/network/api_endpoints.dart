@@ -50,6 +50,7 @@ class ApiEndpoints {
 
   // Leave requests
   static const String leaveRequests = 'leave-requests';
+  static const String leaveTypes = 'leave-types';
   static const String createLeaveRequest = 'leave-requests/store';
   static const String storeLeaveRequest = 'leave-requests/store';
   static const String myLeaveRequests = 'me/leave-requests';

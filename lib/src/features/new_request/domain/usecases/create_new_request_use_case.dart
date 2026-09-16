@@ -15,6 +15,5 @@ class CreateNewRequestUseCase {
 
   Future<Either<Failure, NewRequestResultEntity>> call(
     CreateNewRequestParams params,
-  ) =>
-      _repo.createRequest(params);
+  ) => _repo.createRequest(params);
 }

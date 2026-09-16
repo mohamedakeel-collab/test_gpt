@@ -38,11 +38,7 @@ class _RequestTimePicker extends StatelessWidget {
 }
 
 class _TimeField extends StatelessWidget {
-  const _TimeField({
-    required this.title,
-    this.time,
-    this.onChanged,
-  });
+  const _TimeField({required this.title, this.time, this.onChanged});
 
   final String title;
   final TimeOfDay? time;
@@ -53,10 +49,7 @@ class _TimeField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: const TextStyle().setHintColor.s12.regular,
-        ),
+        Text(title, style: const TextStyle().setHintColor.s12.regular),
 
         6.szH,
 
@@ -64,17 +57,11 @@ class _TimeField extends StatelessWidget {
           onTap: () => _pickTime(context),
           child: Container(
             height: AppSize.sH42,
-            padding: EdgeInsets.symmetric(
-              horizontal: AppPadding.pW12,
-            ),
+            padding: EdgeInsets.symmetric(horizontal: AppPadding.pW12),
             decoration: BoxDecoration(
               color: AppColors.white,
-              borderRadius: BorderRadius.circular(
-                AppCircular.r10,
-              ),
-              border: Border.all(
-                color: AppColors.border,
-              ),
+              borderRadius: BorderRadius.circular(AppCircular.r10),
+              border: Border.all(color: AppColors.border),
             ),
             child: Row(
               children: [
@@ -101,9 +88,7 @@ class _TimeField extends StatelessWidget {
   }
 
   Future<void> _pickTime(BuildContext context) async {
-    final picked = await showCustomTimePicker(
-      initialTime: time,
-    );
+    final picked = await showCustomTimePicker(initialTime: time);
 
     if (picked != null) {
       onChanged?.call(picked);

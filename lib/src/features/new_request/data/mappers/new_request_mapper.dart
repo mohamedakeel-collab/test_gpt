@@ -5,23 +5,21 @@ import '../models/new_request_response_model.dart';
 
 extension NewRequestModelMapper on NewRequestModel {
   NewRequestEntity toEntity() => NewRequestEntity(
-        id: id,
-        employeeId: employeeId,
-        reviewerId: reviewerId,
-        leaveType: leaveType,
-        startDate: startDate,
-        endDate: endDate,
-        reason: reason,
-        file: file,
-        status: status,
-        statusText: statusText,
-        submittedAt: submittedAt,
-      );
+    id: id,
+    employeeId: employeeId,
+    reviewerId: reviewerId,
+    leaveType: leaveType,
+    startDate: startDate,
+    endDate: endDate,
+    reason: reason,
+    file: file,
+    status: status,
+    statusText: statusText,
+    submittedAt: submittedAt,
+  );
 }
 
 extension NewRequestResponseModelMapper on NewRequestResponseModel {
-  NewRequestResultEntity toEntity() => NewRequestResultEntity(
-        message: message,
-        request: data.toEntity(),
-      );
+  NewRequestResultEntity toEntity() =>
+      NewRequestResultEntity(message: message, request: data.toEntity());
 }

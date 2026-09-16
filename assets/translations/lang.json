@@ -291,6 +291,9 @@
   "notification_unread #$ Unread": "غير مقروء",
   "no_team_requests #$ No Team Requests": "لا توجد طلبات",
   "no_notifications #$ No notifications": "لا توجد إشعارات",
+  "leave_type #$ Leave Type": "نوع الإجازة",
+  "select_leave_type #$ Select the leave type": "اختر نوع الإجازة",
+  "no_leave_types #$ No leave types available": "لا توجد أنواع إجازات متاحة",
   "am_period #$ AM": "ص",
   "pm_period #$ PM": "م"
 }

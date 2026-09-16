@@ -51,6 +51,38 @@ class _NewRequestBodyState extends State<_NewRequestBody> {
                       leaveType: widget.request?.leaveType,
                     ),
 
+                    if (selectedType == 1) 16.szH,
+
+                    if (selectedType == 1)
+                      AsyncBlocBuilder<LeaveTypesCubit, List<LeaveTypeEntity>>(
+                        onRetry: () =>
+                            context.read<LeaveTypesCubit>().getLeaveTypes(),
+                        builder: (context, leaveTypes) {
+                          if (leaveTypes.isEmpty) {
+                            return EmptyWidget(
+                              title: LocaleKeys.noLeaveTypes,
+                              desc: LocaleKeys.errorexceptionNotcontaindesc,
+                            );
+                          }
+
+                          return ValueListenableBuilder<LeaveTypeEntity?>(
+                            valueListenable: _vc.selectedLeaveType,
+                            builder: (context, selectedLeaveType, _) {
+                              return AppDropdown<LeaveTypeEntity>(
+                                items: leaveTypes,
+                                value: selectedLeaveType,
+                                showSearchBox: false,
+                                itemAsString: (item) => item.translatedName,
+                                onChanged: _vc.setSelectedLeaveType,
+                                validator: _vc.validateLeaveType,
+                                label: LocaleKeys.leaveType,
+                                hint: LocaleKeys.selectLeaveType,
+                              );
+                            },
+                          );
+                        },
+                      ),
+
                     16.szH,
 
                     _RequestDatePicker(

@@ -1,9 +1,7 @@
 part of '../imports/new_request_imports.dart';
 
 class _RequestReasonField extends StatelessWidget {
-  const _RequestReasonField({
-    this.controller,
-  });
+  const _RequestReasonField({this.controller});
 
   final TextEditingController? controller;
 

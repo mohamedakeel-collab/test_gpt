@@ -11,8 +11,13 @@ part of '../imports/new_request_imports.dart';
 ///   - The cubit owns server state (`AsyncState<NewRequestResultEntity>`);
 ///     this owns all ephemeral form state.
 class NewRequestViewController {
+  NewRequestViewController() {
+    selectedRequestType.addListener(_onRequestTypeChanged);
+  }
+
   final TextEditingController reasonController = TextEditingController();
   final ValueNotifier<int> selectedRequestType = ValueNotifier(1);
+  final ValueNotifier<LeaveTypeEntity?> selectedLeaveType = ValueNotifier(null);
 
   DateTime? startDate;
   DateTime? endDate;
@@ -23,6 +28,18 @@ class NewRequestViewController {
   String? existingFileName;
 
   String get reason => reasonController.text.trim();
+
+  void _onRequestTypeChanged() {
+    if (selectedRequestType.value != 1) {
+      selectedLeaveType.value = null;
+    }
+  }
+
+  void setSelectedLeaveType(LeaveTypeEntity? value) =>
+      selectedLeaveType.value = value;
+
+  String? validateLeaveType(LeaveTypeEntity? value) =>
+      Validators.validateDropDown(value, fieldTitle: LocaleKeys.leaveType);
 
   Future<void> pickAttachment(BuildContext context) async {
     final result = await FilePicker.platform.pickFiles(
@@ -119,7 +136,9 @@ class NewRequestViewController {
     }
 
     final params = CreateNewRequestParams(
-      leaveType: _leaveTypeFor(selectedRequestType.value),
+      leaveType:
+          selectedLeaveType.value?.name ??
+          _leaveTypeFor(selectedRequestType.value),
       startDate: start,
       endDate: end,
       reason: reason,
@@ -160,8 +179,10 @@ class NewRequestViewController {
   }
 
   void dispose() {
+    selectedRequestType.removeListener(_onRequestTypeChanged);
     reasonController.dispose();
     selectedRequestType.dispose();
+    selectedLeaveType.dispose();
   }
 
   int requestTypeFromLeaveType(String leaveType) {

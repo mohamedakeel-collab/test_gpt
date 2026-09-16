@@ -18,6 +18,7 @@ class NewRequestScreen extends StatefulWidget {
 
 class _NewRequestScreenState extends State<NewRequestScreen> {
   late final NewRequestCubit _cubit;
+  late final LeaveTypesCubit _leaveTypesCubit;
   late final NewRequestViewController _vc;
 
   Future<void> _refreshUser() async {
@@ -32,12 +33,14 @@ class _NewRequestScreenState extends State<NewRequestScreen> {
     });
 
     _cubit = injector<NewRequestCubit>();
+    _leaveTypesCubit = injector<LeaveTypesCubit>()..getLeaveTypes();
     _vc = NewRequestViewController();
   }
 
   @override
   void dispose() {
     _vc.dispose();
+    _leaveTypesCubit.close();
     _cubit.close();
     super.dispose();
   }
@@ -48,8 +51,11 @@ class _NewRequestScreenState extends State<NewRequestScreen> {
         widget.mode == RequestMode.edit ||
         widget.mode == RequestMode.editProvider;
 
-    return BlocProvider<NewRequestCubit>.value(
-      value: _cubit,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<NewRequestCubit>.value(value: _cubit),
+        BlocProvider<LeaveTypesCubit>.value(value: _leaveTypesCubit),
+      ],
       child: AnnotatedRegion<SystemUiOverlayStyle>(
         value: const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,

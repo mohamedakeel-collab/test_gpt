@@ -52,16 +52,26 @@ import '../../../features/my_team/domain/usecases/get_my_team_requests_use_case.
     as _i455;
 import '../../../features/my_team/presentation/imports/my_team_imports.dart'
     as _i477;
+import '../../../features/new_request/data/datasources/leave_type_remote_data_source_impl.dart'
+    as _i929;
 import '../../../features/new_request/data/datasources/new_request_remote_data_source.dart'
     as _i272;
+import '../../../features/new_request/data/repositories/leave_type_repository_impl.dart'
+    as _i11;
 import '../../../features/new_request/data/repositories/new_request_repository_impl.dart'
     as _i255;
+import '../../../features/new_request/domain/datasources/leave_type_remote_data_source.dart'
+    as _i1065;
 import '../../../features/new_request/domain/datasources/new_request_remote_data_source.dart'
     as _i517;
+import '../../../features/new_request/domain/repositories/leave_type_repository.dart'
+    as _i394;
 import '../../../features/new_request/domain/repositories/new_request_repository.dart'
     as _i875;
 import '../../../features/new_request/domain/usecases/create_new_request_use_case.dart'
     as _i143;
+import '../../../features/new_request/domain/usecases/get_leave_types_usecase.dart'
+    as _i78;
 import '../../../features/new_request/domain/usecases/update_provider_request_use_case.dart'
     as _i65;
 import '../../../features/new_request/domain/usecases/update_request_use_case.dart'
@@ -223,6 +233,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i517.NewRequestRemoteDataSource>(
       () => _i272.NewRequestRemoteDataSourceImpl(),
     );
+    gh.lazySingleton<_i1065.LeaveTypeRemoteDataSource>(
+      () => _i929.LeaveTypeRemoteDataSourceImpl(),
+    );
     gh.lazySingleton<_i499.AttendanceRepository>(
       () => _i111.AttendanceRepositoryImpl(
         gh<_i546.AttendanceRemoteDataSource>(),
@@ -313,6 +326,10 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i392.EmployeeDetailsRepository>(),
       ),
     );
+    gh.lazySingleton<_i394.LeaveTypeRepository>(
+      () =>
+          _i11.LeaveTypeRepositoryImpl(gh<_i1065.LeaveTypeRemoteDataSource>()),
+    );
     gh.lazySingleton<_i287.OrdersRepository>(
       () => _i493.OrdersRepositoryImpl(gh<_i161.OrdersRemoteDataSource>()),
     );
@@ -327,6 +344,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i485.HomeCubit>(
       () => _i485.HomeCubit(gh<_i885.GetHomeUseCase>()),
+    );
+    gh.lazySingleton<_i78.GetLeaveTypesUseCase>(
+      () => _i78.GetLeaveTypesUseCase(gh<_i394.LeaveTypeRepository>()),
     );
     gh.factory<_i217.CreateEmployeeUseCase>(
       () => _i217.CreateEmployeeUseCase(gh<_i210.AddEmployeeRepository>()),
@@ -398,6 +418,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i528.LogoutUseCase>(
       () => _i528.LogoutUseCase(gh<_i245.LogOutRepository>()),
+    );
+    gh.factory<_i91.LeaveTypesCubit>(
+      () => _i91.LeaveTypesCubit(gh<_i78.GetLeaveTypesUseCase>()),
     );
     gh.factory<_i176.GetNotificationsUseCase>(
       () => _i176.GetNotificationsUseCase(gh<_i1007.NotificationsRepository>()),

@@ -1,22 +1,17 @@
 part of '../imports/new_request_imports.dart';
 
 class _BalanceInfoCard extends StatelessWidget {
-  const _BalanceInfoCard({
-    required this.selectedType,
-  });
+  const _BalanceInfoCard({required this.selectedType});
 
   final ValueNotifier<int> selectedType;
 
   @override
   Widget build(BuildContext context) {
-
     final user = context.watch<UserCubit>().user;
-
 
     final remainingLeaveBalance = selectedType.value == 1
         ? user.remainingLeaveBalance
         : user.permissionHours;
-
 
     return Container(
       padding: EdgeInsets.symmetric(
@@ -39,19 +34,13 @@ class _BalanceInfoCard extends StatelessWidget {
 
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(
-                    color: AppColors.primary,
-                    width: 2,
-                  ),
+                  border: Border.all(color: AppColors.primary, width: 2),
                 ),
 
                 child: Center(
                   child: Text(
                     'i',
-                    style: const TextStyle()
-                        .setPrimaryColor
-                        .s18
-                        .bold,
+                    style: const TextStyle().setPrimaryColor.s18.bold,
                   ),
                 ),
               ),
@@ -60,10 +49,7 @@ class _BalanceInfoCard extends StatelessWidget {
 
               Text(
                 LocaleKeys.remainingVacationBalance,
-                style: const TextStyle()
-                    .setPrimaryColor
-                    .s18
-                    .semiBold,
+                style: const TextStyle().setPrimaryColor.s18.semiBold,
               ),
             ],
           ),
@@ -73,10 +59,7 @@ class _BalanceInfoCard extends StatelessWidget {
           Text(
             '$remainingLeaveBalance',
 
-            style: const TextStyle()
-                .setPrimaryColor
-                .s18
-                .bold,
+            style: const TextStyle().setPrimaryColor.s18.bold,
           ),
         ],
       ),
