@@ -9,61 +9,106 @@ import 'notification_router.dart';
 
 final class NotificationManager {
   NotificationManager._();
-  static final NotificationManager instance = NotificationManager._();
 
-  static const String _isolatePortName = 'notification_action_port';
+  static final NotificationManager instance =
+  NotificationManager._();
+
+  static const String _isolatePortName =
+      'notification_action_port';
 
   ReceivePort? _receivePort;
+
   late NotificationRouter router;
+
+  bool _initialized = false;
 
   Future<void> initialize({
     required NotificationRouter router,
     bool debug = false,
   }) async {
+    if (_initialized) {
+      return;
+    }
+
     this.router = router;
 
-    await NotificationController.initializeLocalNotifications(debug: debug);
-    await NotificationController.initializeRemoteNotifications(debug: debug);
+    await NotificationController.initializeLocalNotifications(
+      debug: debug,
+    );
+
+    await NotificationController.initializeRemoteNotifications(
+      debug: debug,
+    );
+
     await _initializeIsolateReceivePort();
-    await NotificationController.startListeningNotificationEvents();
+
+    await NotificationController
+        .startListeningNotificationEvents();
+
     await _getInitialNotificationAction();
+
+    _initialized = true;
   }
 
   Future<void> _initializeIsolateReceivePort() async {
-    _receivePort = ReceivePort('notification_main_port');
+    _receivePort?.close();
 
-    IsolateNameServer.removePortNameMapping(_isolatePortName);
-    IsolateNameServer.registerPortWithName(
+    _receivePort = ReceivePort();
+
+    IsolateNameServer.removePortNameMapping(
+      _isolatePortName,
+    );
+
+    final registered = IsolateNameServer.registerPortWithName(
       _receivePort!.sendPort,
       _isolatePortName,
     );
 
-    _receivePort!.listen((receivedAction) {
+    if (!registered) {
+      return;
+    }
+
+    _receivePort!.listen((receivedAction) async {
       if (receivedAction is ReceivedAction) {
-        NotificationController.routeAction(receivedAction);
+        await NotificationController.routeAction(
+          receivedAction,
+        );
       }
     });
   }
 
   Future<void> _getInitialNotificationAction() async {
-    final receivedAction = await AwesomeNotifications()
-        .getInitialNotificationAction(removeFromActionEvents: true);
+    final receivedAction =
+    await AwesomeNotifications().getInitialNotificationAction(
+      removeFromActionEvents: true,
+    );
 
-    if (receivedAction == null) return;
-    await NotificationController.routeAction(receivedAction);
+    if (receivedAction == null) {
+      return;
+    }
+
+    await NotificationController.routeAction(
+      receivedAction,
+    );
   }
-
-  Future<void> requestToken() async {
-    await AwesomeNotificationsFcm().requestFirebaseAppToken();
+  Future<String> requestToken() async {
+    return await AwesomeNotificationsFcm()
+        .requestFirebaseAppToken();
   }
 
   Future<bool> requestPermissions() async {
-    return AwesomeNotifications().requestPermissionToSendNotifications();
+    return AwesomeNotifications()
+        .requestPermissionToSendNotifications();
   }
 
   Future<void> dispose() async {
-    IsolateNameServer.removePortNameMapping(_isolatePortName);
+    IsolateNameServer.removePortNameMapping(
+      _isolatePortName,
+    );
+
     _receivePort?.close();
     _receivePort = null;
+
+    _initialized = false;
   }
 }

@@ -1,4 +1,7 @@
+import 'package:clean_arch_base/src/core/notifications/notification_manager.dart';
+import 'package:clean_arch_base/src/core/notifications/notification_router.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -33,27 +36,24 @@ import 'src/core/widgets/exception_view.dart';
 Future<void> bootstrap(Flavor flavor) async {
   F.appFlavor = flavor;
 
-  // Only attach the logging observer in debug — keeps bloc event/state data
-  // (which can include PII) out of release logs.
-  if (kDebugMode) Bloc.observer = AppBlocObserver();
+  if (kDebugMode) {
+    Bloc.observer = AppBlocObserver();
+  }
 
   WidgetsFlutterBinding.ensureInitialized();
 
   await EasyLocalization.ensureInitialized();
 
-  // Hive needs to be ready before any cache/queue store opens a box.
   await Hive.initFlutter();
 
+  await Firebase.initializeApp();
+
   await Future.wait([
-    // Firebase.initializeApp(),
     ScreenUtil.ensureScreenSize(),
     NetworkInfo().check(),
-    // Hydrate the in-memory token cache from encrypted storage so the
-    // first authed request after launch already has a Bearer header.
     TokenStorage.instance.init(),
   ]);
 
-  // These depend on Hive being initialised.
   await CacheConfig.init();
   await OfflineQueueManager().init();
 
@@ -62,12 +62,8 @@ Future<void> bootstrap(Flavor flavor) async {
     DeviceOrientation.portraitDown,
   ]);
 
-  // DI: TokenStorage, DioClient, NotificationManager, ConnectivityCubit, UserCubit, …
   setUpServiceLocator();
 
-  // Restore the previous session (user payload + tokens) from encrypted
-  // storage BEFORE the first frame, so the initial route already knows the
-  // auth status without a flicker.
   await injector<UserCubit>().init();
 
   PageRouterBuilder().initAppRouter(
@@ -88,7 +84,9 @@ Future<void> bootstrap(Flavor flavor) async {
         (FlutterErrorDetails details) => const ExceptionView();
   }
 
-  Helpers.changeStatusbarColor(statusBarColor: Colors.transparent);
+  Helpers.changeStatusbarColor(
+    statusBarColor: Colors.transparent,
+  );
 
   runApp(
     EasyLocalization(

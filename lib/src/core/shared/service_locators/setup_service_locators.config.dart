@@ -207,6 +207,7 @@ import '../../../features/remote_work/domain/usecases/get_attendance_use_case.da
 import '../../../features/remote_work/presentation/imports/remote_work_imports.dart'
     as _i948;
 import '../../network/auth/token_storage.dart' as _i235;
+import '../../notifications/notification_manager.dart' as _i951;
 import '../cubits/base_url/base_url_cubit.dart' as _i200;
 import '../cubits/user_cubit/user_cubit.dart' as _i996;
 
@@ -262,6 +263,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i161.OrdersRemoteDataSource>(
       () => _i688.OrdersRemoteDataSourceImpl(),
     );
+    gh.lazySingleton<_i1009.LoginRemoteDataSource>(
+      () => _i670.LoginRemoteDataSourceImpl(gh<_i951.NotificationManager>()),
+    );
     gh.lazySingleton<_i521.OrderDetailsRemoteDataSource>(
       () => _i521.OrderDetailsRemoteDataSourceImpl(),
     );
@@ -278,9 +282,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i929.EmployeesRemoteDataSource>(
       () => _i396.EmployeesRemoteDataSourceImpl(),
-    );
-    gh.lazySingleton<_i1009.LoginRemoteDataSource>(
-      () => _i670.LoginRemoteDataSourceImpl(),
     );
     gh.lazySingleton<_i705.EmployeesRepository>(
       () =>

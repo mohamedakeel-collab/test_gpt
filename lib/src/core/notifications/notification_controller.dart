@@ -16,7 +16,7 @@ class NotificationController {
   // ── 1. Initialize Local ─────────────────────────────────────────
   static Future<void> initializeLocalNotifications({bool debug = false}) async {
     await AwesomeNotifications().initialize(
-      'resource://drawable/ic_launcher',
+      'resource://drawable/res_notification_icon',
       [
         NotificationChannel(
           channelKey: app_enums.NotificationChannel.messaging.name,

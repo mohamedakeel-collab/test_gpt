@@ -1,8 +1,7 @@
 plugins {
     id("com.android.application")
     id("kotlin-android")
-  //  id("com.google.gms.google-services")
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
+    id("com.google.gms.google-services")
     id("dev.flutter.flutter-gradle-plugin")
 }
 
@@ -16,13 +15,23 @@ android {
     productFlavors {
         create("user") {
             dimension = "flavor-type"
-            applicationId = "com.tag.app.user"
-            resValue(type = "string", name = "app_name", value = "User Tag")
+            applicationId = "com.tag.user"
+            resValue(
+                type = "string",
+                name = "app_name",
+                value = "User Tag"
+            )
         }
+
         create("provider") {
             dimension = "flavor-type"
-            applicationId = "com.tag.app.provider"
-            resValue(type = "string", name = "app_name", value = "Provider Tag")
+            applicationId = "com.tag.hr"
+
+            resValue(
+                type = "string",
+                name = "app_name",
+                value = "Provider Tag"
+            )
         }
     }
 
