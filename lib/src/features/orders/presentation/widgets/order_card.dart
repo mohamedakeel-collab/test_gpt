@@ -44,7 +44,7 @@ class OrderCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        _leaveTypeLabel(order.leaveType),
+                      order.leaveTypeName!,
                         maxLines: 2,
 
                         style: const TextStyle().setMainTextColor.s16.semiBold,

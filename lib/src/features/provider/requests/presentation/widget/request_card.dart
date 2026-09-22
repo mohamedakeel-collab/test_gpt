@@ -40,7 +40,7 @@ class RequestCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    controller.requestTypeLabel(request.requestType),
+                   request.leaveTypeName,
 
                     maxLines: 1,
 

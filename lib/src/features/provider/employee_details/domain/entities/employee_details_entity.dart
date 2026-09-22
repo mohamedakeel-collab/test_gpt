@@ -110,6 +110,7 @@ class EmployeeDetailsLeaveRequestEntity extends Equatable {
     required this.date,
     required this.duration,
     required this.reason,
+    required this.leaveTypeName,
     required this.status,
     required this.statusText,
   });
@@ -117,6 +118,7 @@ class EmployeeDetailsLeaveRequestEntity extends Equatable {
 
   final int id;
   final String requestType;
+  final String leaveTypeName;
   final String date;
   final String duration;
   final String reason;
@@ -132,6 +134,7 @@ class EmployeeDetailsLeaveRequestEntity extends Equatable {
     duration,
     reason,
     status,
+    leaveTypeName,
     statusText,
   ];
 }

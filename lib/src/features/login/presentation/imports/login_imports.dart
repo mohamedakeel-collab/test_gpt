@@ -28,6 +28,7 @@ import '../../../../core/widgets/custom_messages.dart';
 import '../../../../core/widgets/fields/text_fields/default_text_field.dart';
 import '../../../../core/widgets/icon_widget.dart';
 import '../../../home/presentation/imports/home_imports.dart';
+import '../../../home/presentation/keys/main_tap_key.dart';
 import '../../../profile/presentation/imports/profile_imports.dart';
 import '../../data/mappers/login_mappers.dart';
 import '../../domain/entities/login_entity.dart';

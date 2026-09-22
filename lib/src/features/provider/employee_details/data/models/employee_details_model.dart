@@ -72,6 +72,7 @@ class EmployeeDetailsLeaveRequestModel {
   const EmployeeDetailsLeaveRequestModel({
     required this.id,
     required this.requestType,
+    required this.leaveTypeName,
     required this.date,
     required this.duration,
     required this.reason,
@@ -82,6 +83,7 @@ class EmployeeDetailsLeaveRequestModel {
 
   final int id;
   final String requestType;
+  final String leaveTypeName;
   final String date;
   final String duration;
   final String reason;
@@ -100,6 +102,9 @@ class EmployeeDetailsLeaveRequestModel {
 
       requestType: json.getString(
         'leave_type',
+      ),
+      leaveTypeName: json.getString(
+        'leave_type_name',
       ),
 
       date: json.getString(

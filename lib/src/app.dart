@@ -17,6 +17,7 @@ import 'core/notifications/notification_manager.dart';
 import 'core/notifications/notification_router.dart';
 import 'core/shared/cubits/user_cubit/user_cubit.dart';
 import 'features/home/presentation/imports/home_imports.dart';
+import 'features/home/presentation/keys/main_tap_key.dart';
 import 'features/intro/presentation/imports/intro_imports.dart';
 import 'features/login/presentation/imports/login_imports.dart';
 import 'features/splash/presentation/imports/splash_imports.dart';
@@ -29,7 +30,6 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-
   @override
   void initState() {
     super.initState();
@@ -40,8 +40,7 @@ class _AppState extends State<App> {
   }
 
   Future<void> _initializeNotifications() async {
-    final notificationManager =
-    injector<NotificationManager>();
+    final notificationManager = injector<NotificationManager>();
 
     await notificationManager.initialize(
       router: const AppNotificationRouter(),
@@ -61,9 +60,7 @@ class _AppState extends State<App> {
 
       builder: (_, child) => MultiBlocProvider(
         providers: [
-          BlocProvider<UserCubit>.value(
-            value: injector<UserCubit>(),
-          ),
+          BlocProvider<UserCubit>.value(value: injector<UserCubit>()),
 
           BlocProvider<ConnectivityCubit>.value(
             value: injector<ConnectivityCubit>(),
@@ -91,11 +88,10 @@ class _AppState extends State<App> {
 
           supportedLocales: context.supportedLocales,
 
-          localizationsDelegates:
-          context.localizationDelegates,
+          localizationsDelegates: context.localizationDelegates,
 
           home: TokenStorage.instance.hasAccessToken
-              ? const MainTapScreen()
+              ?  MainTapScreen(key: mainTapKey)
               : const SplashScreen(),
         ),
       ),

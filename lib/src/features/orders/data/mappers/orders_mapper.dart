@@ -25,6 +25,7 @@ extension LeaveRequestModelMapper on LeaveRequestModel {
     employeeId: employeeId,
     reviewerId: reviewerId,
     leaveType: leaveType,
+    leaveTypeName: leaveTypeName,
     startDate: startDate,
     startTime: startTime,
     endDate: endDate,
@@ -73,7 +74,7 @@ extension LeaveRequestToEmployeeDetailsMapper on LeaveRequestEntity {
   EmployeeDetailsLeaveRequestEntity toEmployeeDetailsRequest() {
     return EmployeeDetailsLeaveRequestEntity(
       id: id,
-
+leaveTypeName: leaveTypeName??'',
       requestType: leaveType,
 
       date: startDate ?? '',

@@ -1,13 +1,18 @@
 part of '../imports/home_imports.dart';
 
 class MainTapScreen extends StatefulWidget {
-  const MainTapScreen({super.key});
+  const MainTapScreen({
+    super.key,
+    this.initialIndex = 0,
+  });
+
+  final int initialIndex;
 
   @override
-  State<MainTapScreen> createState() => _MainTapScreenState();
+  State<MainTapScreen> createState() => MainTapScreenState();
 }
 
-class _MainTapScreenState extends State<MainTapScreen> {
+class MainTapScreenState extends State<MainTapScreen> {
   int _selectedIndex = 0;
 
   int _ordersRefreshToken = 0;
@@ -26,9 +31,10 @@ class _MainTapScreenState extends State<MainTapScreen> {
   void initState() {
     super.initState();
 
+    _selectedIndex = widget.initialIndex;
+
     _screens = [];
   }
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -87,7 +93,37 @@ class _MainTapScreenState extends State<MainTapScreen> {
       );
     });
   }
+  void changeTab(int index) {
+    if (!mounted) return;
 
+    if (index < 0 || index >= _screens.length) {
+      return;
+    }
+
+    final user = context.read<UserCubit>().user;
+
+    final isUser = F.appFlavor == Flavor.user;
+
+    final isManager = isUser && user.role == 'manager';
+
+    setState(() {
+
+      if (_screens[index] == null) {
+        _screens[index] = _createScreen(
+          index: index,
+          isUser: isUser,
+          isManager: isManager,
+        );
+      }
+
+      if (!isUser && index == 1) {
+        _requestsRefreshToken++;
+      }
+
+      _selectedIndex = index;
+
+    });
+  }
   @override
   Widget build(BuildContext context) {
     final user = context.watch<UserCubit>().user;

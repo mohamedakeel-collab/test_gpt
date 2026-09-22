@@ -15,38 +15,37 @@ class NotificationController {
 
   // ── 1. Initialize Local ─────────────────────────────────────────
   static Future<void> initializeLocalNotifications({bool debug = false}) async {
-    await AwesomeNotifications().initialize(
-      'resource://drawable/res_notification_icon',
-      [
-        NotificationChannel(
-          channelKey: app_enums.NotificationChannel.messaging.name,
-          channelName: 'Messaging',
-          channelDescription: 'Chat and message notifications',
-          importance: NotificationImportance.High,
-          defaultColor: Colors.blue,
-          ledColor: Colors.blue,
-          playSound: true,
-          enableVibration: true,
-        ),
-        NotificationChannel(
-          channelKey: app_enums.NotificationChannel.general.name,
-          channelName: 'General',
-          channelDescription: 'General notifications',
-          importance: NotificationImportance.Default,
-        ),
-        NotificationChannel(
-          channelKey: app_enums.NotificationChannel.system.name,
-          channelName: 'System',
-          channelDescription: 'System alerts',
-          importance: NotificationImportance.High,
-        ),
-      ],
-      debug: debug,
-    );
+    await AwesomeNotifications()
+        .initialize('resource://drawable/res_notification_icon', [
+          NotificationChannel(
+            channelKey: app_enums.NotificationChannel.messaging.name,
+            channelName: 'Messaging',
+            channelDescription: 'Chat and message notifications',
+            importance: NotificationImportance.High,
+            defaultColor: Colors.blue,
+            ledColor: Colors.blue,
+            playSound: true,
+            enableVibration: true,
+          ),
+          NotificationChannel(
+            channelKey: app_enums.NotificationChannel.general.name,
+            channelName: 'General',
+            channelDescription: 'General notifications',
+            importance: NotificationImportance.Default,
+          ),
+          NotificationChannel(
+            channelKey: app_enums.NotificationChannel.system.name,
+            channelName: 'System',
+            channelDescription: 'System alerts',
+            importance: NotificationImportance.High,
+          ),
+        ], debug: debug);
   }
 
   // ── 2. Initialize Remote (FCM) ──────────────────────────────────
-  static Future<void> initializeRemoteNotifications({bool debug = false}) async {
+  static Future<void> initializeRemoteNotifications({
+    bool debug = false,
+  }) async {
     await AwesomeNotificationsFcm().initialize(
       onFcmTokenHandle: myFcmTokenHandle,
       onNativeTokenHandle: myNativeTokenHandle,
@@ -70,12 +69,18 @@ class NotificationController {
   @pragma('vm:entry-point')
   static Future<void> mySilentDataHandle(FcmSilentData silentData) async {
     try {
+      debugPrint('========== SILENT DATA ==========');
+      debugPrint(silentData.data.toString());
+      debugPrint('=================================');
+
       final data = silentData.data;
+
       if (data == null || data.isEmpty) return;
 
       final payload = NotificationPayload.fromMap(
         Map<String, dynamic>.from(data),
       );
+
       final content = _buildContent(payload);
 
       await AwesomeNotifications().createNotification(
@@ -100,7 +105,9 @@ class NotificationController {
 
   // ── Click Handler ───────────────────────────────────────────────
   @pragma('vm:entry-point')
-  static Future<void> onActionReceivedMethod(ReceivedAction receivedAction) async {
+  static Future<void> onActionReceivedMethod(
+    ReceivedAction receivedAction,
+  ) async {
     try {
       if (receivedAction.actionType == ActionType.SilentAction ||
           receivedAction.actionType == ActionType.SilentBackgroundAction) {
@@ -121,17 +128,23 @@ class NotificationController {
   }
 
   @pragma('vm:entry-point')
-  static Future<void> onNotificationCreatedMethod(ReceivedNotification n) async {
+  static Future<void> onNotificationCreatedMethod(
+    ReceivedNotification n,
+  ) async {
     debugPrint('Notification created: ${n.id}');
   }
 
   @pragma('vm:entry-point')
-  static Future<void> onNotificationDisplayedMethod(ReceivedNotification n) async {
+  static Future<void> onNotificationDisplayedMethod(
+    ReceivedNotification n,
+  ) async {
     debugPrint('Notification displayed: ${n.id}');
   }
 
   @pragma('vm:entry-point')
-  static Future<void> onDismissActionReceivedMethod(ReceivedAction action) async {
+  static Future<void> onDismissActionReceivedMethod(
+    ReceivedAction action,
+  ) async {
     debugPrint('Notification dismissed: ${action.id}');
   }
 
@@ -169,34 +182,44 @@ class NotificationController {
   ) {
     return switch (payload.type) {
       app_enums.NotificationType.call => [
-          NotificationActionButton(
-            key: 'ACCEPT',
-            label: 'قبول',
-            color: Colors.green,
-          ),
-          NotificationActionButton(
-            key: 'REJECT',
-            label: 'رفض',
-            color: Colors.red,
-            actionType: ActionType.DismissAction,
-          ),
-        ],
+        NotificationActionButton(
+          key: 'ACCEPT',
+          label: 'قبول',
+          color: Colors.green,
+        ),
+        NotificationActionButton(
+          key: 'REJECT',
+          label: 'رفض',
+          color: Colors.red,
+          actionType: ActionType.DismissAction,
+        ),
+      ],
       _ => null,
     };
   }
 
   // ── Parse Action from data map ──────────────────────────────────
   static NotificationAction _parseAction(Map<String, String?> data) {
-    return switch (data['action_type']) {
-      'navigate_chat' => NavigateToChat(data['chat_id'] ?? ''),
-      'navigate_screen' => NavigateToScreen(data['route'] ?? '/'),
-      'open_url' => OpenUrl(Uri.parse(data['url'] ?? '')),
-      _ => const DismissAction(),
-    };
+    switch (data['receiver_type']) {
+      case 'hr':
+        return const NavigateToScreen('/requests');
+
+      case 'manager':
+        return const NavigateToScreen('/orders');
+
+      case 'employee':
+        return const NavigateToScreen('/home');
+
+      default:
+        return const DismissAction();
+    }
   }
 
   // ── Route Action ────────────────────────────────────────────────
   static Future<void> routeAction(ReceivedAction receivedAction) async {
+    debugPrint('========== CLICK PAYLOAD ==========');
+    debugPrint(receivedAction.payload.toString());
+    debugPrint('===================================');
     final action = _parseAction(receivedAction.payload ?? {});
     await NotificationManager.instance.router.route(action);
   }

@@ -44,7 +44,7 @@ class _RequestDetailsScreenState extends State<RequestDetailsScreen> {
                 if (state is AsyncSuccess<LeaveRequestEntity>) {
                   final request = state.data;
 
-                  if (request.status == 'pending') {
+                  if (request.status == 'pending'||request.status == 'approved_by_manager') {
                     return const _RequestActionButtons();
                   }
                 }

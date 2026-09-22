@@ -54,7 +54,7 @@ extension EmployeeDetailsLeaveRequestModelMapper
   EmployeeDetailsLeaveRequestEntity toEntity() {
     return EmployeeDetailsLeaveRequestEntity(
       id: id,
-
+leaveTypeName: requestType,
       requestType: requestType,
 
       date: date,

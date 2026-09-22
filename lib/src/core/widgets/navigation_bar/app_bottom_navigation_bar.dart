@@ -48,7 +48,18 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
       if (mounted) setState(() => _isClickable = true);
     });
   }
+  @override
+  void didUpdateWidget(
+      covariant AppBottomNavigationBar oldWidget,
+      ) {
+    super.didUpdateWidget(oldWidget);
 
+    if (widget.selectedIndex != oldWidget.selectedIndex) {
+      setState(() {
+        _selectedIndex = widget.selectedIndex;
+      });
+    }
+  }
   Widget _buildTab(NavigationBarEntity tab, int index) {
     final isActive = _selectedIndex == index;
     return Expanded(

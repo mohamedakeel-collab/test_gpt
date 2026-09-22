@@ -24,7 +24,9 @@ class _LoginBody extends StatelessWidget {
       listener: (context, state) {
         switch (state) {
           case AsyncSuccess<LoginEntity>():
-              Go.offAll(const MainTapScreen());
+              Go.offAll(MainTapScreen(
+                key: mainTapKey,
+              ));
             break;
 
           case AsyncFailure<LoginEntity>(:final failure):

@@ -20,6 +20,7 @@ class LeaveRequestModel {
   final String? startDate;
   final String? startTime;
   final String? endDate;
+  final String? leaveTypeName;
   final String? endTime;
   final String? duration;
   final String reason;
@@ -44,6 +45,7 @@ class LeaveRequestModel {
     required this.leaveType,
     required this.reason,
     required this.reviewedByManager,
+    required this.leaveTypeName,
     required this.reviewedByHr,
     required this.status,
     this.reviewerId,
@@ -68,6 +70,7 @@ class LeaveRequestModel {
         employeeId: json.getInt('employee_id'),
         reviewerId: json.getIntOrNull('reviewer_id'),
         leaveType: json.getString('leave_type'),
+        leaveTypeName: json.getString('leave_type_name'),
         startDate: json.getStringOrNull('start_date'),
         startTime: json.getStringOrNull('start_time'),
         endDate: json.getStringOrNull('end_date'),
