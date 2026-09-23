@@ -23,10 +23,28 @@ class _LoginBody extends StatelessWidget {
 
       listener: (context, state) {
         switch (state) {
-          case AsyncSuccess<LoginEntity>():
-              Go.offAll(MainTapScreen(
+          case AsyncSuccess<LoginEntity>(:final data):
+
+            final user = data.toUserModel();
+
+            final isProvider = F.appFlavor == Flavor.provider;
+
+            if (isProvider && user.role != 'hr') {
+              MessageUtils.showSnackBar(
+                context: context,
+                baseStatus: BaseStatus.error,
+                  message: LocaleKeys.accountCannotAccess.tr(),
+              );
+
+              return;
+            }
+
+            Go.offAll(
+              MainTapScreen(
                 key: mainTapKey,
-              ));
+              ),
+            );
+
             break;
 
           case AsyncFailure<LoginEntity>(:final failure):

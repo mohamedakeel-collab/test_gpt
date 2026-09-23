@@ -12,19 +12,16 @@ class MessageUtils {
     required String message,
   }) {
     final messenger = ScaffoldMessenger.of(context ?? Go.context);
+
     final snackBar = SnackBar(
-      duration: const Duration(seconds: 3),
+      duration: const Duration(seconds: 2),
 
-      content: Text(message, style: const TextStyle().setWhiteColor.s11.medium),
-
-      action: SnackBarAction(
-        label: LocaleKeys.cancel,
-
-        textColor: AppColors.white,
-
-        onPressed: () {
-          messenger.clearSnackBars();
-        },
+      content: Text(
+        message,
+        style: const TextStyle()
+            .setWhiteColor
+            .s11
+            .medium,
       ),
 
       backgroundColor: baseStatus == BaseStatus.error
@@ -36,6 +33,8 @@ class MessageUtils {
       elevation: 4,
     );
 
-    messenger.showSnackBar(snackBar);
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(snackBar);
   }
 }

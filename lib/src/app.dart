@@ -30,9 +30,11 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
+  late final bool _hasToken;
   @override
   void initState() {
     super.initState();
+    _hasToken = TokenStorage.instance.hasAccessToken;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializeNotifications();
@@ -90,8 +92,8 @@ class _AppState extends State<App> {
 
           localizationsDelegates: context.localizationDelegates,
 
-          home: TokenStorage.instance.hasAccessToken
-              ?  MainTapScreen(key: mainTapKey)
+          home: _hasToken
+              ? MainTapScreen(key: mainTapKey)
               : const SplashScreen(),
         ),
       ),

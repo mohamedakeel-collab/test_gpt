@@ -138,7 +138,12 @@ class NotificationController {
   static Future<void> onNotificationDisplayedMethod(
     ReceivedNotification n,
   ) async {
+    final payload = NotificationPayload.fromReceivedNotification(n);
+
     debugPrint('Notification displayed: ${n.id}');
+    debugPrint('Notification displayed: $payload');
+    debugPrint('Notification displayed: Akeel');
+
   }
 
   @pragma('vm:entry-point')

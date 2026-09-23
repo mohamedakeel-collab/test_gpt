@@ -292,6 +292,7 @@
   "no_team_requests #$ No Team Requests": "لا توجد طلبات",
   "no_notifications #$ No notifications": "لا توجد إشعارات",
   "leave_type #$ Leave Type": "نوع الإجازة",
+  "account_cannot_access #$ This account cannot access provider app": "لا يمكن لهذا الحساب الوصول إلى تطبيق المزود",
   "select_leave_type #$ Select the leave type": "اختر نوع الإجازة",
   "no_leave_types #$ No leave types available": "لا توجد أنواع إجازات متاحة",
   "am_period #$ AM": "ص",

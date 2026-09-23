@@ -263,6 +263,7 @@
   "no_team_requests": "No Team Requests",
   "no_notifications": "No notifications",
   "leave_type": "Leave Type",
+  "account_cannot_access": "This account cannot access provider app",
   "select_leave_type": "Select the leave type",
   "no_leave_types": "No leave types available",
   "am_period": "AM",

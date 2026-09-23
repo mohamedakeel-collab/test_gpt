@@ -263,6 +263,7 @@
   "no_team_requests": "لا توجد طلبات",
   "no_notifications": "لا توجد إشعارات",
   "leave_type": "نوع الإجازة",
+  "account_cannot_access": "لا يمكن لهذا الحساب الوصول إلى تطبيق المزود",
   "select_leave_type": "اختر نوع الإجازة",
   "no_leave_types": "لا توجد أنواع إجازات متاحة",
   "am_period": "ص",
