@@ -87,11 +87,12 @@ class AddEmployeeViewController {
   }
 
   String? validateImage() {
-    if (isEdit && (employeeImage.value != null || existingImage != null)) {
-      return null;
-    }
+    final hasImage = employeeImage.value != null ||
+        (existingImage != null && existingImage!.isNotEmpty);
 
-    return employeeImage.value == null ? LocaleKeys.fillField : null;
+    if (isEdit || hasImage) return null;
+
+    return LocaleKeys.uploadPersonalImage.tr();
   }
 
   Future<void> pickAttachment(BuildContext context) async {

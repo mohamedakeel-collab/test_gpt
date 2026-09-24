@@ -27,9 +27,18 @@ class _AddEmployeeButton extends StatelessWidget {
             borderRadius: AppCircular.r12,
             isDisabled: state.isLoading,
             onTap: () async {
-              if (!controller.validateForm()) {
-                return;
+              final formValid = controller.formKey.currentState?.validate() ?? false;
+              final imageError = controller.validateImage();
+
+              if (imageError != null) {
+                MessageUtils.showSnackBar(
+                  context: context,
+                  baseStatus: BaseStatus.error,
+                  message: imageError,
+                );
               }
+
+              if (!formValid || imageError != null) return;
 
               final cubit = context.read<AddEmployeeCubit>();
 

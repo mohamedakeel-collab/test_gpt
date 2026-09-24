@@ -17,6 +17,8 @@ import '../../../../core/shared/cubits/user_cubit/user_cubit.dart';
 import '../../../../core/shared/extensions/text_style_extensions.dart';
 
 import '../../../../core/shared/extensions/widgets/padding_extension.dart';
+import '../../../home/presentation/imports/home_imports.dart';
+import '../../../home/presentation/keys/main_tap_key.dart';
 import '../../../intro/presentation/imports/intro_imports.dart';
 import '../../../login/presentation/imports/login_imports.dart';
 

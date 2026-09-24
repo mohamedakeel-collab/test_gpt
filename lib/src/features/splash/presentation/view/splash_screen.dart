@@ -8,36 +8,46 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  static bool _navigated = false;
+
   @override
   void initState() {
-    initUserData(context);
     super.initState();
+    _goNext();
   }
-  Future<void> initUserData(BuildContext context) async {
-    Future.delayed(
-      const Duration(milliseconds: ConstantManager.splashTimer),
-    ).then((value) async {
-      final result = await UserCubit.instance.init();
 
-      if (result) {
-        Go.to(IntroScreen());
-      } else {
-        Go.to(IntroScreen());
-      }
-    });
+  Future<void> _goNext() async {
+    if (_navigated) return;
+    _navigated = true;
+
+    await Future.delayed(
+      const Duration(milliseconds: ConstantManager.splashTimer),
+    );
+    if (!mounted) return;
+
+
+    final isLoggedIn = injector<UserCubit>().isUserLoggedIn;
+    if (isLoggedIn) {
+      Go.offAll(MainTapScreen(key: mainTapKey));
+    } else {
+      Go.offAll(const IntroScreen());
+    }
   }
+
   @override
   Widget build(BuildContext context) {
-
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-        value: const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.light,
-          systemNavigationBarColor: AppColors.main,
+    return const AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+        systemNavigationBarColor: AppColors.main,
+      ),
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: AppColors.splashBackground,
+          body: SplashBody(),
         ),
-        child:  SafeArea(
-          child: const Scaffold(
-            backgroundColor: AppColors.splashBackground, body:SplashBody(),),
-        ));
+      ),
+    );
   }
 }

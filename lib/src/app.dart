@@ -45,7 +45,7 @@ class _AppState extends State<App> {
     final notificationManager = injector<NotificationManager>();
 
     await notificationManager.initialize(
-      router: const AppNotificationRouter(),
+      router:  AppNotificationRouter(),
       debug: kDebugMode,
     );
 
@@ -92,9 +92,7 @@ class _AppState extends State<App> {
 
           localizationsDelegates: context.localizationDelegates,
 
-          home: _hasToken
-              ? MainTapScreen(key: mainTapKey)
-              : const SplashScreen(),
+          home:  const SplashScreen(),
         ),
       ),
     );
