@@ -38,10 +38,8 @@ class _MyTeamScreenState extends State<MyTeamScreen> {
   @override
   void didUpdateWidget(covariant MyTeamScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
-
-
     if (widget.refreshToken != oldWidget.refreshToken) {
-
+      _controller.selectStatus('pending');
       _cubit.getTeamRequests(
         perPage: 10,
         status: _controller.selectedStatusFilter,

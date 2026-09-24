@@ -35,7 +35,7 @@ import '../../../provider/employees/presentation/imports/employees_imports.dart'
 import '../../../provider/requests/presentation/imports/requests_imports.dart';
 import 'dart:async';
 part '../view/home_screen.dart';
-part '../view/main_tap_csreen.dart';
+part '../view/main_tap_screen.dart';
 part '../cubits/home_cubit.dart';
 part '../controllers/home_view_controller.dart';
 part '../widgets/home_body.dart';

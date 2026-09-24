@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../flavors.dart';
 
 import '../../features/home/presentation/imports/home_imports.dart';
 import '../../features/home/presentation/keys/main_tap_key.dart';
 import '../navigation/navigator.dart';
+import '../shared/cubits/user_cubit/user_cubit.dart';
 
 sealed class NotificationAction {
   const NotificationAction();
@@ -44,26 +46,25 @@ final class AppNotificationRouter implements NotificationRouter {
   Future<void> route(NotificationAction action) async {
     switch (action) {
       case NavigateToScreen(:final route):
-        if (route == '/requests') {
-          // open Requests tab inside BottomNavigation
-          mainTapKey.currentState?.changeTab(1);
+        final main = mainTapKey.currentState;
+        if (main == null) return;
 
+        final isUser = F.appFlavor == Flavor.user;
+        final isManager = isUser && UserCubit.instance.user.role == 'manager';
+
+        final tab = switch (route) {
+          '/requests' => isUser ? null : 1,                   // HR → Requests
+          '/my-team'  => isManager ? 1 : null,                // Manager → My Team
+          '/orders'   => isUser ? (isManager ? 2 : 1) : 1,    // Orders
+          '/home'     => 0,
+          _           => null,
+        };
+
+        if (tab != null) {
+          _navigator?.popUntil((r) => r.isFirst);
+          main.changeTab(tab, refresh: true);
           return;
         }
-
-        if (route == '/orders') {
-          // open Requests tab inside BottomNavigation
-          mainTapKey.currentState?.changeTab(1);
-
-          return;
-        }
-        if (route == '/home') {
-          // open Requests tab inside BottomNavigation
-          mainTapKey.currentState?.changeTab(1);
-
-          return;
-        }
-
         await _navigator?.pushNamed(route);
 
       case NavigateToChat(:final chatId):

@@ -208,13 +208,10 @@ class NotificationController {
     switch (data['receiver_type']) {
       case 'hr':
         return const NavigateToScreen('/requests');
-
       case 'manager':
-        return const NavigateToScreen('/orders');
-
+        return const NavigateToScreen('/my-team');
       case 'employee':
-        return const NavigateToScreen('/home');
-
+        return const NavigateToScreen('/orders');
       default:
         return const DismissAction();
     }

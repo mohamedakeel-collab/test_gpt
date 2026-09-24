@@ -93,22 +93,20 @@ class MainTapScreenState extends State<MainTapScreen> {
       );
     });
   }
-  void changeTab(int index) {
-    if (!mounted) return;
-
-    if (index < 0 || index >= _screens.length) {
-      return;
-    }
-
-    final user = context.read<UserCubit>().user;
+  void changeTab(int index, {bool refresh = false}) {
+    if (!mounted || index < 0 || index >= _screens.length) return;
 
     final isUser = F.appFlavor == Flavor.user;
-
-    final isManager = isUser && user.role == 'manager';
+    final isManager = isUser && context.read<UserCubit>().user.role == 'manager';
 
     setState(() {
+      if (refresh) {
+        if (!isUser && index == 1) _requestsRefreshToken++;
+        if (isManager && index == 1) _myTeamRefreshToken++;
+        if (isUser && index == (isManager ? 2 : 1)) _ordersRefreshToken++;
+      }
 
-      if (_screens[index] == null) {
+      if (_screens[index] == null || refresh) {
         _screens[index] = _createScreen(
           index: index,
           isUser: isUser,
@@ -116,12 +114,7 @@ class MainTapScreenState extends State<MainTapScreen> {
         );
       }
 
-      if (!isUser && index == 1) {
-        _requestsRefreshToken++;
-      }
-
       _selectedIndex = index;
-
     });
   }
   @override
